@@ -14,17 +14,17 @@ title: "Cover inequalities"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «Integer linear programming» and «LP relaxation and dual bounds»: ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
+    - From this module, [Chapter 1 «Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [Chapter 2 «LP relaxation»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
 
-    - From this module, the chapters «Ideal formulations» and «Valid inequalities»: the convex hull of the integer solutions, valid inequalities, and cuts that remove fractional points.
+    - From this module, [Chapter 3 «Ideal formulations»](https://fabiofurini.github.io/integer-linear-programming/formulations/ideal-formulations/) and [Chapter 4 «Valid inequalities»](https://fabiofurini.github.io/integer-linear-programming/formulations/valid-inequalities/): the convex hull of the integer solutions, valid inequalities, and cuts that remove fractional points.
 
-    - From the module <em>Combinatorial optimization</em>, the chapter «Knapsack problems»: the knapsack problem and the LP relaxation of the knapsack model, solved with Dantzig's rule.
+    - The LP relaxation of a binary problem with one constraint, solved by inserting the variables in non-increasing order of the ratio $c_j/a_j$ between objective and constraint coefficients (Dantzig's rule).
 
 !!! chiave "Objectives"
 
     At the end of this chapter you will be able to:
 
-    - write the cover inequalities of a knapsack constraint, and prove that they are valid;
+    - write the cover inequalities of a $\le$ constraint with positive coefficients of a binary MIP, and prove that they are valid;
 
     - list the covers and the minimal covers of an instance, and describe the cover closure;
 
@@ -34,80 +34,74 @@ title: "Cover inequalities"
 
     - compute the violation of a cover inequality and the distance of a point from it.
 
-## 5.1 Knapsack constraints and their LP relaxation
+## 5.1 A constraint with positive coefficients and its LP relaxation
 
-- Given:
+<a id="box-1-def-posconstr"></a>
 
-    - a knapsack of <em>capacity</em> $c \in \Z_{\ge 1}$,
+!!! definizione "Definition 5.1: constraint with positive coefficients of a binary MIP"
 
-    - a set $\mathscr{I} = \{1,2,\ldots,n\}$ of $n$ items,
+    Given binary variables $x_j$, for $j \in \mathscr{I} = \{1,2,\ldots,n\}$, integer coefficients $a_j \in \Z_{\ge 1}$ and a right-hand side $b \in \Z_{\ge 1}$, consider the constraint
 
-    - for each item $j \in \mathscr{I}$, a <em>weight</em> $w_j \in \Z_{\ge 1}$,
-
-    and a binary variable $x_j$ for each item $j\in\mathscr{I}$, equal to $1$ if item $j$ is selected in the knapsack and to $0$ otherwise, the <em>knapsack constraint</em> (also called <em>budget constraint</em>) is:
-
-!!! chiave ""
-
-    <a id="eq-model-knapsack"></a>
+    <a id="eq-model-main"></a>
 
     \begin{align*}
-    \sum_{j\in\mathscr{I}}w_jx_j&\le c, \label{eq:capacity} \tag{5.1a}\\
+    \sum_{j\in\mathscr{I}}a_jx_j&\le b, \label{eq:main} \tag{5.1a}\\
     x_j&\in\{0,1\}, &\forall j\in\mathscr{I}. \label{eq:binary} \tag{5.1b}
     \end{align*}
 
-- We assume that
-
-    $$
-    w_j \le c ~~~~\text{for all}~~~~ j \in \mathscr{I} ~~~~~~~\text{and}~~~~~~~ \sum_{j \in \mathscr{I}} w_j>c.
-    $$
-
-    The first assumption guarantees that every item can be selected, the second one that not all the items fit together into the knapsack.
-
-- We denote by $X$ the <em>knapsack set</em>, i.e., the set of feasible solutions of $\eqref{eq:capacity}$–$\eqref{eq:binary}$:
+    Its set of feasible solutions is
 
     \begin{equation*}
     \label{eq:binary-feasible-set}
     X=\left\{\vet x\in\{0,1\}^n:
-    \sum_{j\in\mathscr{I}}w_jx_j\le c\right\}. \tag{5.2}
+    \sum_{j\in\mathscr{I}}a_jx_j\le b\right\}, \tag{5.2}
     \end{equation*}
 
-    $X$ is a finite set of binary points. Its convex hull $\operatorname{conv}(X)$, called the <em>knapsack polytope</em>, is the smallest convex set containing $X$.
-
-- An exact description of $\operatorname{conv}(X)$ is generally hard to obtain. We therefore start from the LP relaxation
+    and its LP relaxation is
 
     \begin{equation*}
     \label{eq:relaxation}
     P=\left\{\vet x\in[0,1]^n:
-    \sum_{j\in\mathscr{I}}w_jx_j\le c\right\}. \tag{5.3}
+    \sum_{j\in\mathscr{I}}a_jx_j\le b\right\}. \tag{5.3}
     \end{equation*}
 
-    The aim is to strengthen $P$ by removing fractional points without removing any point of $X$, thereby bringing the relaxation closer to $\operatorname{conv}(X)$.
+- Constraints of this type are called <strong>knapsack constraints</strong> or <strong>budget constraints</strong>.
 
-- One or several knapsack constraints appear in many ILP models. Valid inequalities for this set remain valid when further constraints are imposed.
+- We assume that
 
-- With profits $p_j$, maximizing $\sum_{j\in\mathscr{I}}p_jx_j$ over $P$ gives an upper bound on the corresponding integer maximization problem; adding valid inequalities can improve this upper bound.
+    $$
+    a_j \le b ~~~~\text{for all}~~~~ j \in \mathscr{I} ~~~~~~~\text{and}~~~~~~~ \sum_{j \in \mathscr{I}} a_j>b.
+    $$
 
-- <strong>A challenge.</strong> Before reading on, consider the instance of [Example 5.1](#box-7-ex-guide), with four items. The optimal solution of its LP relaxation is fractional. Can you find an inequality that cuts it off without removing any feasible binary point? The examples of this chapter answer this question.
+    The first assumption guarantees that every variable can be set to $1$, the second one that they cannot all be set to $1$ together.
+
+- $X$ is a finite set of binary points, and an exact description of its convex hull $\operatorname{conv}(X)$ is generally hard to obtain. The aim is to strengthen $P$ by removing fractional points without removing any point of $X$.
+
+- A MIP can contain several constraints of this type, and further constraints. Valid inequalities for $X$ remain valid when other constraints are imposed.
+
+!!! chiave ""
+
+    With objective coefficients $c_j$, maximizing $\sum_{j\in\mathscr{I}}c_jx_j$ over $P$ gives an upper bound on the integer maximization problem; valid inequalities for $X$ can improve this upper bound.
 
 ## 5.2 Covers and cover inequalities
 
-<a id="box-1-def-cover"></a>
+<a id="box-2-def-cover"></a>
 
-!!! definizione "Definition 5.1: Cover and collection of all covers"
+!!! definizione "Definition 5.2: Cover and collection of all covers"
 
-    A <em>cover</em> is a subset $C\subseteq\mathscr{I}$ whose total weight exceeds the knapsack capacity. The collection of all covers is
+    A <em>cover</em> is a subset $C\subseteq\mathscr{I}$ whose total coefficient $\sum_{j\in C}a_j$ exceeds the right-hand side $b$. The collection of all covers is
 
     \begin{equation*}
     \label{eq:covers}
     \mathcal{C}=\left\{C\subseteq\mathscr{I}:
-    \sum_{j\in C}w_j>c\right\}. \tag{5.4}
+    \sum_{j\in C}a_j>b\right\}. \tag{5.4}
     \end{equation*}
 
-    Since weights and capacity are integer, the condition is equivalent to $\sum_{j\in C}w_j\ge c+1$.
+    Since coefficients and right-hand side are integer, the condition is equivalent to $\sum_{j\in C}a_j\ge b+1$.
 
-<a id="box-2-def-inequality"></a>
+<a id="box-3-def-inequality"></a>
 
-!!! definizione "Definition 5.2: Cover inequality"
+!!! definizione "Definition 5.3: Cover inequality"
 
     Given $C\in\mathcal{C}$, the associated <em>cover inequality</em> is
 
@@ -116,47 +110,47 @@ title: "Cover inequalities"
     \sum_{j\in C}x_j\le |C|-1. \tag{5.5}
     \end{equation*}
 
-<a id="box-3-prop-cover-validity"></a>
+<a id="box-4-prop-cover-validity"></a>
 
-!!! teorema "Proposition 5.3"
+!!! teorema "Proposition 5.4"
 
     For every cover $C\in\mathcal{C}$, the cover inequality $\eqref{eq:cover-cut}$ is valid for $X$.
 
 ??? dimostrazione "Proof"
 
-    Suppose that a point $\vet x\in X$ violates $\eqref{eq:cover-cut}$. The sum of $|C|$ binary variables is then greater than $|C|-1$, hence $x_j=1$ for every $j\in C$. Since all weights are positive,
+    Suppose that a point $\vet x\in X$ violates $\eqref{eq:cover-cut}$. The sum of $|C|$ binary variables is then greater than $|C|-1$, hence $x_j=1$ for every $j\in C$. Since all coefficients are positive,
 
     $$
-    \sum_{j\in\mathscr{I}}w_jx_j\ge\sum_{j\in C}w_j>c.
+    \sum_{j\in\mathscr{I}}a_jx_j\ge\sum_{j\in C}a_j>b.
     $$
 
-    This contradicts the capacity constraint: at most $|C|-1$ items of $C$ can be selected together. <span class="qed">□</span>
+    This contradicts the constraint $\eqref{eq:main}$: at most $|C|-1$ variables of $C$ can be equal to $1$ together. <span class="qed">□</span>
 
 ### 5.2.1 Minimal covers
 
-<a id="box-4-def-minimal"></a>
+<a id="box-5-def-minimal"></a>
 
-!!! definizione "Definition 5.4: Minimal cover"
+!!! definizione "Definition 5.5: Minimal cover"
 
     A cover $C$ is <em>minimal</em> if no proper subset of $C$ is a cover. Equivalently,
 
     \begin{equation*}
     \label{eq:minimal}
-    \sum_{j\in C}w_j>c,\qquad
-    \sum_{j\in C}w_j-w_i\le c\quad\forall i\in C. \tag{5.6}
+    \sum_{j\in C}a_j>b,\qquad
+    \sum_{j\in C}a_j-a_i\le b\quad\forall i\in C. \tag{5.6}
     \end{equation*}
 
-- Since weights are positive, it suffices to remove one item at a time: if each of these $|C|$ subsets fits into the knapsack, every smaller subset fits as well.
+- Since the coefficients are positive, it suffices to remove one variable at a time: if each of these $|C|$ subsets satisfies the constraint, every smaller subset satisfies it as well.
 
-<a id="box-5-prop-minimal-covers-suffice"></a>
+<a id="box-6-prop-minimal-covers-suffice"></a>
 
-!!! teorema "Proposition 5.5"
+!!! teorema "Proposition 5.6"
 
     The inequalities of the minimal covers, together with the upper bounds $x_j\le1$ for all $j\in\mathscr{I}$, imply every cover inequality.
 
 ??? dimostrazione "Proof"
 
-    Starting from a cover $C$, remove items as long as the remaining set is still a cover: this gives a minimal cover $D\subseteq C$. Adding the cover inequality of $D$ and the upper bounds of the items in $C\setminus D$ gives
+    Starting from a cover $C$, remove variables as long as the remaining set is still a cover: this gives a minimal cover $D\subseteq C$. Adding the cover inequality of $D$ and the upper bounds of the variables in $C\setminus D$ gives
 
     $$
     \sum_{j\in C}x_j
@@ -168,9 +162,9 @@ title: "Cover inequalities"
 
 ### 5.2.2 The cover closure
 
-<a id="box-6-def-closure"></a>
+<a id="box-7-def-closure"></a>
 
-!!! definizione "Definition 5.6: Cover closure"
+!!! definizione "Definition 5.7: Cover closure"
 
     The <em>cover closure</em> of $P$ is the polyhedron
 
@@ -189,17 +183,17 @@ title: "Cover inequalities"
 
     and in general the first inclusion is strict.
 
-- By [Proposition 5.5](#box-5-prop-minimal-covers-suffice), the inequalities of the minimal covers are sufficient to describe $P^{\mathrm{cov}}$.
+- By [Proposition 5.6](#box-6-prop-minimal-covers-suffice), the inequalities of the minimal covers are sufficient to describe $P^{\mathrm{cov}}$.
 
-- The number of covers can be exponential in $n$. For example, if $w_j=1$ for all $j\in\mathscr{I}$ and $c=1$, every subset with at least two items is a cover, i.e., there are $2^n-n-1$ covers. Also the minimal covers can be exponentially many: for $w_j=1$ for all $j\in\mathscr{I}$, $n=2m$ and $c=m$, they are the $\binom{2m}{m+1}$ subsets of $m+1$ items.
+- The number of covers can be exponential in $n$. For example, if $a_j=1$ for all $j\in\mathscr{I}$ and $b=1$, every subset with at least two indices is a cover, i.e., there are $2^n-n-1$ covers. Also the minimal covers can be exponentially many: for $a_j=1$ for all $j\in\mathscr{I}$, $n=2m$ and $b=m$, they are the $\binom{2m}{m+1}$ subsets of $m+1$ indices.
 
 - Therefore, cover inequalities are not added all at once: they are added only when they are violated, i.e., they are <em>separated</em> (Section [5.4](#sez-sec-separation)).
 
-<a id="box-7-ex-guide"></a>
+<a id="box-8-ex-guide"></a>
 
-!!! esempio "Example 5.1: A Knapsack Problem"
+!!! esempio "Example 5.1: A binary problem with one constraint of this form"
 
-    Consider $\mathscr{I}=\{1,2,3,4\}$, capacity $c=9$, and the following profits and weights.
+    Consider $\mathscr{I}=\{1,2,3,4\}$, right-hand side $b=9$, and the following objective coefficients $c_j$ and constraint coefficients $a_j$.
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -210,14 +204,14 @@ title: "Cover inequalities"
     <th>4</th>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(p_j\)</span></td>
+    <td><span class="arithmatex">\(c_j\)</span></td>
     <td>6</td>
     <td>5</td>
     <td>8</td>
     <td>9</td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(w_j\)</span></td>
+    <td><span class="arithmatex">\(a_j\)</span></td>
     <td>2</td>
     <td>3</td>
     <td>6</td>
@@ -225,7 +219,7 @@ title: "Cover inequalities"
     </tr>
     </table></div>
 
-    The associated $\LPKP$ model is:
+    The associated $\LP$ model is:
 
     $$
     \begin{array}{rrcrcrcrcl}
@@ -239,25 +233,25 @@ title: "Cover inequalities"
     \end{array}
     $$
 
-    The profit-to-weight ratios $p_j/w_j$ are $3,5/3,4/3,9/7$, in non-increasing order. Dantzig's rule inserts the items in this order, and inserts fractionally the first item that does not fit: it gives an optimal solution of $\LPKP$. An optimal solution $\tilde{\vet x}(\LPKP)$ is:
+    The ratios $c_j/a_j$ are $3,5/3,4/3,9/7$, in non-increasing order. Dantzig's rule sets to $1$ the variables in this order, as long as the constraint is satisfied, and gives to the first variable that would violate it the largest fractional value allowed: this gives an optimal solution of $\LP$. An optimal solution $\tilde{\vet x}(\LP)$ is:
 
     $$
     \tilde{x}_1=\tilde{x}_2=1,\qquad
     \tilde{x}_3=\frac23,\qquad \tilde{x}_4=0.
     $$
 
-    The optimal value $z(\LPKP)$ is $6+5+8(2/3)=49/3$.
+    The optimal value $z(\LP)$ is $6+5+8(2/3)=49/3$.
 
-<a id="box-8-ex-guide-closure"></a>
+<a id="box-9-ex-guide-closure"></a>
 
-!!! esempio "Example 5.2: The cover closure of the four-item instance"
+!!! esempio "Example 5.2: The cover closure of the four-variable instance"
 
-    The instance of [Example 5.1](#box-7-ex-guide) has the following seven covers.
+    The instance of [Example 5.1](#box-8-ex-guide) has the following seven covers.
 
     <div class="tabella" markdown="0"><table>
     <tr>
     <th><span class="arithmatex">\(C\)</span></th>
-    <th><span class="arithmatex">\(\sum_{j\in C}w_j\)</span></th>
+    <th><span class="arithmatex">\(\sum_{j\in C}a_j\)</span></th>
     <th><span class="arithmatex">\(|C|\)</span></th>
     <th>Cover inequality</th>
     <th>Minimal</th>
@@ -313,14 +307,14 @@ title: "Cover inequalities"
     </tr>
     </table></div>
 
-    Only the first three covers are minimal; their inequalities already describe the cover closure. Denote by $\LPcov$ the LP obtained by adding them to $\LPKP$. An optimal solution $\tilde{\vet x}(\LPcov)$ is:
+    Only the first three covers are minimal; their inequalities already describe the cover closure. Denote by $\LPcov$ the LP obtained by adding them to $\LP$. An optimal solution $\tilde{\vet x}(\LPcov)$ is:
 
     $$
     \tilde{x}_1=1,\qquad \tilde{x}_2=\frac35,\qquad
     \tilde{x}_3=\frac25,\qquad \tilde{x}_4=\frac25.
     $$
 
-    The optimal value is $z(\LPcov)=79/5<z(\LPKP)=49/3$.
+    The optimal value is $z(\LPcov)=79/5<z(\LP)=49/3$.
 
 ## 5.3 Geometric interpretation { #sez-sec-geometry }
 
@@ -328,31 +322,23 @@ title: "Cover inequalities"
 
 - Every step is illustrated both in two and in three dimensions, with the same colours in all figures: the red region is the continuous region under consideration; green identifies a cover inequality (an edge in 2D, a face in 3D); black points are the feasible binary points; the blue point is the fractional point discussed in the text.
 
-- First consider only the domain, $[0,1]^2$ or $[0,1]^3$: no capacity constraint is imposed in the next two examples.
+- First consider only the domain, $[0,1]^2$ or $[0,1]^3$: no constraint other than the bounds is imposed in the next two examples.
 
-<a id="box-9-ex-square"></a>
+<a id="box-10-ex-square"></a>
 
 !!! esempio "Example 5.3: A cover inequality in the unit square"
 
     In $[0,1]^2$, the inequality $x_1+x_2\le1$ removes only the binary point $(1,1)$ and preserves the binary points $(0,0)$, $(1,0)$ and $(0,1)$.
 
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 1](../img/05-cover/fig01.svg){ .fig .ovale loading=lazy  }
 
     Unit square: domain only.
-
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
 
     ![Figure 2](../img/05-cover/fig02.svg){ .fig .ovale loading=lazy  }
 
     Domain with $x_1+x_2\le1$.
 
-    </div>
-
-<a id="box-10-ex-cube"></a>
+<a id="box-11-ex-cube"></a>
 
 !!! esempio "Example 5.4: Cover inequalities in the unit cube"
 
@@ -362,39 +348,23 @@ title: "Cover inequalities"
 
     - The inequality $x_1+x_2+x_3\le2$ removes only the binary point $x_1=x_2=x_3=1$.
 
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 3](../img/05-cover/fig03.svg){ .fig .ovale loading=lazy  }
 
     Domain with $x_1+x_2\le1$.
-
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
 
     ![Figure 4](../img/05-cover/fig04.svg){ .fig .ovale loading=lazy  }
 
     Domain with $x_1+x_3\le1$.
 
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 5](../img/05-cover/fig05.svg){ .fig .ovale loading=lazy  }
 
     Domain with both inequalities.
-
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
 
     ![Figure 6](../img/05-cover/fig06.svg){ .fig .ovale loading=lazy  }
 
     Domain with $x_1+x_2+x_3\le2$.
 
-    </div>
-
-<a id="box-11-ex-2d"></a>
+<a id="box-12-ex-2d"></a>
 
 !!! esempio "Example 5.5: A cover in two dimensions"
 
@@ -404,33 +374,25 @@ title: "Cover inequalities"
     P_2=\{\vet x\in[0,1]^2:10x_1+5x_2\le12\}.
     $$
 
-    The cover $C=\{1,2\}$ gives $x_1+x_2\le1$. The point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$ satisfies the capacity constraint at equality, but violates the cover by $2/5$. The original polygon has vertices
+    The cover $C=\{1,2\}$ gives $x_1+x_2\le1$. The point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$ satisfies the constraint at equality, but violates the cover by $2/5$. The original polygon has vertices
 
     $$
     (0,0),\ (1,0),\ (1,2/5),\ (7/10,1),\ (0,1).
     $$
 
-    After adding the cut, the region is the triangle with vertices $(0,0),(1,0),(0,1)$. Thus all three feasible binary points are preserved, and the capacity constraint becomes redundant, since $10x_1+5x_2\le10<12$ on the triangle.
-
-    <div class="minipage" style="width:48%" markdown>
+    After adding the cut, the region is the triangle with vertices $(0,0),(1,0),(0,1)$. Thus all three feasible binary points are preserved, and the constraint becomes redundant, since $10x_1+5x_2\le10<12$ on the triangle.
 
     ![Figure 7](../img/05-cover/fig07.svg){ .fig .ovale loading=lazy  }
 
     Original $P_2$ and the boundary $x_1+x_2=1$.
 
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 8](../img/05-cover/fig08.svg){ .fig .ovale loading=lazy  }
 
     $P_2\cap\{x_1+x_2\le1\}$: the blue point is removed.
 
-    </div>
+<a id="box-13-ex-3d-a"></a>
 
-<a id="box-12-ex-3d-a"></a>
-
-!!! esempio "Example 5.6: Capacity and successive cover cuts"
+!!! esempio "Example 5.6: Successive cover cuts"
 
     For $\mathscr{I}=\{1,2,3\}$, let
 
@@ -448,47 +410,31 @@ title: "Cover inequalities"
     \end{array}
     $$
 
-    Only the last two are minimal. The blue point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$, $\tilde{x}_3=0$ lies in $P_A$. It satisfies the first inequality and is on the boundary of the second; the third is violated by $2/5$, exactly as in [Example 5.5](#box-11-ex-2d). Unlike the previous domain-only panels, every following panel includes the capacity constraint.
-
-    <div class="minipage" style="width:48%" markdown>
+    Only the last two are minimal. The blue point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$, $\tilde{x}_3=0$ lies in $P_A$. It satisfies the first inequality and is on the boundary of the second; the third is violated by $2/5$, exactly as in [Example 5.5](#box-12-ex-2d). Unlike the previous domain-only panels, every following panel includes the constraint $10x_1+5x_2+6x_3\le12$.
 
     ![Figure 9](../img/05-cover/fig09.svg){ .fig .ovale loading=lazy  }
 
     Original $P_A$.
 
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 10](../img/05-cover/fig10.svg){ .fig .ovale loading=lazy  }
 
     Add $x_1+x_2+x_3\le2$.
-
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
 
     ![Figure 11](../img/05-cover/fig11.svg){ .fig .ovale loading=lazy  }
 
     Also add $x_1+x_3\le1$.
 
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 12](../img/05-cover/fig12.svg){ .fig .ovale loading=lazy  }
 
     Also add $x_1+x_2\le1$: the cover closure.
 
-    </div>
-
-    - For the objective $\max\,40x_1+15x_2+12x_3$, the optimal solution over $P_A$ is $\tilde{\vet x}=(1,2/5,0)$, with value $46$. Over the cover closure, the optimal solution is $(1,0,0)$, with value $40$, which is also optimal for the KP.
+    - For the objective $\max\,40x_1+15x_2+12x_3$, the optimal solution over $P_A$ is $\tilde{\vet x}=(1,2/5,0)$, with value $46$. Over the cover closure, the optimal solution is $(1,0,0)$, with value $40$, which is also optimal for the binary problem.
 
     - In this instance the cover closure coincides with $\operatorname{conv}(X)$: its vertices, shown in the last panel, are all binary. This is a property of this instance, not of every cover closure.
 
-<a id="box-13-ex-3d-b"></a>
+<a id="box-14-ex-3d-b"></a>
 
-!!! esempio "Example 5.7: A different capacity constraint"
+!!! esempio "Example 5.7: A different constraint"
 
     For $\mathscr{I}=\{1,2,3\}$, consider now the instance
 
@@ -496,27 +442,19 @@ title: "Cover inequalities"
     P_B=\{\vet x\in[0,1]^3:5x_1+4x_2+6x_3\le12\}.
     $$
 
-    Every pair fits, whereas the three items together have weight $15$. Thus the only cover is $\{1,2,3\}$ and it is minimal. Its inequality is $x_1+x_2+x_3\le2$. The blue point $\tilde{x}_1=\tilde{x}_2=1$, $\tilde{x}_3=1/2$ has weight $12$ and violates this cut by $1/2$.
-
-    <div class="minipage" style="width:48%" markdown>
+    Every pair of variables satisfies the constraint, whereas the three coefficients sum to $15>12$. Thus the only cover is $\{1,2,3\}$ and it is minimal. Its inequality is $x_1+x_2+x_3\le2$. The blue point $\tilde{x}_1=\tilde{x}_2=1$, $\tilde{x}_3=1/2$ has left-hand side $12$ and violates this cut by $1/2$.
 
     ![Figure 13](../img/05-cover/fig13.svg){ .fig .ovale loading=lazy  }
 
     Original $P_B$.
 
-    </div>
-
-    <div class="minipage" style="width:48%" markdown>
-
     ![Figure 14](../img/05-cover/fig14.svg){ .fig .ovale loading=lazy  }
 
     $P_B\cap\{x_1+x_2+x_3\le2\}$.
 
-    </div>
+    - The plane of the constraint intersects the cube edges at $(1,1,1/2)$, $(1,1/4,1)$ and $(2/5,1,1)$.
 
-    - The capacity plane intersects the cube edges at $(1,1,1/2)$, $(1,1/4,1)$ and $(2/5,1,1)$.
-
-    - The cover removes these fractional vertices while preserving all seven feasible binary points. As in the 2D example, after the cut the capacity constraint is redundant: the sum of the two largest weights is $6+5=11<12$.
+    - The cover removes these fractional vertices while preserving all seven feasible binary points. As in the 2D example, after the cut the constraint is redundant: the sum of the two largest coefficients is $6+5=11<12$.
 
     - The polyhedron $P_B\cap\{x_1+x_2+x_3\le2\}$ has only binary vertices (last panel): here a single cover inequality gives $\operatorname{conv}(X)$.
 
@@ -555,13 +493,13 @@ title: "Cover inequalities"
     \sum_{j\in C}(1-\tilde{x}_j)&<1. \label{eq:cost-test} \tag{5.9}
     \end{align*}
 
-- Assigning to each item $j$ the cost $q_j=1-\tilde{x}_j\ge0$, the CSP amounts to finding a cover of <em>minimum cost</em>: a violated cover inequality exists if and only if this minimum cost is less than $1$.
+- Assigning to each index $j$ the cost $q_j=1-\tilde{x}_j\ge0$, the CSP amounts to finding a cover of <em>minimum cost</em>: a violated cover inequality exists if and only if this minimum cost is less than $1$.
 
 ### 5.4.1 An ILP formulation for the CSP
 
-- Introduce $n$ binary variables $z_j$: $z_j=1$ if item $j$ belongs to the cover and $z_j=0$ otherwise.
+- Introduce $n$ binary variables $z_j$: $z_j=1$ if $j$ belongs to the cover and $z_j=0$ otherwise.
 
-- The objective minimizes the total cover cost; the single weight constraint forces the selected set to be a cover.
+- The objective minimizes the total cover cost; the single constraint forces the selected set to be a cover.
 
 !!! chiave ""
 
@@ -571,15 +509,15 @@ title: "Cover inequalities"
     (\CSP)\qquad
     \min\quad\sum_{j\in\mathscr{I}}(1-\tilde{x}_j)z_j
     \label{eq:csp-obj} \tag{5.10a}\\
-    \text{subject to}\quad\sum_{j\in\mathscr{I}}w_jz_j&\ge c+1,
-    \label{eq:csp-weight} \tag{5.10b}\\
+    \text{subject to}\quad\sum_{j\in\mathscr{I}}a_jz_j&\ge b+1,
+    \label{eq:csp-constraint} \tag{5.10b}\\
     z_j&\in\{0,1\},&\forall j\in\mathscr{I}.
     \label{eq:csp-domain} \tag{5.10c}
     \end{align*}
 
-<a id="box-14-prop-csp-separation"></a>
+<a id="box-15-prop-csp-separation"></a>
 
-!!! teorema "Proposition 5.7"
+!!! teorema "Proposition 5.8"
 
     A cover inequality violated by $\tilde{\vet x}$ exists if and only if $z(\CSP)<1$.
 
@@ -603,17 +541,17 @@ title: "Cover inequalities"
 
 - If $z(\CSP)<1$, the maximum violation of a cover inequality at $\tilde{\vet x}$ is $1-z(\CSP)$.
 
-<a id="box-15-ex-guide-csp"></a>
+<a id="box-16-ex-guide-csp"></a>
 
 !!! esempio "Example 5.8: Separation of the cover inequalities"
 
-    We consider again [Example 5.1](#box-7-ex-guide). The cover inequalities are separated iteratively: at each iteration, the current LP is solved, the $\CSP$ is solved for its optimal solution $\tilde{\vet x}$, and the maximally violated cover inequality is added, until no cover inequality is violated.
+    We consider again [Example 5.1](#box-8-ex-guide). The cover inequalities are separated iteratively: at each iteration, the current LP is solved, the $\CSP$ is solved for its optimal solution $\tilde{\vet x}$, and the maximally violated cover inequality is added, until no cover inequality is violated.
 
-    <span style="color:#e03131"><strong>Iteration 1.</strong></span> An optimal solution of $\LPKP$ is
+    <span style="color:#e03131"><strong>Iteration 1.</strong></span> An optimal solution of $\LP$ is
 
     $$
     \tilde{x}_1=1,\qquad \tilde{x}_2=1,\qquad \tilde{x}_3=\frac23,\qquad
-    \tilde{x}_4=0,\qquad z(\LPKP)=\frac{49}{3}.
+    \tilde{x}_4=0,\qquad z(\LP)=\frac{49}{3}.
     $$
 
     The associated $\CSP$ is:
@@ -634,7 +572,7 @@ title: "Cover inequalities"
     \tilde{x}_1+\tilde{x}_2+\tilde{x}_3=1+1+\frac23=\frac83>2.
     $$
 
-    <span style="color:#e03131"><strong>Iteration 2.</strong></span> Adding this cover inequality to $\LPKP$, we obtain the following LP, denoted $\LP_1$:
+    <span style="color:#e03131"><strong>Iteration 2.</strong></span> Adding this cover inequality to $\LP$, we obtain the following LP, denoted $\LP_1$:
 
     $$
     \begin{array}{rrcrcrcrcl}
@@ -709,11 +647,11 @@ title: "Cover inequalities"
 
     An optimal solution of $\CSP$ is $\tilde{z}_1=0$, $\tilde{z}_2=1$, $\tilde{z}_3=0$, $\tilde{z}_4=1$, with value $z(\CSP)=1$ (the covers $\{1,2,3\}$ and $\{1,2,4\}$ have the same cost): <strong>no</strong> cover inequality is violated by $\tilde{\vet x}$, and the separation stops.
 
-    The final value $z(\LP_2)=\frac{79}{5}$ coincides with the value $z(\LPcov)$ of the cover closure ([Example 5.2](#box-8-ex-guide-closure)): the separation reaches the bound of the cover closure by adding only $2$ of the $7$ cover inequalities.
+    The final value $z(\LP_2)=\frac{79}{5}$ coincides with the value $z(\LPcov)$ of the cover closure ([Example 5.2](#box-9-ex-guide-closure)): the separation reaches the bound of the cover closure by adding only $2$ of the $7$ cover inequalities.
 
     The solution $\tilde{\vet x}$ is still <strong>fractional</strong>, although it satisfies all the cover inequalities: the cover closure does not coincide, in general, with the convex hull of the integer solutions.
 
-## 5.5 Transforming the CSP into a Knapsack Problem
+## 5.5 Transforming the CSP into a complementary problem
 
 - Consider a feasible assignment of the CSP variables $z_j$. Define the complementary binary variables $y_j$ by
 
@@ -721,17 +659,17 @@ title: "Cover inequalities"
     y_j=1-z_j\qquad\forall j\in\mathscr{I}.
     $$
 
-    Thus $y_j=1$ if item $j$ is outside the cover, whereas $y_j=0$ if item $j$ belongs to the cover.
+    Thus $y_j=1$ if $j$ is outside the cover, whereas $y_j=0$ if $j$ belongs to the cover.
 
-- The weight constraint becomes
+- The constraint becomes
 
     $$
-    \sum_{j\in\mathscr{I}}w_j(1-y_j)\ge c+1
+    \sum_{j\in\mathscr{I}}a_j(1-y_j)\ge b+1
     \quad\Longleftrightarrow\quad
-    \sum_{j\in\mathscr{I}}w_jy_j\le\sum_{j\in\mathscr{I}}w_j-(c+1).
+    \sum_{j\in\mathscr{I}}a_jy_j\le\sum_{j\in\mathscr{I}}a_j-(b+1).
     $$
 
-    By the assumption $\sum_{j\in\mathscr{I}}w_j>c$, this capacity is non-negative.
+    By the assumption $\sum_{j\in\mathscr{I}}a_j>b$, this right-hand side is non-negative.
 
 - The objective can be written as
 
@@ -741,7 +679,7 @@ title: "Cover inequalities"
     -\sum_{j\in\mathscr{I}}(1-\tilde{x}_j)y_j.
     $$
 
-    Since the first two terms are constant, minimizing it is equivalent to the following KP, called the <em>complementary KP</em>, whose profits $1-\tilde{x}_j$ are non-negative (possibly zero).
+    Since the first two terms are constant, minimizing it is equivalent to the following problem, called the <em>complementary problem</em>, with non-negative (possibly zero) objective coefficients $1-\tilde{x}_j$.
 
 !!! chiave ""
 
@@ -751,8 +689,8 @@ title: "Cover inequalities"
     (\CSPKP)\qquad
     \max\quad\sum_{j\in\mathscr{I}}(1-\tilde{x}_j)y_j
     \label{eq:complement-obj} \tag{5.11a}\\
-    \text{subject to}\quad\sum_{j\in\mathscr{I}}w_jy_j&\le\sum_{j\in\mathscr{I}}w_j-(c+1),
-    \label{eq:complement-weight} \tag{5.11b}\\
+    \text{subject to}\quad\sum_{j\in\mathscr{I}}a_jy_j&\le\sum_{j\in\mathscr{I}}a_j-(b+1),
+    \label{eq:complement-constraint} \tag{5.11b}\\
     y_j&\in\{0,1\},&\forall j\in\mathscr{I}.
     \label{eq:complement-domain} \tag{5.11c}
     \end{align*}
@@ -779,32 +717,32 @@ title: "Cover inequalities"
 
 ### 5.5.1 A greedy separation heuristic
 
-The following greedy procedure constructs feasible values $\bar{y}_j$ for the complementary KP.
+The following greedy procedure constructs feasible values $\bar{y}_j$ for the complementary problem.
 
-1. Set $\bar{y}_j=0$ for all $j\in\mathscr{I}$ and the residual capacity $r=\sum_{j\in\mathscr{I}}w_j-(c+1)$. Sort the items by non-increasing efficiency $q_j/w_j=(1-\tilde{x}_j)/w_j$, breaking ties by increasing index.
+1. Set $\bar{y}_j=0$ for all $j\in\mathscr{I}$ and the residual right-hand side $r=\sum_{j\in\mathscr{I}}a_j-(b+1)$. Sort the indices by non-increasing ratio $q_j/a_j=(1-\tilde{x}_j)/a_j$, breaking ties by increasing index.
 
-2. Scan the items in this order. If item $j$ has positive profit $q_j>0$ and $w_j\le r$, set $\bar{y}_j=1$ and $r:=r-w_j$; otherwise skip it.
+2. Scan the indices in this order. If $q_j>0$ and $a_j\le r$, set $\bar{y}_j=1$ and $r:=r-a_j$; otherwise skip it.
 
-3. Reconstruct the cover $C=\{j:\bar{y}_j=0\}$ and evaluate its cost. If desired, reduce it to a minimal cover by removing items as long as its weight exceeds $c$.
+3. Reconstruct the cover $C=\{j:\bar{y}_j=0\}$ and evaluate its cost. If desired, reduce it to a minimal cover by removing indices as long as $\sum_{j\in C}a_j$ exceeds $b$.
 
-- Items with zero profit ($\tilde{x}_j=1$) are never selected: they remain in the cover, which may then be non-minimal.
+- Indices with $q_j=0$ ($\tilde{x}_j=1$) are never selected: they remain in the cover, which may then be non-minimal.
 
-- Removing an item from a cover decreases its cost by $q_j\ge0$: reducing a violated cover to a minimal one cannot decrease its violation.
+- Removing an index from a cover decreases its cost by $q_j\ge0$: reducing a violated cover to a minimal one cannot decrease its violation.
 
-- The greedy algorithm is a <em>heuristic</em> for the complementary KP: if it does not find a violated cover inequality, we cannot conclude that none exists.
+- The greedy algorithm is a <em>heuristic</em> for the complementary problem: if it does not find a violated cover inequality, we cannot conclude that none exists.
 
-<a id="box-16-ex-guide-kp"></a>
+<a id="box-17-ex-guide-comp"></a>
 
-!!! esempio "Example 5.9: Complementary KP and greedy scan"
+!!! esempio "Example 5.9: Complementary problem and greedy scan"
 
-    For the point $\tilde{\vet x}=(1,1,\frac23,0)$ of Iteration 1 in [Example 5.8](#box-15-ex-guide-csp),
+    For the point $\tilde{\vet x}=(1,1,\frac23,0)$ of Iteration 1 in [Example 5.8](#box-16-ex-guide-csp),
 
     \begin{align*}
     4-\sum_{j\in\mathscr{I}}\tilde{x}_j&=4-1-1-\frac23=\frac43,\\
-    \sum_{j\in\mathscr{I}}w_j-(c+1)&=2+3+6+7-(9+1)=8.
+    \sum_{j\in\mathscr{I}}a_j-(b+1)&=2+3+6+7-(9+1)=8.
     \end{align*}
 
-    The complementary KP is
+    The complementary problem is
 
     $$
     \begin{array}{rrcrcrcrcl}
@@ -818,8 +756,8 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <tr>
     <th><span class="arithmatex">\(j\)</span></th>
     <th><span class="arithmatex">\(q_j\)</span></th>
-    <th><span class="arithmatex">\(w_j\)</span></th>
-    <th><span class="arithmatex">\(q_j/w_j\)</span></th>
+    <th><span class="arithmatex">\(a_j\)</span></th>
+    <th><span class="arithmatex">\(q_j/a_j\)</span></th>
     <th>Decision</th>
     <th>Residual</th>
     </tr>
@@ -828,7 +766,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td><span class="arithmatex">\(1\)</span></td>
     <td><span class="arithmatex">\(7\)</span></td>
     <td><span class="arithmatex">\(\frac{1}{7}\)</span></td>
-    <td>take</td>
+    <td><span class="arithmatex">\(\bar{y}_j=1\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
     </tr>
     <tr>
@@ -836,7 +774,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td><span class="arithmatex">\(\frac{1}{3}\)</span></td>
     <td><span class="arithmatex">\(6\)</span></td>
     <td><span class="arithmatex">\(\frac{1}{18}\)</span></td>
-    <td>skip</td>
+    <td><span class="arithmatex">\(\bar{y}_j=0\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
     </tr>
     <tr>
@@ -844,7 +782,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td><span class="arithmatex">\(0\)</span></td>
     <td><span class="arithmatex">\(2\)</span></td>
     <td><span class="arithmatex">\(0\)</span></td>
-    <td>zero profit</td>
+    <td><span class="arithmatex">\(q_j=0\)</span>, <span class="arithmatex">\(\bar{y}_j=0\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
     </tr>
     <tr>
@@ -852,12 +790,12 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td><span class="arithmatex">\(0\)</span></td>
     <td><span class="arithmatex">\(3\)</span></td>
     <td><span class="arithmatex">\(0\)</span></td>
-    <td>zero profit</td>
+    <td><span class="arithmatex">\(q_j=0\)</span>, <span class="arithmatex">\(\bar{y}_j=0\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
     </tr>
     </table></div>
 
-    The scan gives $\bar{y}_1=\bar{y}_2=\bar{y}_3=0$ and $\bar{y}_4=1$, with profit $1$. Items $3$ and $4$ cannot fit together; the only positive-profit alternatives have values $1/3$ and $1$. Thus this greedy solution is also optimal, and
+    The scan gives $\bar{y}_1=\bar{y}_2=\bar{y}_3=0$ and $\bar{y}_4=1$, of value $1$. Indices $3$ and $4$ cannot be taken together; the only alternatives with positive objective coefficient have values $1/3$ and $1$. Thus this greedy solution is also optimal, and
 
     $$
     z(\CSP)
@@ -865,26 +803,26 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     =\frac43-1=\frac13.
     $$
 
-    The cover is $\tilde{C}=\{j\in\mathscr{I}:\tilde{y}_j=0\}=\{1,2,3\}$, as found in Iteration 1 of [Example 5.8](#box-15-ex-guide-csp).
+    The cover is $\tilde{C}=\{j\in\mathscr{I}:\tilde{y}_j=0\}=\{1,2,3\}$, as found in Iteration 1 of [Example 5.8](#box-16-ex-guide-csp).
 
 ## 5.6 Extended cover inequalities
 
-- A cover inequality can be strengthened by also considering the items outside the cover that are at least as heavy as every item of the cover. Let
+- A cover inequality can be strengthened by also considering the variables outside the cover whose coefficients are at least as large as every coefficient of the cover. Let
 
     $$
-    \widehat{w}(C)=\max_{j\in C}w_j
+    \widehat{a}(C)=\max_{j\in C}a_j
     $$
 
-    be the maximum weight of the items in $C$.
+    be the maximum coefficient of the variables in $C$.
 
-<a id="box-17-def-extended"></a>
+<a id="box-18-def-extended"></a>
 
-!!! definizione "Definition 5.8: Extended cover inequality"
+!!! definizione "Definition 5.9: Extended cover inequality"
 
     For a cover $C$, let
 
     $$
-    E(C)=C\cup\{j\in\mathscr{I}\setminus C:w_j\ge\widehat{w}(C)\}.
+    E(C)=C\cup\{j\in\mathscr{I}\setminus C:a_j\ge\widehat{a}(C)\}.
     $$
 
     The associated <em>extended cover inequality</em> is
@@ -896,31 +834,31 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
 
     The right-hand side depends on $|C|$, not on $|E(C)|$.
 
-<a id="box-18-prop-extended-cover-validity"></a>
+<a id="box-19-prop-extended-cover-validity"></a>
 
-!!! teorema "Proposition 5.9"
+!!! teorema "Proposition 5.10"
 
     For every cover $C\in\mathcal{C}$, the extended cover inequality $\eqref{eq:extended}$ is valid for $X$.
 
 ??? dimostrazione "Proof"
 
-    Let $k=|C|$ and take any set $S\subseteq E(C)$ with $|S|=k$. The sets $S\setminus C$ and $C\setminus S$ have the same number of items, and each item of $S\setminus C$ weighs at least $\widehat{w}(C)$, i.e., at least as much as each item of $C\setminus S$. Replacing the items of $C\setminus S$ with those of $S\setminus C$ gives
+    Let $k=|C|$ and take any set $S\subseteq E(C)$ with $|S|=k$. The sets $S\setminus C$ and $C\setminus S$ have the same number of variables, and each coefficient $a_j$ with $j\in S\setminus C$ is at least $\widehat{a}(C)$, i.e., at least as large as each coefficient with $j\in C\setminus S$. Replacing the indices of $C\setminus S$ with those of $S\setminus C$ gives
 
     $$
-    \sum_{j\in S}w_j\ge\sum_{j\in C}w_j>c.
+    \sum_{j\in S}a_j\ge\sum_{j\in C}a_j>b.
     $$
 
-    Hence no point $\vet x\in X$ can select $k$ items of $E(C)$: at most $k-1$ of them can be selected together. <span class="qed">□</span>
+    Hence no point $\vet x\in X$ can have $k$ variables of $E(C)$ equal to $1$: at most $k-1$ of them can be equal to $1$ together. <span class="qed">□</span>
 
 - Since $C\subseteq E(C)$ and the right-hand side is the same, the extended cover inequality dominates the cover inequality of $C$.
 
-- It can be seen as a <em>lifting</em> of the coefficients of the items in $E(C)\setminus C$ from $0$ to $1$. It does not forbid a heavy item to be selected together with items of $C$: it limits to $|C|-1$ the number of selected items of the whole set $E(C)$. General lifting techniques are outside the scope of these notes.
+- It can be seen as a <em>lifting</em> of the coefficients of the variables in $E(C)\setminus C$ from $0$ to $1$. It does not forbid a variable with a large coefficient to be equal to $1$ together with variables of $C$: it limits to $|C|-1$ the number of variables of the whole set $E(C)$ equal to $1$.
 
-<a id="box-19-ex-guide-extended"></a>
+<a id="box-20-ex-guide-extended"></a>
 
-!!! esempio "Example 5.10: Strengthening the four-item cover"
+!!! esempio "Example 5.10: Strengthening the cover of the four-variable instance"
 
-    In [Example 5.1](#box-7-ex-guide), consider the cover $C=\{1,2,3\}$. Then $\widehat{w}(C)=6$, and item $4$ has weight $7\ge6$, so
+    In [Example 5.1](#box-8-ex-guide), consider the cover $C=\{1,2,3\}$. Then $\widehat{a}(C)=6$, and the coefficient of $x_4$ is $7\ge6$, so
 
     $$
     E(C)=\{1,2,3,4\},\qquad x_1+x_2+x_3+x_4\le2.
@@ -941,7 +879,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     \end{array}
     $$
 
-    An optimal solution of $\LP_{\mathrm{ext}}$ is $\tilde{\vet x}=(1,0,0,1)$, with value $z(\LP_{\mathrm{ext}})=6+9=15$. Since it is binary, $\tilde{\vet x}$ is also optimal for the KP. We have $z(\LP_{\mathrm{ext}})=15<z(\LPcov)=79/5$: in this instance, one extended cover inequality is stronger than all the cover inequalities together.
+    An optimal solution of $\LP_{\mathrm{ext}}$ is $\tilde{\vet x}=(1,0,0,1)$, with value $z(\LP_{\mathrm{ext}})=6+9=15$. Since it is binary, $\tilde{\vet x}$ is also optimal for the binary problem. We have $z(\LP_{\mathrm{ext}})=15<z(\LPcov)=79/5$: in this instance, one extended cover inequality is stronger than all the cover inequalities together.
 
 ## 5.7 Violation and distance from a cover inequality
 
@@ -1000,13 +938,13 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
 
     Indeed, substitution gives $\sum_{j\in C}x_j^{\perp}=|C|-1$.
 
-- The CSP maximizes the violation, not the distance: when the covers have different cardinalities, the two criteria can rank them differently. For example, at the point $\tilde{\vet x}=(1/10,1,1)$ of $P_A$ ([Example 5.6](#box-12-ex-3d-a)), the covers $\{1,2\}$, $\{1,3\}$ and $\{1,2,3\}$ all have violation $1/10$, but their distances are $1/(10\sqrt2)$, $1/(10\sqrt2)$ and $1/(10\sqrt3)$, respectively.
+- The CSP maximizes the violation, not the distance: when the covers have different cardinalities, the two criteria can rank them differently. For example, at the point $\tilde{\vet x}=(1/10,1,1)$ of $P_A$ ([Example 5.6](#box-13-ex-3d-a)), the covers $\{1,2\}$, $\{1,3\}$ and $\{1,2,3\}$ all have violation $1/10$, but their distances are $1/(10\sqrt2)$, $1/(10\sqrt2)$ and $1/(10\sqrt3)$, respectively.
 
-<a id="box-20-ex-distance"></a>
+<a id="box-21-ex-distance"></a>
 
 !!! esempio "Example 5.11: Orthogonal projection in two dimensions"
 
-    Take the vertex $\tilde{x}_1=7/10$, $\tilde{x}_2=1$ of $P_2$ in [Example 5.5](#box-11-ex-2d) and the cover $C=\{1,2\}$. Its cover inequality is $x_1+x_2\le1$ and $|C|=2$. Then
+    Take the vertex $\tilde{x}_1=7/10$, $\tilde{x}_2=1$ of $P_2$ in [Example 5.5](#box-12-ex-2d) and the cover $C=\{1,2\}$. Its cover inequality is $x_1+x_2\le1$ and $|C|=2$. Then
 
     $$
     v_C(\tilde{\vet x})=\frac7{10},\qquad
@@ -1019,11 +957,11 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
 
     ![Figure 15](../img/05-cover/fig15.svg){ .fig .ovale loading=lazy  }
 
-<a id="box-21-ex-distance3d"></a>
+<a id="box-22-ex-distance3d"></a>
 
 !!! esempio "Example 5.12: Orthogonal projection in three dimensions"
 
-    Take the point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$, $\tilde{x}_3=0$ of $P_A$ in [Example 5.6](#box-12-ex-3d-a) and the cover $C=\{1,2\}$. Its cover inequality is $x_1+x_2\le1$ and $|C|=2$. Then
+    Take the point $\tilde{x}_1=1$, $\tilde{x}_2=2/5$, $\tilde{x}_3=0$ of $P_A$ in [Example 5.6](#box-13-ex-3d-a) and the cover $C=\{1,2\}$. Its cover inequality is $x_1+x_2\le1$ and $|C|=2$. Then
 
     $$
     v_C(\tilde{\vet x})=\frac25,\qquad
@@ -1041,33 +979,33 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
 
 !!! attenzione "Warning"
 
-    - <strong>Using a set that is not a cover.</strong> The inequality $\sum_{j\in C}x_j\le|C|-1$ is valid only if the total weight of $C$ exceeds the capacity $c$; check the weights before writing it.
+    - <strong>Using a set that is not a cover.</strong> The inequality $\sum_{j\in C}x_j\le|C|-1$ is valid only if the total coefficient $\sum_{j\in C}a_j$ exceeds the right-hand side $b$; check the coefficients before writing it.
 
     - <strong>Using $|E(C)|-1$ for an extended cover.</strong> The right-hand side of the extended cover inequality is $|C|-1$, where $C$ is the cover, not $|E(C)|-1$.
 
-    - <strong>Removing all the zero-profit items from a cover.</strong> To obtain a minimal cover, remove items one at a time as long as the remaining set is still a cover: removing all of them may leave a set that is not a cover.
+    - <strong>Removing all the indices with $q_j=0$ from a cover.</strong> To obtain a minimal cover, remove indices one at a time as long as the remaining set is still a cover: removing all of them may leave a set that is not a cover.
 
     - <strong>Stopping the separation at a heuristic failure.</strong> If the greedy heuristic algorithm finds no violated cover inequality, we cannot conclude that none exists: only the optimal value of the separation problem proves it.
 
     - <strong>Confusing violation and distance.</strong> The cover separation problem maximizes the violation; covers with the same violation can have different distances from the point.
 
-    - <strong>Believing that the cover closure is the convex hull.</strong> A point can satisfy all the cover inequalities and still be fractional ([Example 5.8](#box-15-ex-guide-csp)).
+    - <strong>Believing that the cover closure is the convex hull.</strong> A point can satisfy all the cover inequalities and still be fractional ([Example 5.8](#box-16-ex-guide-csp)).
 
 ## 5.9 In summary
 
 !!! chiave "In summary"
 
-    - A cover is a set of items whose total weight exceeds the capacity; its cover inequality allows at most $|C|-1$ of its items, and it is valid for the knapsack set.
+    - A cover is a set of variables whose total coefficient exceeds the right-hand side; its cover inequality allows at most $|C|-1$ of its variables to be equal to $1$, and it is valid for $X$.
 
     - The minimal covers are enough: their inequalities imply all the others, but they can be exponentially many, so they are separated only when violated.
 
-    - Separating a cover inequality means finding a cover of minimum cost $\sum_{j\in C}(1-\tilde{x}_j)$: a violated inequality exists if and only if the minimum cost is less than $1$; this is a knapsack problem.
+    - Separating a cover inequality means finding a cover of minimum cost $\sum_{j\in C}(1-\tilde{x}_j)$: a violated inequality exists if and only if the minimum cost is less than $1$; this is a 0–1 problem with one $\le$ constraint, defined in the chapter.
 
     - An extended cover inequality dominates the cover inequality of the same cover.
 
     - The cover closure is closer to $\operatorname{conv}(X)$ than the LP relaxation, but in general it is not equal to it.
 
-    <strong>Dashboard of the four-item instance.</strong> The lower and upper bounds on the optimal value of the knapsack problem of [Example 5.1](#box-7-ex-guide). The profits are integer, so the upper bound is the rounded-down value of the LP relaxation.
+    <strong>Dashboard of the four-variable instance.</strong> The lower and upper bounds on the optimal value of the binary problem of [Example 5.1](#box-8-ex-guide). The objective coefficients are integer, so the upper bound is the rounded-down value of the LP relaxation.
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1080,7 +1018,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td>LP relaxation</td>
     <td><span class="arithmatex">\(11\)</span></td>
     <td><span class="arithmatex">\(16\)</span></td>
-    <td>greedy solution <span class="arithmatex">\((1,1,0,0)\)</span>, <span class="arithmatex">\(\lfloor z(\LPKP)\rfloor\)</span> with <span class="arithmatex">\(z(\LPKP)=\tfrac{49}{3}\)</span></td>
+    <td>greedy solution <span class="arithmatex">\((1,1,0,0)\)</span>, <span class="arithmatex">\(\lfloor z(\LP)\rfloor\)</span> with <span class="arithmatex">\(z(\LP)=\tfrac{49}{3}\)</span></td>
     </tr>
     <tr>
     <td>Cover closure</td>

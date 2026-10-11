@@ -12,11 +12,11 @@ title: "Ideal formulations"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «Integer linear programming» and «LP relaxation and dual bounds»: the feasible region of an ILP problem, the LP relaxation and its bound, and the car example.
+    - From this module, the chapters «Integer linear programming» and «Primal and dual bounds»: the feasible region of an ILP problem, the LP relaxation and its bound, and the car example.
 
-    - From the module <em>Linear Programming</em>, Chapter 15 «Geometry of linear programming»: vertices of a polyhedron, and the fact that an LP problem with an optimal solution has an optimal vertex.
+    - From the module <em>Linear Programming</em>, [Chapter 15 «The geometry of Linear Programming»](https://fabiofurini.github.io/linear-programming/advanced-methods/15-geometry/): vertices of a polyhedron, and the fact that an LP problem with an optimal solution has an optimal vertex.
 
-    - From the module <em>Convex optimization</em>, Chapter 1 «Convex sets»: convex combinations and convex hulls. A short recap is given in this chapter.
+    - From the module <em>Convex optimization</em>, [Chapter 1 «Convex sets»](https://fabiofurini.github.io/convex-optimization/preliminaries/01-convex-sets/): convex combinations and convex hulls. A short recap is given in this chapter.
 
 !!! chiave "Objectives"
 
@@ -34,19 +34,9 @@ title: "Ideal formulations"
 
 !!! nota "Where we were"
 
-    In the car example we have the lower bound $14$ and the upper bound $\lfloor z(\LP) \rfloor = 15$. The gap of $\frac{1}{14}$ is due to the polyhedron of the constraints, which contains fractional points that no integer point can justify. We ask: which polyhedron would give no gap at all?
+    In the car example we have the lower bound $14$ and the upper bound $\lfloor z(\LP) \rfloor = 15$. The gap of $\frac{1}{14}$ is due to the polyhedron of the constraints, which contains fractional points outside the convex hull of the integer points. This chapter defines the polyhedron that gives no gap.
 
-## 3.1 Why ideal formulations?
-
-- The same set of integer points can be described by many different systems of linear inequalities, and each of them gives a different LP relaxation with a different bound.
-
-- The best polyhedron is the smallest one that contains all the integer points. If we could use it, the LP relaxation would return an integer solution, and the ILP problem would be as easy as an LP problem.
-
-- This polyhedron is the <strong>convex hull</strong> of the feasible solutions, and a system of inequalities that describes it is an <strong>ideal formulation</strong>.
-
-## 3.2 The convex hull
-
-- Imagine a rubber band stretched around a set of points and then released: it settles around the smallest convex region containing the points. This is the convex hull.
+## 3.1 The convex hull
 
 <a id="box-1-def-hull"></a>
 
@@ -58,7 +48,11 @@ title: "Ideal formulations"
 
 - For an ILP problem we take $S = F$, the set of the feasible solutions. The vertices of $\mathrm{conv}(F)$ are integer feasible solutions.
 
-- In the car example, the convex hull of the $16$ integer points has $6$ vertices:
+<a id="box-2-ex-hull-car"></a>
+
+!!! esempio "Example 3.1: convex hull of the car example"
+
+    The convex hull of the $16$ integer points of the car example has $6$ vertices:
 
     $$
     (0,0), \quad (4,0), \quad (4,1), \quad (3,2), \quad (1,3), \quad (0,3).
@@ -66,13 +60,13 @@ title: "Ideal formulations"
 
     Of the other $10$ points, five lie on its boundary, namely $(0,1)$, $(0,2)$, $(1,0)$, $(2,0)$ and $(3,0)$, and five in its interior, namely $(1,1)$, $(2,1)$, $(3,1)$, $(1,2)$ and $(2,2)$.
 
-![Figure 1](../img/03-ideal-formulations/fig01.svg){ .fig .ovale loading=lazy  }
+    ![Figure 1](../img/03-ideal-formulations/fig01.svg){ .fig .ovale loading=lazy  }
 
-<em>The convex hull of the $16$ integer points of the car example (green). Its $6$ vertices (black squares) are integer points; five other points lie on its boundary and five in its interior.</em>
+    <em>The convex hull of the $16$ integer points of the car example (green). Its $6$ vertices (black squares) are integer points; five other points lie on its boundary and five in its interior.</em>
 
-## 3.3 Formulations and ideal formulations
+## 3.2 Formulations and ideal formulations
 
-<a id="box-2-def-formulation"></a>
+<a id="box-3-def-formulation"></a>
 
 !!! definizione "Definition 3.2: of formulation"
 
@@ -84,13 +78,13 @@ title: "Ideal formulations"
     \mathrm{conv}(F) ~\subseteq~ P.
     $$
 
-<a id="box-3-def-ideal"></a>
+<a id="box-4-def-ideal"></a>
 
 !!! definizione "Definition 3.3: of ideal formulation"
 
     A formulation $P$ of an ILP problem is <strong>ideal</strong> if $P = \mathrm{conv}(F)$, that is, if the feasible region of its LP relaxation is exactly the convex hull of the integer feasible solutions.
 
-<a id="box-4-theo-ideal"></a>
+<a id="box-5-theo-ideal"></a>
 
 !!! teorema "Theorem 3.4: LP over an ideal formulation"
 
@@ -102,17 +96,25 @@ title: "Ideal formulations"
 
 - The simplex algorithm returns an optimal vertex, so with an ideal formulation it returns an integer solution. If the LP problem has several optimal solutions, a method that does not return vertices can give a fractional point on the optimal face: this is why the theorem speaks of an optimal vertex.
 
-### 3.3.1 The car example
-
-- The formulation of the car example is <strong>not ideal</strong>. The point $(\frac{7}{2},\frac{5}{2})$ belongs to $P$ but not to $\mathrm{conv}(F)$, because it violates $x_1 + x_2 \le 5$, which all the vertices of the hull satisfy: $\mathrm{conv}(F) \subsetneq P$.
-
-![Figure 2](../img/03-ideal-formulations/fig02.svg){ .fig .ovale loading=lazy  }
-
-<em>The car example: the polyhedron of the LP relaxation (red) contains the convex hull of the integer points (green), and the optimal solution of the LP relaxation (blue) is outside the hull.</em>
-
-- The convex hull is described by the following four inequalities and the non-negativity constraints:
-
 !!! chiave ""
+
+    With an ideal formulation, an ILP problem is solved as an LP problem: an optimal vertex of the LP relaxation is an optimal ILP solution.
+
+<a id="box-6-ex-car-not-ideal"></a>
+
+!!! esempio "Example 3.2: the formulation of the car example is not ideal"
+
+    The point $(\frac{7}{2},\frac{5}{2})$ belongs to the polyhedron $P$ of the car example but not to $\mathrm{conv}(F)$, because it violates $x_1 + x_2 \le 5$, which all the vertices of the hull of <span style="color:#1971c2">[Example 3.1](#box-2-ex-hull-car)</span> satisfy: $\mathrm{conv}(F) \subsetneq P$.
+
+    ![Figure 2](../img/03-ideal-formulations/fig02.svg){ .fig .ovale loading=lazy  }
+
+    <em>The car example: the polyhedron of the LP relaxation (red) contains the convex hull of the integer points (green), and the optimal solution of the LP relaxation (blue) is outside the hull.</em>
+
+<a id="box-7-ex-car-ideal"></a>
+
+!!! esempio "Example 3.3: an ideal formulation of the car example"
+
+    The convex hull of the car example is described by the following four inequalities and the non-negativity constraints:
 
     $$
     \begin{array}{rrrrrrr}
@@ -125,15 +127,19 @@ title: "Ideal formulations"
     \end{array}
     $$
 
-- These inequalities define exactly the $6$ vertices of the hull, and the same $16$ integer points. The LP relaxation of this <strong>ideal formulation</strong> has the optimal solution $(4,1)$, which is integer, with $z(\LP) = 14 = z(\ILP)$.
+    These inequalities define exactly the $6$ vertices of the hull, and the same $16$ integer points. The LP relaxation of this <strong>ideal formulation</strong> has the optimal solution $(4,1)$, which is integer, with $z(\LP) = 14 = z(\ILP)$.
 
-![Figure 3](../img/03-ideal-formulations/fig03.svg){ .fig .ovale loading=lazy  }
+    ![Figure 3](../img/03-ideal-formulations/fig03.svg){ .fig .ovale loading=lazy  }
 
-<em>The ideal formulation of the car example: its feasible region (green) is the convex hull of the integer points. The optimal solution of the LP problem is the integer point $(4,1)$ (blue).</em>
+    <em>The ideal formulation of the car example: its feasible region (green) is the convex hull of the integer points. The optimal solution of the LP problem is the integer point $(4,1)$ (blue).</em>
 
-## 3.4 Comparing formulations
+## 3.3 Comparing formulations
 
-- Two formulations $P_1$ and $P_2$ of the same ILP problem are compared through the polyhedra. If $P_1 \subseteq P_2$, we say that $P_1$ is <strong>stronger</strong> than $P_2$.
+<a id="box-8-def-stronger"></a>
+
+!!! definizione "Definition 3.5: stronger formulation"
+
+    Given two formulations $P_1$ and $P_2$ of the same ILP problem, $P_1$ is <strong>stronger</strong> than $P_2$ if $P_1 \subseteq P_2$.
 
 - A stronger formulation never gives a worse upper bound: the maximum over a smaller set is not larger, so
 
@@ -141,21 +147,21 @@ title: "Ideal formulations"
     P_1 \subseteq P_2 \quad \Longrightarrow \quad z(\ILP) ~\le~ z(\LP_1) ~\le~ z(\LP_2).
     $$
 
-- The ideal formulation is the strongest of all, because it is contained in every formulation. In the car example the original formulation gives the bound $\lfloor \frac{31}{2} \rfloor = 15$, and the ideal one gives the bound $14$.
+- The ideal formulation is the strongest of all, because it is contained in every formulation. In the car example the original formulation gives the bound $\lfloor \frac{31}{2} \rfloor = 15$, and the ideal one of <span style="color:#1971c2">[Example 3.3](#box-7-ex-car-ideal)</span> gives the bound $14$.
 
 !!! chiave ""
 
     Among the formulations of the same ILP problem, we prefer the ones with the smallest polyhedron: their LP relaxations give the best upper bounds, and the ideal formulation gives the optimal value.
 
-## 3.5 Good news and bad news
+## 3.4 Existence of ideal formulations
 
-- <strong>Good news.</strong> An ideal formulation exists for every ILP problem whose feasible region is bounded or, more in general, whose data are rational (Meyer's theorem; in this module the data are integer). The convex hull of the integer points is a polyhedron, so it is described by a finite number of linear inequalities.
+- An ideal formulation exists for every ILP problem whose feasible region is bounded or, more in general, whose data are rational (Meyer's theorem; in this module the data are integer). The convex hull of the integer points is a polyhedron, so it is described by a finite number of linear inequalities.
 
-- <strong>Bad news.</strong> Finding the ideal formulation is in general very difficult. It can require an exponential number of inequalities, and finding the necessary ones is often as hard as solving the ILP problem itself.
+- Finding the ideal formulation is in general very difficult. It can require an exponential number of inequalities, and finding the necessary ones is often as hard as solving the ILP problem itself.
 
-- The practical way out is to move step by step. We keep the formulation we have and add inequalities that are satisfied by all the integer points, and that cut off fractional points: they are the <strong>valid inequalities</strong> of the next chapter.
+- In practice we keep the formulation we have and add, step by step, inequalities that are satisfied by all the integer points and cut off fractional points: the <strong>valid inequalities</strong> of the next chapter.
 
-## 3.6 Typical mistakes
+## 3.5 Typical mistakes
 
 !!! attenzione "Warning"
 
@@ -167,7 +173,7 @@ title: "Ideal formulations"
 
     - <strong>Adding inequalities that remove integer points.</strong> A formulation must keep all the points of $F$: the polyhedron can shrink only down to the convex hull, never below it.
 
-## 3.7 In summary
+## 3.6 In summary
 
 !!! chiave "In summary"
 
@@ -191,16 +197,10 @@ title: "Ideal formulations"
     <th>From</th>
     </tr>
     <tr>
-    <td>Integer linear programming</td>
-    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
-    <td>–</td>
-    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
-    </tr>
-    <tr>
-    <td>LP relaxation and dual bounds</td>
+    <td>Primal and dual bounds</td>
     <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
+    <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     <tr>
     <td>Ideal formulations</td>

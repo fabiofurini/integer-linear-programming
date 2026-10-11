@@ -760,6 +760,14 @@
     return `${t} \\ge ${tq(it.f0)}`;
   };
   const xTexOrig = (it) => `${lin(it.a)} \\le ${it.b}`;
+  const xTexPrima = (it) => `${lin(it.a0)} \\le ${it.b0}`;
+  const scartoTex = (it) => `x_{${4 + it.k}} = ${it.b} - ${it.a[0] && it.a[1] ? `(${lin(it.a)})` : lin(it.a)}`;
+  // il taglio in x1, x2 reso primitivo (diviso per g = MCD, termine noto per difetto), poi il suo scarto
+  const primitivoTex = (it) => (it.g > 1
+    ? T(`cioè in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\); diviso per \\(${it.g}\\) (MCD dei coefficienti) e arrotondato per difetto diventa il taglio primitivo \\(${xTexOrig(it)}\\)`,
+        `that is, in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\); divided by \\(${it.g}\\) (gcd of the coefficients) and rounded down it becomes the primitive cut \\(${xTexOrig(it)}\\)`)
+    : T(`cioè in \\(x_1, x_2\\) il taglio primitivo \\(${xTexOrig(it)}\\) (coefficienti senza divisori comuni)`,
+        `that is, in \\(x_1, x_2\\) the primitive cut \\(${xTexOrig(it)}\\) (coefficients with no common divisor)`));
   // gli stati dell'esecuzione: k = 0 è il rilassamento, k = i dopo il taglio i
   const xStato = (k) => (k === 0 ? { x: ["7/2", "5/2"], z: "31/2" } : { x: G.iterazioni[k - 1].xdopo, z: G.iterazioni[k - 1].zdopo });
 
@@ -829,15 +837,15 @@
       const xc = xStato(k), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
       righe.push(`<strong>${T("Iterazione", "Iteration")} ${k}/${G.iterazioni.length}</strong>`);
       if (k === 0) {
-        righe.push(T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio aggiunge una variabile \\(x_5, x_6, \\dots\\) (il suo surplus).`,
-          `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut adds a variable \\(x_5, x_6, \\dots\\) (its surplus).`));
+        righe.push(T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio, scritto in \\(x_1, x_2\\), si rende primitivo e poi riceve il suo scarto \\(x_5, x_6, \\dots\\).`,
+          `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut, written in \\(x_1, x_2\\), is made primitive and then gets its slack \\(x_5, x_6, \\dots\\).`));
       } else {
         const it = G.iterazioni[k - 1], riga = it.riga === "z"
           ? T("la riga della funzione obiettivo", "the objective row")
           : T(`la riga di \\(x_${it.riga}\\)`, `the row of \\(x_${it.riga}\\)`);
         righe.push(T(`Prima del taglio: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`, `Before the cut: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`));
-        righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), cioè in \\(x_1, x_2\\): \\(${xTexOrig(it)}\\).`,
-          `${tinta(C.viola, "Cut")} from ${riga} (fractional right-hand side \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), that is, in \\(x_1, x_2\\): \\(${xTexOrig(it)}\\).`));
+        righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${primitivoTex(it)}. Scarto: \\(${scartoTex(it)} \\ge 0\\).`,
+          `${tinta(C.viola, "Cut")} from ${riga} (fractional right-hand side \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${primitivoTex(it)}. Slack: \\(${scartoTex(it)} \\ge 0\\).`));
         righe.push(T(`Dopo il taglio (simplesso duale): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` +
           (intero ? `: ${tinta(C.verde, "intero")}, quindi ottimo.` : "."),
           `After the cut (dual simplex): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` + (intero ? `: ${tinta(C.verde, "integer")}, hence optimal.` : ".")));
@@ -847,7 +855,7 @@
         "Rule: the row with the largest fractional right-hand side; ties go to the basic variable of lowest index (the row of \\(z\\) last).")}</small>`);
       return righe.join("<br>");
     },
-    domanda: T("Il valore \\(z\\) scende a ogni taglio ma i tagli sono molti: quale taglio fa scendere \\(z\\) più di tutti? Controlla che nessun punto verde sia mai tolto. Dove sta l'ottimo continuo rispetto all'involucro?",
-      "The value \\(z\\) falls with every cut but there are many cuts: which cut lowers \\(z\\) the most? Check that no green point is ever removed. Where is the LP optimum with respect to the hull?"),
+    domanda: T("Il valore \\(z\\) scende a ogni taglio: quale taglio fa scendere \\(z\\) più di tutti? Controlla che nessun punto verde sia mai tolto. Dove sta l'ottimo continuo rispetto all'involucro?",
+      "The value \\(z\\) falls with every cut: which cut lowers \\(z\\) the most? Check that no green point is ever removed. Where is the LP optimum with respect to the hull?"),
   };
 })();

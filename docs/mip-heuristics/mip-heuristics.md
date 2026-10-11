@@ -14,13 +14,11 @@ title: "MIP heuristics"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «LP relaxation and dual bounds» and «LP-based branch-and-bound algorithms»: the LP relaxation, the primal and dual bounds, the optimality gap, and the branching operations.
+    - From this module, the chapters «Primal and dual bounds» and «LP-based branch-and-bound algorithms»: the LP relaxation, the lower and upper bounds, the optimality gap, and the branching operations.
 
-    - From this module, the chapter «What a MIP solver does»: the incumbent solution, the sub-problems solved by a solver, and the heuristics inside it.
+    - From this module, the chapter «MIP solvers: what they do»: the incumbent solution, the sub-problems solved by a solver, and the heuristics inside it.
 
-    - From the module <em>Algorithms</em>: constructive heuristics ($GR$, $FF$, $NN$, $LPT$), local search and metaheuristics, whose solutions are the starting points of this chapter.
-
-    - From the module <em>Linear Programming</em>: the dual simplex algorithm, which re-optimizes an LP after a change of a bound.
+    - From the module <em>Linear Programming</em>: the [dual simplex algorithm (Chapter 10)](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/), which re-optimizes an LP after a change of a bound.
 
 !!! chiave "Objectives"
 
@@ -28,9 +26,9 @@ title: "MIP heuristics"
 
     - explain how a heuristic algorithm uses the LP relaxation and a MIP solver;
 
-    - execute by hand rounding, diving, the feasibility pump, RINS, local branching and proximity search on small instances;
+    - execute by hand rounding, diving, the feasibility pump, RINS, local branching and proximity search on a small MIP;
 
-    - execute relax-and-fix and fix-and-optimize on a lot sizing instance;
+    - execute relax-and-fix and fix-and-optimize on a MIP whose variables are split into blocks;
 
     - decide which method to use when a feasible solution is missing, or when an incumbent solution must be improved;
 
@@ -38,17 +36,58 @@ title: "MIP heuristics"
 
 ## 10.1 MIP-based heuristics { #sez-sec-intro }
 
-- The heuristic algorithms of the previous notes — constructive heuristics, local search and metaheuristics — work directly on a representation of the solutions (a binary vector, a vector $bin$, a tour, a vector $mach$). They never look at a mathematical model of the problem, and they never use a solver.
+<a id="box-1-def-mip"></a>
 
-- In this last set of notes on heuristic algorithms the problem is given as a <strong>mixed-integer linear program</strong> (MIP), and the heuristic uses two tools that come with the model:
+!!! definizione "Definition 10.1: MIP in general form"
 
-    - the <strong>LP relaxation</strong>, whose optimal solution tells <em>where to look</em>: it is the solution of a simpler problem, often close to the good solutions of the original one;
+    A <strong>MIP</strong> with $N$ variables $\vet x=(x_1,x_2,\dots,x_N)$ reads
 
-    - the <strong>MIP solver</strong>, which can explore <em>exactly</em> a set of solutions far too large to be enumerated, provided that the set is described by linear constraints.
+    <a id="eq-eq-mip"></a>
 
-    Heuristics that combine a mathematical programming model with heuristic ideas are also called <strong>matheuristics</strong>.
+    \begin{align*}
+    && \min ~~ f(\vet x) \label{eq:mip-obj} \tag{10.1a}\\[1ex]
+    && \text{subject to} \quad A\,\vet x &\le b, & \label{eq:mip-cons} \tag{10.1b}\\[1ex]
+    && l_j \le x_j &\le u_j, & \forall j \in \{1,2,\dots,N\}, \label{eq:mip-bounds} \tag{10.1c}\\[1ex]
+    && x_j &\in \Z, & \forall j \in \mathscr{D}, \label{eq:mip-int} \tag{10.1d}
+    \end{align*}
 
-- The methods of these notes are built on five ideas, one or two per section.
+    where $f$ is a linear function and $\mathscr{D}\subseteq\{1,2,\dots,N\}$ is the set of the indices of the <strong>integer variables</strong>. The feasible region of the <strong>LP relaxation</strong> is
+
+    $$
+    \mathcal{L} = \big\{\vet x\in\R^N : A\,\vet x\le b,~ l\le \vet x\le u\big\},
+    $$
+
+    and $z(\LP)=\min\{f(\vet x): \vet x\in\mathcal{L}\}$ is the value of the LP relaxation.
+
+- A maximization problem, such as the car example, is handled in the same way, exchanging $\min$ and $\max$, $\le$ and $\ge$ in the comparisons of objective values.
+
+<a id="box-2-def-mipheur"></a>
+
+!!! definizione "Definition 10.2: MIP-based heuristic"
+
+    A <strong>heuristic algorithm</strong> returns a feasible solution of a MIP problem [(10.1)](#eq-eq-mip) without any guarantee of optimality. It is <strong>MIP-based</strong> (a <strong>matheuristic</strong>) if it uses the LP relaxation and a MIP solver to search for the solution.
+
+- A heuristic gives a primal bound (an upper bound for a minimization problem, a lower bound for a maximization problem), never a dual bound. The branch-and-bound algorithm of this module finds the incumbent solution only by chance, as a leaf of the tree.
+
+- The optimal solution of the <strong>LP relaxation</strong> tells <em>where to look</em>: it is the solution of a simpler problem, often close to the good solutions of the original one.
+
+- The <strong>MIP solver</strong> explores <em>exactly</em> a set of solutions far too large to be enumerated, provided that the set is described by linear constraints.
+
+<a id="box-3-def-incumbent"></a>
+
+!!! definizione "Definition 10.3: incumbent, rounding and completion"
+
+    - A feasible solution $\bar{\vet x}$ of the MIP [(10.1)](#eq-eq-mip), the best one known, is the <strong>incumbent</strong>, and $f(\bar{\vet x})$ is its value.
+
+    - The <strong>rounding</strong> of a real number $v$ to the nearest integer is $\rnd{v} = \big\lfloor v + \frac12 \big\rfloor$, so that a value $\frac12$ is rounded up.
+
+    - A point $\bar{\vet x}$ with $\bar x_j \in \Z$ for all $j \in \mathscr{D}$ is <strong>completed</strong> by fixing the integer variables to the values $\bar x_j$ and solving the LP on the continuous variables.
+
+- Throughout the chapter, $\tilde{\vet x}$ denotes an optimal solution of an LP relaxation, and $\bar{\vet x}$ a point whose components $\bar x_j$, $j\in\mathscr{D}$, are integer.
+
+- If the LP of the completion has an optimal solution, $\bar{\vet x}$ is turned into a feasible solution of the MIP; if it is infeasible, so is $\bar{\vet x}$. When all the variables are integer, the completion simply checks the constraints.
+
+- The methods are built on five ideas, one or two per section.
 
 <div class="tabella" markdown="0"><table>
 <tr>
@@ -72,152 +111,57 @@ title: "MIP heuristics"
 <td>local branching; proximity search</td>
 </tr>
 <tr>
-<td>decompose along the time</td>
+<td>decompose into blocks of variables</td>
 <td>relax-and-fix; fix-and-optimize</td>
 </tr>
 </table></div>
 
-- All the methods are written for a MIP in the following general form.
+- The examples are solved with the MIP solver Gurobi, used from Python through <code>gurobipy</code>; the module <em>MIP Modelling</em> ([<u>fabiofurini.github.io/mip-modelling</u>](https://fabiofurini.github.io/mip-modelling/), [chapter 3 «From the model to Python/Gurobi»](https://fabiofurini.github.io/mip-modelling/modelling-3/)) explains how to use it. When an LP has several optimal solutions, the text reports the one returned by the solver; all the codes are in the last section.
 
-!!! chiave ""
+## 10.2 The examples of the chapter { #sez-sec-models }
 
-    A <strong>MIP</strong> with $N$ variables $\vet x=(x_1,x_2,\dots,x_N)$ reads
+- The methods are illustrated on the <strong>car example</strong> of this module and on four small problems of the <strong>catalogue of MIP problems</strong>. All of them are ILP problems in canonical maximization form, with integer data and $x_j\in\Z_{\ge 0}$ for every $j$, so that $\mathscr{D}=\{1,2,\dots,N\}$.
 
-    <a id="eq-eq-mip"></a>
-
-    \begin{align*}
-    && \min ~~ f(\vet x) \label{eq:mip-obj} \tag{10.1a}\\[1ex]
-    && \text{subject to} \quad A\,\vet x &\le b, & \label{eq:mip-cons} \tag{10.1b}\\[1ex]
-    && l_j \le x_j &\le u_j, & \forall j \in \{1,2,\dots,N\}, \label{eq:mip-bounds} \tag{10.1c}\\[1ex]
-    && x_j &\in \Z, & \forall j \in \mathscr{D}, \label{eq:mip-int} \tag{10.1d}
-    \end{align*}
-
-    where $f$ is a linear function and $\mathscr{D}\subseteq\{1,2,\dots,N\}$ is the set of the indices of the <strong>integer variables</strong>. The feasible region of the <strong>LP relaxation</strong> is
+- The <strong>car example</strong> reads
 
     $$
-    \mathcal{L} = \big\{\vet x\in\R^N : A\,\vet x\le b,~ l\le \vet x\le u\big\},
+    \max~ 3\,x_1+2\,x_2 \quad\text{s.t.}\quad 10\,x_1+4\,x_2\le 45,\quad 4\,x_1+14\,x_2\le 49,\quad x_1,x_2\in\Z_{\ge 0}
     $$
-
-    and $z(\LP)=\min\{f(\vet x): \vet x\in\mathcal{L}\}$ is the value of the LP relaxation on the instance $I$.
-
-- A maximization problem, such as the KP, is handled in the same way, exchanging $\min$ and $\max$, $\le$ and $\ge$ in the comparisons of objective values.
-
-- Throughout the notes, $\tilde{\vet x}$ denotes an optimal solution of an LP relaxation, and $\bar{\vet x}$ a point whose integer components $\bar x_j$, $j\in\mathscr{D}$, are integer. When $\bar{\vet x}$ is a feasible solution, the best one known, it is called the <strong>incumbent</strong>, and $f(\bar{\vet x})$ is its value. The <strong>rounding</strong> of a real number $v$ to the nearest integer is
-
-    $$
-    \rnd{v} = \Big\lfloor v + \frac12 \Big\rfloor ,
-    $$
-
-    so that a value $\frac12$ is rounded up.
-
-- A point $\bar{\vet x}$ with integer components on $\mathscr{D}$ is <strong>completed</strong> by fixing the integer variables to their values $\bar x_j$ and solving the LP on the continuous variables: either the LP has an optimal solution, and $\bar{\vet x}$ is turned into a feasible solution of the MIP, or the LP is infeasible, and so is $\bar{\vet x}$. When all the variables are integer, the completion simply checks the constraints.
-
-- The examples of the notes are solved with the MIP solver Gurobi, used from Python through <code>gurobipy</code>, as in the chapter on Gurobi of the MIP modelling course. When an LP has several optimal solutions, the text reports the one returned by the solver; all the codes are in the last section.
-
-## 10.2 The problems and their MIP models { #sez-sec-models }
-
-- The heuristics are illustrated on the four problems of the previous notes, whose definitions and assumptions are given in the notes on combinatorial optimization problems, and on their reference instances, recalled in the following table with the values computed in the previous notes on heuristic algorithms.
 
 <div class="tabella" markdown="0"><table>
 <tr>
 <th>problem</th>
-<th>reference instance</th>
-<th>values</th>
+<th>objective <span class="arithmatex">\(\max\)</span></th>
+<th>constraints</th>
 </tr>
 <tr>
-<td>KP</td>
-<td><span class="arithmatex">\(p=(10,7,6,4)\)</span>, <span class="arithmatex">\(w=(5,4,3,3)\)</span>, <span class="arithmatex">\(c=9\)</span></td>
-<td><span class="arithmatex">\(GR\)</span>: <span class="arithmatex">\(\{1,3\}\)</span>, profit <span class="arithmatex">\(16\)</span>; <span class="arithmatex">\(z(I)=17\)</span>, <span class="arithmatex">\(\{1,2\}\)</span></td>
+<td><span class="arithmatex">\(P7\)</span></td>
+<td><span class="arithmatex">\(3x_1+x_2\)</span></td>
+<td><span class="arithmatex">\(x_1+4x_2\le 12\)</span>,  <span class="arithmatex">\(2x_1+x_2\le 5\)</span></td>
 </tr>
 <tr>
-<td>BPP</td>
-<td><span class="arithmatex">\(w=(4,4,5,3,2,3)\)</span>, <span class="arithmatex">\(c=7\)</span></td>
-<td><span class="arithmatex">\(FF\)</span>: <span class="arithmatex">\(4\)</span> bins; <span class="arithmatex">\(z(I)=3\)</span></td>
+<td><span class="arithmatex">\(P42\)</span></td>
+<td><span class="arithmatex">\(3x_1+2x_2+4x_3\)</span></td>
+<td><span class="arithmatex">\(x_1+x_2+2x_3\le 4\)</span>,  <span class="arithmatex">\(2x_1+3x_3\le 5\)</span>,  <span class="arithmatex">\(2x_1+x_2+3x_3\le 7\)</span></td>
 </tr>
 <tr>
-<td>TSP</td>
-<td><span class="arithmatex">\(5\)</span> cities, as in the notes on definitions</td>
-<td><span class="arithmatex">\(NN\)</span> from city <span class="arithmatex">\(1\)</span>: <span class="arithmatex">\(25\)</span>; <span class="arithmatex">\(z(I)=18\)</span></td>
+<td><span class="arithmatex">\(P46\)</span></td>
+<td><span class="arithmatex">\(5x_1+6x_2+10x_3\)</span></td>
+<td><span class="arithmatex">\(9x_1+2x_2+2x_3\le 11\)</span>,  <span class="arithmatex">\(2x_1+6x_2+6x_3\le 16\)</span>,  <span class="arithmatex">\(4x_1+2x_2+7x_3\le 10\)</span></td>
 </tr>
 <tr>
-<td><span class="arithmatex">\(P\,||\,C_{\max}\)</span></td>
-<td><span class="arithmatex">\(t=(5,5,4,4,3,3,3)\)</span>, <span class="arithmatex">\(m=3\)</span></td>
-<td><span class="arithmatex">\(LPT\)</span>: <span class="arithmatex">\(J_1=\{1,5,7\}\)</span>, <span class="arithmatex">\(J_2=\{2,6\}\)</span>, <span class="arithmatex">\(J_3=\{3,4\}\)</span>, <span class="arithmatex">\(11\)</span>; <span class="arithmatex">\(z(I)=9\)</span></td>
+<td><span class="arithmatex">\(P72\)</span></td>
+<td><span class="arithmatex">\(7x_1+6x_2+5x_3-2x_4+3x_5\)</span></td>
+<td><span class="arithmatex">\(x_1+3x_2+5x_3-2x_4+2x_5\le 4\)</span>,  <span class="arithmatex">\(4x_1+2x_2-2x_3+x_4+x_5\le 3\)</span>,</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><span class="arithmatex">\(2x_1+4x_2+4x_3-2x_4+5x_5\le 5\)</span>,  <span class="arithmatex">\(3x_1+x_2+2x_3-x_4-2x_5\le 1\)</span></td>
 </tr>
 </table></div>
 
-- The MIP models below are the classical ones, studied in the notes on ILP formulations of classical problems and in the MIP modelling course; we recall them in the form used by the codes of these notes.
-
-### 10.2.1 The knapsack problem
-
-!!! chiave ""
-
-    With $x_j=1$ if and only if item $j$ is selected:
-
-    <a id="eq-eq-kp"></a>
-
-    \begin{align*}
-    && \max ~~ \sum_{j\in\mathscr{I}} p_j\, x_j \label{eq:kp-obj} \tag{10.2a}\\[1ex]
-    && \text{subject to} \quad \sum_{j\in\mathscr{I}} w_j\, x_j &\le c, & \label{eq:kp-cap} \tag{10.2b}\\[1ex]
-    && x_j &\in \{0,1\}, & \forall j\in\mathscr{I}. \label{eq:kp-dom} \tag{10.2c}
-    \end{align*}
-
-### 10.2.2 The bin packing problem
-
-!!! chiave ""
-
-    With a set $\mathscr{B}=\{1,2,\dots,n\}$ of available bins, $x_{jb}=1$ if and only if item $j$ is packed into bin $b$, and $y_b=1$ if and only if bin $b$ is used:
-
-    <a id="eq-eq-bpp"></a>
-
-    \begin{align*}
-    && \min ~~ \sum_{b\in\mathscr{B}} y_b \label{eq:bpp-obj} \tag{10.3a}\\[1ex]
-    && \text{subject to} \quad \sum_{b\in\mathscr{B}} x_{jb} &= 1, & \forall j\in\mathscr{I}, \label{eq:bpp-assign} \tag{10.3b}\\[1ex]
-    && \sum_{j\in\mathscr{I}} w_j\, x_{jb} &\le c\, y_b, & \forall b\in\mathscr{B}, \label{eq:bpp-cap} \tag{10.3c}\\[1ex]
-    && x_{jb} &\in \{0,1\}, & \forall j\in\mathscr{I},~\forall b\in\mathscr{B}, \label{eq:bpp-domx} \tag{10.3d}\\[1ex]
-    && y_b &\in \{0,1\}, & \forall b\in\mathscr{B}. \label{eq:bpp-domy} \tag{10.3e}
-    \end{align*}
-
-- The content of bin $b$ is the packing pattern $P_b=\{j\in\mathscr{I}: x_{jb}=1\}$. Any upper bound on the number of bins can be used as $|\mathscr{B}|$; we use $n$, which is always enough.
-
-### 10.2.3 The travelling salesman problem
-
-!!! chiave ""
-
-    Let $E=\big\{\{i,j\}: i,j\in\mathscr{V},~ i<j\big\}$ be the set of the edges, $\delta(i)$ the set of the edges incident to city $i$, and $E(S)$ the set of the edges with both endpoints in $S\subseteq\mathscr{V}$. With $x_{ij}=1$ if and only if the tour uses the edge $\{i,j\}$:
-
-    <a id="eq-eq-tsp"></a>
-
-    \begin{align*}
-    && \min ~~ \sum_{\{i,j\}\in E} d_{ij}\, x_{ij} \label{eq:tsp-obj} \tag{10.4a}\\[1ex]
-    && \text{subject to} \quad \sum_{\{i,j\}\in\delta(i)} x_{ij} &= 2, & \forall i\in\mathscr{V}, \label{eq:tsp-deg} \tag{10.4b}\\[1ex]
-    && \sum_{\{i,j\}\in E(S)} x_{ij} &\le |S|-1, & \forall S\subset\mathscr{V},~ 2\le|S|\le n-2, \label{eq:tsp-sec} \tag{10.4c}\\[1ex]
-    && x_{ij} &\in \{0,1\}, & \forall \{i,j\}\in E. \label{eq:tsp-dom} \tag{10.4d}
-    \end{align*}
-
-- The <strong>degree constraints</strong> $\eqref{eq:tsp-deg}$ say that every city is the endpoint of two edges of the tour; the <strong>subtour elimination constraints</strong> $\eqref{eq:tsp-sec}$ forbid closed subtours on a proper subset $S$ of the cities. They are exponentially many, and on large instances they are generated only when violated.
-
-### 10.2.4 The scheduling problem $P\,||\,C_{\max}$
-
-!!! chiave ""
-
-    With $x_{jh}=1$ if and only if job $j$ is assigned to machine $h$, and $C_{\max}$ the makespan:
-
-    <a id="eq-eq-pcm"></a>
-
-    \begin{align*}
-    && \min ~~ C_{\max} \label{eq:pcm-obj} \tag{10.5a}\\[1ex]
-    && \text{subject to} \quad \sum_{h=1}^{m} x_{jh} &= 1, & \forall j\in\mathscr{J}, \label{eq:pcm-assign} \tag{10.5b}\\[1ex]
-    && \sum_{j\in\mathscr{J}} t_j\, x_{jh} &\le C_{\max}, & \forall h\in\{1,2,\dots,m\}, \label{eq:pcm-load} \tag{10.5c}\\[1ex]
-    && x_{jh} &\in \{0,1\}, & \forall j\in\mathscr{J},~\forall h\in\{1,2,\dots,m\}, \label{eq:pcm-domx} \tag{10.5d}\\[1ex]
-    && C_{\max} &\ge 0. & \label{eq:pcm-domc} \tag{10.5e}
-    \end{align*}
-
-- $C_{\max}$ is the only continuous variable of the four models: given the assignment, the completion sets it to the largest load $L_h=\sum_{j\in\mathscr{J}} t_j\,x_{jh}$.
-
-### 10.2.5 The LP relaxations on the reference instances
-
-- The following table reports the size of the four models on the reference instances, the value $z(\LP)$ of their LP relaxations, computed with Gurobi, and the optimal value $z(I)$.
+- The following table reports the value $z(\LP)$ of the LP relaxation, the upper bound $\lfloor z(\LP)\rfloor$ (the objective takes integer values), and the optimal value $z(\ILP)$, all computed with the exact simplex algorithm and checked with Gurobi.
 
 <div class="tabella" markdown="0"><table>
 <tr>
@@ -225,113 +169,89 @@ title: "MIP heuristics"
 <th>variables</th>
 <th>constraints</th>
 <th><span class="arithmatex">\(z(\LP)\)</span></th>
-<th><span class="arithmatex">\(z(I)\)</span></th>
-<th>LP solution integer?</th>
+<th><span class="arithmatex">\(\lfloor z(\LP)\rfloor\)</span></th>
+<th><span class="arithmatex">\(z(\ILP)\)</span></th>
 </tr>
 <tr>
-<td>KP</td>
+<td>car</td>
+<td><span class="arithmatex">\(2\)</span></td>
+<td><span class="arithmatex">\(2\)</span></td>
+<td><span class="arithmatex">\(\frac{31}{2}\)</span></td>
+<td><span class="arithmatex">\(15\)</span></td>
+<td><span class="arithmatex">\(14\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P7\)</span></td>
+<td><span class="arithmatex">\(2\)</span></td>
+<td><span class="arithmatex">\(2\)</span></td>
+<td><span class="arithmatex">\(\frac{15}{2}\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P42\)</span></td>
+<td><span class="arithmatex">\(3\)</span></td>
+<td><span class="arithmatex">\(3\)</span></td>
+<td><span class="arithmatex">\(\frac{21}{2}\)</span></td>
+<td><span class="arithmatex">\(10\)</span></td>
+<td><span class="arithmatex">\(10\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P46\)</span></td>
+<td><span class="arithmatex">\(3\)</span></td>
+<td><span class="arithmatex">\(3\)</span></td>
+<td><span class="arithmatex">\(\frac{499}{25}\)</span></td>
+<td><span class="arithmatex">\(19\)</span></td>
+<td><span class="arithmatex">\(16\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P72\)</span></td>
+<td><span class="arithmatex">\(5\)</span></td>
 <td><span class="arithmatex">\(4\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(17.75\)</span></td>
-<td><span class="arithmatex">\(17\)</span></td>
-<td>no</td>
-</tr>
-<tr>
-<td>BPP</td>
-<td><span class="arithmatex">\(42\)</span></td>
-<td><span class="arithmatex">\(12\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td>no</td>
-</tr>
-<tr>
-<td>TSP</td>
-<td><span class="arithmatex">\(10\)</span></td>
-<td><span class="arithmatex">\(25\)</span></td>
-<td><span class="arithmatex">\(18\)</span></td>
-<td><span class="arithmatex">\(18\)</span></td>
-<td>yes</td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(P\,||\,C_{\max}\)</span></td>
-<td><span class="arithmatex">\(22\)</span></td>
-<td><span class="arithmatex">\(10\)</span></td>
-<td><span class="arithmatex">\(9\)</span></td>
-<td><span class="arithmatex">\(9\)</span></td>
-<td>no</td>
+<td><span class="arithmatex">\(\frac{507}{59}\)</span></td>
+<td><span class="arithmatex">\(8\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
 </tr>
 </table></div>
 
-- On all four instances the LP value, rounded in the direction of the bound (down for the KP, up for the three minimization problems), is already the optimal value. The relaxations are <em>strong</em> on these instances: the difficulty is to find a solution that attains the bound, not to prove it.
+<a id="box-4-ex-lpsol"></a>
 
-- This is the typical situation in which MIP-based heuristics are useful.
-
-- On the TSP reference instance the LP solution is itself the optimal tour $(1,3,5,2,4)$: every method of these notes finds it at once. With $5$ cities, moreover, every integer solution of the degree constraints is a tour, since a subtour needs at least $3$ cities and the remaining $2$ cities cannot form another one. The TSP is therefore not used in the examples of the following sections.
-
-<a id="box-1-ex-lpsol"></a>
-
-!!! esempio "Example 10.1: The LP solutions of the reference instances"
-
-    <strong>KP.</strong> The LP solution is $\tilde{\vet x}=\big(1,\frac14,1,0\big)$: the items are taken by non-increasing efficiency, and the split item $2$ is taken for the fraction $\frac{9-8}{4}=\frac14$ of its weight, so $z(\LP)=10+\frac74+6=17.75$.
-
-    <strong>$P\,||\,C_{\max}$.</strong> The LP solution returned by the solver is (zeros omitted)
+!!! esempio "Example 10.1: The LP solutions of the examples"
 
     <div class="tabella" markdown="0"><table>
     <tr>
-    <th></th>
-    <th><span class="arithmatex">\(j=1\)</span></th>
-    <th><span class="arithmatex">\(j=2\)</span></th>
-    <th><span class="arithmatex">\(j=3\)</span></th>
-    <th><span class="arithmatex">\(j=4\)</span></th>
-    <th><span class="arithmatex">\(j=5\)</span></th>
-    <th><span class="arithmatex">\(j=6\)</span></th>
-    <th><span class="arithmatex">\(j=7\)</span></th>
+    <th>problem</th>
+    <th>optimal solution <span class="arithmatex">\(\tilde{\vet x}\)</span> of the LP relaxation</th>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\tilde x_{j1}\)</span></td>
-    <td></td>
-    <td><span class="arithmatex">\(\frac35\)</span></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
+    <td>car</td>
+    <td><span class="arithmatex">\(\big(\frac72,\frac52\big)\)</span></td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\tilde x_{j2}\)</span></td>
-    <td></td>
-    <td></td>
-    <td><span class="arithmatex">\(\frac12\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td></td>
-    <td></td>
+    <td><span class="arithmatex">\(P7\)</span></td>
+    <td><span class="arithmatex">\(\big(\frac52,0\big)\)</span></td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\tilde x_{j3}\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(\frac25\)</span></td>
-    <td><span class="arithmatex">\(\frac12\)</span></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td><span class="arithmatex">\(P42\)</span></td>
+    <td><span class="arithmatex">\(\big(\frac52,\frac32,0\big)\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(P46\)</span></td>
+    <td><span class="arithmatex">\(\big(\frac{17}{25},\frac{49}{25},\frac{12}{25}\big)\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(P72\)</span></td>
+    <td><span class="arithmatex">\(\big(\frac{39}{59},0,\frac{91}{59},\frac{166}{59},\frac{37}{59}\big)\)</span></td>
     </tr>
     </table></div>
 
-    with loads $L_1=3+5\cdot\frac35+3=9$, $L_2=4\cdot\frac12+4+3=9$, $L_3=5+5\cdot\frac25+4\cdot\frac12=9$ and $\tilde C_{\max}=9=\frac{27}{3}$. The LP has infinitely many optimal solutions: every fractional assignment with three loads equal to $9$ is optimal.
-
-    <strong>BPP.</strong> The LP solution returned by the solver puts item $1$ into bin $6$, item $2$ into bin $4$, item $3$ for $\frac45$ into bin $3$ and for $\frac15$ into bin $4$, item $4$ into bin $6$, item $5$ into bin $1$, item $6$ into bin $3$, and opens the bins by the fractions
-
-    $$
-    y^* = \Big(\frac27,\, 0,\, 1,\, \frac57,\, 0,\, 1\Big),
-    $$
-
-    just enough to contain their loads: $2$, $0$, $7$, $5$, $0$, $7$. Its value is $\frac{21}{7}=3$.
+    The first three solutions have at most two fractional components, with fractional part $\frac12$; the last two are the examples where the methods have more room to fail.
 
 ## 10.3 Rounding { #sez-sec-rounding }
 
-!!! chiave ""
+<a id="box-5-def-rounding"></a>
+
+!!! definizione "Definition 10.4: rounding"
 
     <em>Rounding</em> is the simplest MIP-based heuristic. It solves the LP relaxation, rounds every integer variable of the LP solution to the nearest integer, and completes the continuous variables. It returns a feasible solution, or it fails if the rounded point violates a constraint.
 
@@ -355,11 +275,11 @@ title: "MIP heuristics"
 
 - <strong>Why it can fail.</strong> Rounding treats the variables one at a time, while the constraints link them. A constraint with all non-negative coefficients and right-hand side $b_i\ge0$ stays satisfied if the variables are rounded <em>down</em>, and one of the form $\ge$ if they are rounded <em>up</em>.
 
-- An <strong>equality</strong> constraint, such as the assignment constraints of the BPP and of $P\,||\,C_{\max}$, is almost always violated by independent roundings.
+- An <strong>equality</strong> constraint is almost always violated by independent roundings: two fractional values that sum to $1$ become, for instance, $1$ and $1$.
 
-<a id="box-2-obs-rounddown"></a>
+<a id="box-6-obs-rounddown"></a>
 
-!!! teorema "Observation 10.1"
+!!! teorema "Observation 10.5"
 
     Let all the coefficients of $A$ be non-negative, $b\ge 0$ and $l=0$. If $\tilde{\vet x}\in\mathcal{L}$, then the point $\lfloor \tilde{\vet x}\rfloor$, obtained by rounding down every integer variable, belongs to $\mathcal{L}$.
 
@@ -367,31 +287,33 @@ title: "MIP heuristics"
 
     For every $j$, $0\le\lfloor \tilde x_j\rfloor\le \tilde x_j\le u_j$, so the bounds hold. For every row $i$, since $a_{ij}\ge0$, $\sum_j a_{ij}\lfloor \tilde x_j\rfloor\le\sum_j a_{ij}\tilde x_j\le b_i$. <span class="qed">□</span>
 
-- For the KP, rounding the LP solution down gives the items that precede the split item: always feasible, and in general not optimal.
+- The car example satisfies the assumptions of the observation: rounding down is always feasible, and in general not optimal.
 
-<a id="box-3-ex-rounding"></a>
+<a id="box-7-ex-rounding"></a>
 
-!!! esempio "Example 10.2: Rounding on the reference instances"
+!!! esempio "Example 10.2: Rounding on the car example and on $P42$"
 
-    <strong>KP.</strong> The LP solution $\tilde{\vet x}=\big(1,\frac14,1,0\big)$ is rounded to $\bar{\vet x}=(1,0,1,0)$: weight $8\le9$, profit $16$. It is the solution of $GR$ of the notes on constructive heuristics. Rounding $\tilde x_2=\frac14$ up instead would give $(1,1,1,0)$, of weight $12>9$: infeasible.
-
-    <strong>$P\,||\,C_{\max}$.</strong> In the LP solution of [Example 10.1](#box-1-ex-lpsol), $\rnd{\frac35}=1$ and $\rnd{\frac25}=0$ send job $2$ to machine $1$, but $\rnd{\frac12}=1$ assigns job $3$ to <em>both</em> machines $2$ and $3$:
+    <strong>Car example.</strong> The LP solution $\tilde{\vet x}=\big(\frac72,\frac52\big)$ is rounded to $\bar{\vet x}=(4,3)$, which violates the first constraint:
 
     $$
-    \bar x_{31}+\bar x_{32}+\bar x_{33}=0+1+1=2\neq 1 .
+    10\cdot 4+4\cdot 3=52>45 .
     $$
 
-    The assignment constraint $\eqref{eq:pcm-assign}$ of job $3$ is violated: <strong>rounding fails</strong>.
+    <strong>Rounding fails.</strong> Rounding down instead gives $(3,2)$: $38\le45$, $40\le49$, of value $13$, while $z(\ILP)=14$.
 
-    <strong>BPP.</strong> Rounding the LP solution of [Example 10.1](#box-1-ex-lpsol) gives $\bar{\vet y}=(0,0,1,1,0,1)$ and puts item $3$ into bin $3$. Two capacity constraints $\eqref{eq:bpp-cap}$ are violated: bin $1$ contains item $5$ but $\bar y_1=0$ ($2\le 0$ is false), and bin $3$ contains items $3$ and $6$ ($5+3=8>7$). <strong>Rounding fails</strong>.
+    <strong>$P42$.</strong> The LP solution $\big(\frac52,\frac32,0\big)$ is rounded to $(3,2,0)$, which violates the second constraint: $2\cdot3=6>5$. <strong>Rounding fails.</strong> Rounding down gives $(2,1,0)$, of value $8$, while $z(\ILP)=10$.
 
-- The three outcomes summarize the method: on the KP, with a single packing constraint, rounding is safe ([Observation 10.1](#box-2-obs-rounddown)); on the problems with assignment constraints it fails, because the LP spreads a job or an item over several machines or bins, and rounding cannot decide where it goes.
+    <strong>$P72$.</strong> The LP solution is rounded to $(1,0,2,3,1)$, which violates the first constraint: $1+10-6+2=7>4$. <strong>Rounding fails.</strong>
+
+- The two examples summarize the method: the rounding to the nearest integer fails when several variables are fractional at the same time and the constraints are tight; the rounding down is safe, but leaves part of the LP value on the table.
 
 ## 10.4 Diving { #sez-sec-diving }
 
 - Rounding takes all its decisions at once, on the basis of a single LP solution. <strong>Diving</strong> takes them one at a time, and after each decision it asks the LP again: the LP solution is re-computed with the decisions taken so far, and it adapts to them.
 
-!!! chiave ""
+<a id="box-8-def-diving"></a>
+
+!!! definizione "Definition 10.6: diving"
 
     <em>Diving</em> repeatedly solves the LP relaxation, selects one integer variable with a fractional value, fixes it to an integer value, and solves the LP again. It stops with a feasible solution when the LP solution is integer on all the integer variables, and it fails when the LP becomes infeasible. A <em>rule</em> decides which variable is fixed and to which value.
 
@@ -413,7 +335,7 @@ title: "MIP heuristics"
     &emsp;&emsp;&emsp;&emsp;select $j\in F$ and a value $v\in\Z$ according to the rule  
     &emsp;&emsp;&emsp;&emsp;$l_j\leftarrow v$;   $u_j\leftarrow v$&emsp;*// fix $x_j:=v$*
 
-- <strong>Fractional diving.</strong> Select the variable that is <em>least</em> fractional, i.e., the $j\in F$ that minimizes $\big|\tilde x_j-\rnd{\tilde x_j}\big|$, and fix it to $v=\rnd{\tilde x_j}$. The LP is almost sure about this variable, so the fixing changes the LP solution as little as possible. In the codes of these notes, ties are broken in favour of the variable that comes first in the order of the variables ($x_{11},x_{12},\dots$ for the assignment models, then $C_{\max}$ or $y_1,y_2,\dots$).
+- <strong>Fractional diving.</strong> Select the variable that is <em>least</em> fractional, i.e., the $j\in F$ that minimizes $\big|\tilde x_j-\rnd{\tilde x_j}\big|$, and fix it to $v=\rnd{\tilde x_j}$. The LP is almost sure about this variable, so the fixing changes the LP solution as little as possible. In the codes of this chapter, ties are broken in favour of the variable with the smallest index.
 
 - <strong>Guided diving</strong> [\[3\]](#ref-DRL05). With an incumbent $\bar{\vet x}$, select the $j\in F$ that minimizes $|\tilde x_j-\bar x_j|$, and fix it to $v=\bar x_j$. The incumbent guides the dive toward a region of good solutions, and the LP decides in which order its values are adopted.
 
@@ -421,143 +343,51 @@ title: "MIP heuristics"
 
 - <strong>Diving and branch-and-bound.</strong> Fixing $x_j:=\rnd{\tilde x_j}$ is a branching decision. A dive is a single path from the root of the branch-and-bound tree to a leaf, always taking one of the two children, without ever coming back: depth-first search without backtracking.
 
-- <strong>Cost.</strong> Every step solves an LP that differs from the previous one by a single bound, so the dual simplex method re-optimizes it starting from the previous basis in a few iterations. A dive with $|\mathscr{D}|$ integer variables needs at most $|\mathscr{D}|$ LPs, usually far fewer, since an LP solution has many integer components already.
+- <strong>Cost.</strong> Every step solves an LP that differs from the previous one by a single bound, so the dual simplex algorithm re-optimizes it starting from the previous basis in a few iterations. A dive with $|\mathscr{D}|$ integer variables needs at most $|\mathscr{D}|$ LPs, usually far fewer, since an LP solution has many integer components already.
 
 - <strong>Failure.</strong> The LP becomes infeasible when the fixings taken so far are incompatible. Implementations then undo the last fixing and try the other value (a single backtrack), or give up.
 
-<a id="box-4-ex-divekp"></a>
+<a id="box-9-ex-divecar"></a>
 
-!!! esempio "Example 10.3: Fractional diving on the KP"
+!!! esempio "Example 10.3: Fractional diving on the car example"
 
-    <strong>Step 1.</strong> The LP solution is $\tilde{\vet x}=\big(1,\frac14,1,0\big)$, of value $17.75$. The only fractional variable is $x_2$, rounded to $\rnd{\frac14}=0$: fix $x_2:=0$.
+    <strong>Step 1.</strong> The LP solution is $\tilde{\vet x}=\big(\frac72,\frac52\big)$, of value $\frac{31}{2}$. Both variables are at distance $\frac12$ from the nearest integer; the tie is broken by the index: $x_1:=\rnd{\frac72}=4$.
 
-    <strong>Step 2.</strong> Without item $2$, the LP takes items $1$ and $3$ (weight $8$) and the fraction $\frac13$ of item $4$: $\tilde{\vet x}=\big(1,0,1,\frac13\big)$, of value $10+6+\frac43=\frac{52}{3}\approx 17.33$. Fix $x_4:=\rnd{\frac13}=0$.
+    <strong>Step 2.</strong> With $x_1=4$ the constraints become $4x_2\le5$ and $14x_2\le33$, so the LP solution is $\tilde{\vet x}=\big(4,\frac54\big)$, of value $12+\frac52=\frac{29}{2}$. Fix $x_2:=\rnd{\frac54}=1$.
 
-    <strong>Step 3.</strong> The LP solution $\tilde{\vet x}=(1,0,1,0)$, of value $16$, is integer: the dive returns $\{1,3\}$, of profit $16$.
-
-    The dive is the path drawn with solid lines in the branch-and-bound tree below; the dashed nodes are the branches it never visits, with the value of their LP relaxations.
+    <strong>Step 3.</strong> The LP solution $(4,1)$, of value $14$, is integer: the dive returns $(4,1)$, which is the <strong>optimal</strong> solution of the ILP problem.
 
     ![Figure 1](../img/10-mip-heuristics/fig01.svg){ .fig loading=lazy  }
 
-    The branch $x_2=1$, abandoned at the first step, contains the optimal solution $\{1,2\}$ of profit $17$, which is an optimal solution of its LP relaxation. The first decision of the dive, $\rnd{\frac14}=0$, was the wrong one.
+<a id="box-10-ex-guided"></a>
 
-<a id="box-5-ex-divepcm"></a>
+!!! esempio "Example 10.4: Guided diving on the car example and on $P7$"
 
-!!! esempio "Example 10.4: Fractional diving on $P\,||\,C_{\max}$"
+    <strong>Car example.</strong> The incumbent is $\bar{\vet x}=(3,2)$, of value $13$ (rounding down). In the LP solution $\big(\frac72,\frac52\big)$ both variables are at distance $\frac12$ from $\bar{\vet x}$; fix $x_1:=3$. The new LP solution is $\big(3,\frac{37}{14}\big)$, of value $\frac{100}{7}$; fix $x_2:=\bar x_2=2$. The LP solution $(3,2)$ is integer, of value $13$: the dive <strong>returns the incumbent</strong>, without improving it.
 
-    The dive starts from the LP solution of [Example 10.1](#box-1-ex-lpsol). The table reports, for each step, the value of the LP, its fractional variables and the fixing; a fractionality $|\tilde x_j-\rnd{\tilde x_j}|$ equal for two variables is broken by the order $x_{11},x_{12},x_{13},x_{21},\dots$
+    <strong>$P7$.</strong> The incumbent is $\bar{\vet x}=(2,0)$, of value $6$ (rounding down of $\big(\frac52,0\big)$). The only fractional variable is $x_1$: fix $x_1:=2$. The LP solution $(2,1)$, of value $7$, is integer: guided diving finds the <strong>optimal</strong> solution after one fixing, even if the incumbent has $\bar x_2=0$, because the LP rebuilds the variables that are not fixed.
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th>step</th>
-    <th>LP value</th>
-    <th>fractional variables</th>
-    <th>fixing</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{21}=\frac35\)</span>, <span class="arithmatex">\(x_{23}=\frac25\)</span>, <span class="arithmatex">\(x_{32}=\frac12\)</span>, <span class="arithmatex">\(x_{33}=\frac12\)</span></td>
-    <td><span class="arithmatex">\(x_{21}:=1\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{11}=\frac15\)</span>, <span class="arithmatex">\(x_{13}=\frac45\)</span>, <span class="arithmatex">\(x_{32}=\frac34\)</span>, <span class="arithmatex">\(x_{33}=\frac14\)</span></td>
-    <td><span class="arithmatex">\(x_{11}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{32}=\frac34\)</span>, <span class="arithmatex">\(x_{33}=\frac14\)</span>, <span class="arithmatex">\(x_{41}=\frac14\)</span>, <span class="arithmatex">\(x_{43}=\frac34\)</span></td>
-    <td><span class="arithmatex">\(x_{32}:=1\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{41}=\frac14\)</span>, <span class="arithmatex">\(x_{43}=\frac34\)</span>, <span class="arithmatex">\(x_{52}=\frac23\)</span>, <span class="arithmatex">\(x_{53}=\frac13\)</span></td>
-    <td><span class="arithmatex">\(x_{41}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{61}=\frac13\)</span>, <span class="arithmatex">\(x_{62}=\frac23\)</span></td>
-    <td><span class="arithmatex">\(x_{61}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(x_{12}=\frac35\)</span>, <span class="arithmatex">\(x_{13}=\frac25\)</span>, <span class="arithmatex">\(x_{71}=\frac13\)</span>, <span class="arithmatex">\(x_{72}=\frac23\)</span></td>
-    <td><span class="arithmatex">\(x_{71}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(7\)</span></td>
-    <td><span class="arithmatex">\(9.5\)</span></td>
-    <td><span class="arithmatex">\(x_{42}=\frac18\)</span>, <span class="arithmatex">\(x_{43}=\frac78\)</span></td>
-    <td><span class="arithmatex">\(x_{42}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(9.5\)</span></td>
-    <td><span class="arithmatex">\(x_{62}=\frac16\)</span>, <span class="arithmatex">\(x_{63}=\frac56\)</span></td>
-    <td><span class="arithmatex">\(x_{62}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(9.5\)</span></td>
-    <td><span class="arithmatex">\(x_{12}=\frac12\)</span>, <span class="arithmatex">\(x_{13}=\frac12\)</span></td>
-    <td><span class="arithmatex">\(x_{12}:=1\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(9.5\)</span></td>
-    <td><span class="arithmatex">\(x_{72}=\frac16\)</span>, <span class="arithmatex">\(x_{73}=\frac56\)</span></td>
-    <td><span class="arithmatex">\(x_{72}:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(11\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td>none</td>
-    <td>—</td>
-    </tr>
-    </table></div>
+- The incumbent only decides the <em>values</em> of the fixed variables: on the car example both fixed values agree with the poor incumbent, on $P7$ the fixed value is the right one.
 
-    The last LP solution is integer: $J_1=\{2,5\}$, $J_2=\{1,3\}$, $J_3=\{4,6,7\}$, with loads $8$, $9$, $10$ and makespan $10$. The dive improves on rounding, which failed, and on $LPT$ ($11$), but it does not reach the optimum $9$.
+<a id="box-11-ex-divefail"></a>
 
-- For six steps the LP value stays at $9$: the LP of $P\,||\,C_{\max}$ has a huge set of optimal solutions, and fixing one variable just moves the LP to another of them. The LP value tells nothing about the quality of the decisions until the load of a machine is forced above $9$, at step $7$, and then it is too late to undo the decisions that caused it. Min-max objectives are as flat for the LP as they are for local search.
+!!! esempio "Example 10.5: A dive that fails on $P42$ and on $P72$"
 
-<a id="box-6-ex-guided"></a>
+    <strong>$P42$.</strong> The LP solution is $\big(\frac52,\frac32,0\big)$; $x_1$ and $x_2$ are at distance $\frac12$, and the tie is broken by the index: $x_1:=\rnd{\frac52}=3$. The second constraint gives $2\cdot3+3x_3\le5$, which is violated for every $x_3\ge0$: the LP is infeasible, <strong>the dive fails at the first step</strong>.
 
-!!! esempio "Example 10.5: Guided diving on $P\,||\,C_{\max}$"
+    <strong>$P72$.</strong> The fractional parts of the LP solution are $\frac{39}{59},\frac{91}{59},\frac{166}{59},\frac{37}{59}$ (for $x_1,x_3,x_4,x_5$), and the least fractional is $x_4$, at distance $\frac{11}{59}$ from $3$: $x_4:=3$. The new LP has value $\frac{728}{85}$ and solution $\big(\frac{56}{85},0,\frac{138}{85},3,\frac{52}{85}\big)$; the least fractional variable is $x_1$, rounded to $1$. Fixing $x_1:=1$ and $x_4:=3$ makes the LP <strong>infeasible</strong>.
 
-    The incumbent is the solution of $LPT$, $J_1=\{1,5,7\}$, $J_2=\{2,6\}$, $J_3=\{3,4\}$, of makespan $11$, i.e., $\bar x_{11}=\bar x_{51}=\bar x_{71}=\bar x_{22}=\bar x_{62}=\bar x_{33}=\bar x_{43}=1$ and all the other $\bar x_{jh}=0$.
-
-    <strong>Step 1.</strong> In the LP solution of [Example 10.1](#box-1-ex-lpsol) the fractional variables and their distances from the incumbent are
-
-    $$
-    |\tilde x_{21}-\bar x_{21}|=\tfrac35,\quad |\tilde x_{23}-\bar x_{23}|=\tfrac25,\quad |\tilde x_{32}-\bar x_{32}|=\tfrac12,\quad
-    |\tilde x_{33}-\bar x_{33}|=\tfrac12 .
-    $$
-
-    The closest is $x_{23}$: fix $x_{23}:=\bar x_{23}=0$.
-
-    <strong>Step 2.</strong> The new LP solution, of value $9$, has the fractional variables $x_{12}=\frac25$, $x_{13}=\frac35$, $x_{31}=\frac12$, $x_{32}=\frac12$, at distances $\frac25$, $\frac35$, $\frac12$, $\frac12$ from the incumbent. Fix $x_{12}:=\bar x_{12}=0$.
-
-    <strong>Step 3.</strong> The LP solution is integer, of value $9$: $J_1=\{5,6,7\}$, $J_2=\{2,4\}$, $J_3=\{1,3\}$, all loads equal to $9$. Guided diving finds an <strong>optimal</strong> solution after two LPs.
-
-- Guided by a solution of makespan $11$, the dive ends at a solution of makespan $9$: the incumbent only decides the <em>values</em> of the two fixed variables, both equal to $0$, while the LP rebuilds the rest of the assignment.
-
-- On the BPP reference instance, fractional diving takes $8$ fixings, all with LP value $3$; the ninth, $x_{12}:=1$, puts item $1$ into bin $2$, which already contains item $2$ by an earlier fixing, and $4+4>7$ makes the LP infeasible: <strong>the dive fails</strong>. The fixings $x_{jb}=1$ commit items to bins one at a time, and the LP of the BPP is so weak ($3$ at every step) that it gives no warning before the dead end.
+- In both cases the first fixings follow the LP, which does not see that the constraints, together, leave no room. A dive that fails gives no solution at all: this is the reason for the feasibility pump of the next section.
 
 ## 10.5 The feasibility pump { #sez-sec-fp }
 
-- Rounding and diving fail on the BPP reference instance, and on many real MIPs they fail most of the time: for a general MIP, even <em>deciding whether a feasible solution exists</em> is NP-complete. The <strong>feasibility pump</strong> of Fischetti, Glover and Lodi [\[4\]](#ref-FGL05) gives up the objective function and concentrates on a single goal: to find a feasible solution.
+- Rounding and diving fail on $P42$ and on $P72$, and on many MIPs they fail most of the time: for a general MIP, even <em>deciding whether a feasible solution exists</em> is NP-complete. The <strong>feasibility pump</strong> of Fischetti, Glover and Lodi [\[4\]](#ref-FGL05) gives up the objective function and concentrates on a single goal: to find a feasible solution.
 
 - The idea is to work with two points at the same time. A point of $\mathcal{L}$ satisfies all the linear constraints, but may be fractional; an integer point is integer, but may violate the constraints. A feasible solution is a point that is both. The pump makes the two points chase each other until they coincide, and to do so it needs to measure how far apart they are.
 
-<a id="box-7-def-distance"></a>
+<a id="box-12-def-distance"></a>
 
-!!! definizione "Definition 10.2: Distance from an integer point"
+!!! definizione "Definition 10.7: Distance from an integer point"
 
     Let $\bar{\vet x}$ be a point with $\bar x_j\in\Z$ for all $j\in\mathscr{D}$. The <strong>distance</strong> of a point $\vet x\in\R^N$ from $\bar{\vet x}$ is
 
@@ -578,7 +408,9 @@ title: "MIP heuristics"
 
 - For a general integer variable the same holds if $\bar x_j=l_j$ (the term is $x_j-l_j$) or $\bar x_j=u_j$ (the term is $u_j-x_j$). Otherwise $|x_j-\bar x_j|$ is replaced by an auxiliary variable $d_j$ with the two constraints $d_j\ge x_j-\bar x_j$ and $d_j\ge \bar x_j-x_j$; at the minimum, $d_j=|x_j-\bar x_j|$. In all cases, the point of $\mathcal{L}$ closest to $\bar{\vet x}$ is computed by solving <strong>one LP</strong>.
 
-!!! chiave ""
+<a id="box-13-def-fp"></a>
+
+!!! definizione "Definition 10.8: feasibility pump"
 
     The <em>feasibility pump</em> builds two sequences of points: points $\tilde{\vet x}^{0},\tilde{\vet x}^{1},\tilde{\vet x}^{2},\dots$ of $\mathcal{L}$, which satisfy the linear constraints, and integer points $\bar{\vet x}^0,\bar{\vet x}^1,\bar{\vet x}^2,\dots$, which satisfy the integrality constraints. It starts from the LP solution $\tilde{\vet x}^{0}$; each integer point is the <em>rounding</em> of the last point of $\mathcal{L}$, and each point of $\mathcal{L}$ is the <em>projection</em> of the last integer point, i.e., the point of $\mathcal{L}$ at minimum distance from it. It stops when the distance is $0$: the two points coincide and are a feasible solution. When the rounding returns an integer point already visited, the pump <em>perturbs</em> it.
 
@@ -617,7 +449,7 @@ title: "MIP heuristics"
 
 - <strong>Long cycles.</strong> The pump can also cycle among several integer points. When the new integer point equals one of the last ones, the original pump makes a <strong>restart</strong>: a binary component is flipped when $|\tilde x_j-\hat x_j|+\max\{\rho_j,0\}>\frac12$, with $\rho_j$ uniformly random in $[-0.3,0.7]$, so that the components where $\tilde x_j$ is far from $\hat x_j$ are flipped with high probability.
 
-- <strong>Random numbers.</strong> In all the notes on heuristic algorithms, random numbers are produced by the <em>minimal standard</em> generator of Park and Miller, with integer arithmetic on $64$ bits:
+- <strong>Random numbers.</strong> In the codes of this chapter, random numbers are produced by the <em>minimal standard</em> generator of Park and Miller, with integer arithmetic on $64$ bits:
 
     $$
     seed \leftarrow (16807\cdot seed) \bmod (2^{31}-1), \qquad u = \frac{seed}{2^{31}-1}\in(0,1),
@@ -629,7 +461,7 @@ title: "MIP heuristics"
 
 - <strong>General integer variables.</strong> The pump was designed for binary variables, where the flip changes $\bar x_j$ into $1-\bar x_j$; for general integer variables it moves $\bar x_j$ by one unit toward $\tilde x_j$, and the distance uses the auxiliary variables $d_j$ [\[2\]](#ref-BFL07).
 
-<a id="box-8-ex-fp2"></a>
+<a id="box-14-ex-fp2"></a>
 
 !!! esempio "Example 10.6: The feasibility pump in two variables"
 
@@ -695,122 +527,58 @@ title: "MIP heuristics"
 
     <strong>Iteration 3.</strong> The point $(1,1)$ belongs to $\mathcal{L}$ ($4+3=7\ge7$ and $4+5=9\le 11$): its distance from $\mathcal{L}$ is $0$, and the pump returns $(1,1)$, of value $5$. It is optimal, since the other integer point $(2,0)$ has value $2$.
 
-<a id="box-9-ex-fppcm"></a>
+<a id="box-15-ex-fpcar"></a>
 
-!!! esempio "Example 10.7: The feasibility pump on $P\,||\,C_{\max}$"
+!!! esempio "Example 10.7: The feasibility pump on the car example and on $P72$"
 
-    <strong>Iteration 0.</strong> The LP solution of [Example 10.1](#box-1-ex-lpsol) is rounded as in [Example 10.2](#box-3-ex-rounding): job $3$ is assigned to machines $2$ and $3$, and $\bar{\vet x}^0$ is infeasible.
-
-    <strong>Iteration 1.</strong> The projection minimizes $\Delta(\vet x,\bar{\vet x}^0)$, which is linear since all the integer variables are binary. The solver returns the point of $\mathcal{L}$ that keeps all the assignments of $\bar{\vet x}^0$ and removes job $3$ from machine $2$, i.e., it moves $x_{32}$ from $1$ to $0$: $\Delta=1$ (removing job $3$ from machine $3$ would be equally close). The result is integer:
-
-    $$
-    J_1=\{2,6,7\},\qquad J_2=\{4,5\},\qquad J_3=\{1,3\},
-    $$
-
-    with loads $11$, $7$, $9$, and its rounding is the new integer point $\bar{\vet x}^1$.
-
-    <strong>Iteration 2.</strong> $\bar{\vet x}^1\in\mathcal{L}$, the distance is $0$, and the pump returns a solution of makespan $11$, after two projections.
-
-- The solution has the same makespan as $LPT$: the projection takes care of the assignment constraints and ignores the loads, since $C_{\max}$ is continuous and does not enter $\Delta$. The pump answers the question “is there a feasible solution?”, which for $P\,||\,C_{\max}$ was not a difficult question.
-
-<a id="box-10-ex-fpbpp"></a>
-
-!!! esempio "Example 10.8: The feasibility pump on the BPP"
-
-    On the BPP reference instance, where rounding and diving fail, the pump is run with the seeds $1,2,\dots,10$ of the random numbers. The table reports the number of projections, of flips and of restarts, the number of bins opened by the solution found ($\sum_b \bar y_b$, the value of the solution) and the number of non-empty bins.
+    <strong>Car example.</strong> Rounding the LP solution gives $\bar{\vet x}^0=(4,3)$, which is infeasible.
 
     <div class="tabella" markdown="0"><table>
     <tr>
-    <th>seed</th>
-    <th><span class="arithmatex">\(1\)</span></th>
-    <th><span class="arithmatex">\(2\)</span></th>
-    <th><span class="arithmatex">\(3\)</span></th>
-    <th><span class="arithmatex">\(4\)</span></th>
-    <th><span class="arithmatex">\(5\)</span></th>
-    <th><span class="arithmatex">\(6\)</span></th>
-    <th><span class="arithmatex">\(7\)</span></th>
-    <th><span class="arithmatex">\(8\)</span></th>
-    <th><span class="arithmatex">\(9\)</span></th>
-    <th><span class="arithmatex">\(10\)</span></th>
+    <th><span class="arithmatex">\(k\)</span></th>
+    <th>projection <span class="arithmatex">\(\tilde{\vet x}^{k}\)</span></th>
+    <th><span class="arithmatex">\(\Delta\big(\tilde{\vet x}^{k},\bar{\vet x}^{k-1}\big)\)</span></th>
+    <th>next integer point</th>
     </tr>
     <tr>
-    <td>projections</td>
-    <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(12\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(19\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(20\)</span></td>
-    </tr>
-    <tr>
-    <td>flips</td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    </tr>
-    <tr>
-    <td>restarts</td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(\big(\frac72,\frac52\big)\)</span></td>
     <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(\rnd{\tilde{\vet x}^1}=\bar{\vet x}^0\)</span>: flip <span class="arithmatex">\(x_1\)</span>, <span class="arithmatex">\(\bar{\vet x}^1=(3,3)\)</span></td>
+    </tr>
+    <tr>
     <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
+    <td><span class="arithmatex">\(\big(3,\frac{37}{14}\big)\)</span></td>
+    <td><span class="arithmatex">\(\frac{5}{14}\)</span></td>
+    <td><span class="arithmatex">\(\rnd{\tilde{\vet x}^2}=\bar{\vet x}^1\)</span>: flip <span class="arithmatex">\(x_2\)</span>, <span class="arithmatex">\(\bar{\vet x}^2=(3,2)\)</span></td>
     </tr>
     <tr>
-    <td>bins opened</td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
     <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    </tr>
-    <tr>
-    <td>non-empty bins</td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
+    <td><span class="arithmatex">\((3,2)\)</span></td>
+    <td><span class="arithmatex">\(0\)</span></td>
+    <td>stop: feasible</td>
     </tr>
     </table></div>
 
-    The pump finds a feasible solution with every seed, but always after some restarts: without them it would cycle. Only with seed $7$ the solution is optimal: $\{3,5\}$, $\{2,4\}$, $\{1,6\}$, of value $3$. With seed $4$ the pump opens $5$ bins, two of which stay empty: the packing $\{3,5\}$, $\{1,6\}$, $\{2,4\}$ is optimal, but the solution has value $5$, because nothing in the distance function asks to close the empty bins.
+    At iteration $1$ the two components of $\tilde{\vet x}^1$ are at the same distance $\frac12$ from $\bar{\vet x}^0$, and the flip takes the first one. The pump needs <strong>two flips</strong> and returns $(3,2)$, of value $13$: it is feasible, but not optimal ($z(\ILP)=14$), because after the first LP the objective is ignored.
+
+    <strong>$P72$.</strong> Rounding and diving fail (Examples [10.2](#box-7-ex-rounding), [Example 10.5](#box-11-ex-divefail)). The pump rounds the LP solution to $\bar{\vet x}^0=(1,0,2,3,1)$, which violates the first constraint, and needs three projections and one flip (of $x_3$, from $2$ to $1$) to reach the feasible solution
+
+    $$
+    \bar{\vet x}=(0,0,1,3,1), \qquad f(\bar{\vet x})=2 ,
+    $$
+
+    very far from $z(\ILP)=7$ and from the upper bound $8$.
 
 - The pump is a method to find a <em>first</em> feasible solution, and it does that well. The quality of the solution is the job of the improvement methods of the next sections, which start from an incumbent.
 
 ## 10.6 Improving an incumbent with a sub-MIP { #sez-sec-submip }
 
-- The methods of the previous sections build a solution from the LP relaxation. The three methods of this section start from an <strong>incumbent</strong> $\bar{\vet x}$, computed by any heuristic — a constructive heuristic, a local search, the feasibility pump — and try to improve it.
+- The methods of the previous sections build a solution from the LP relaxation. The three methods of this section start from an <strong>incumbent</strong> $\bar{\vet x}$, computed by any heuristic — rounding, diving, the feasibility pump — and try to improve it.
 
 - They all follow the same pattern: add to the MIP some constraints that restrict it to a set of solutions <em>related to</em> $\bar{\vet x}$, and solve the restricted problem, called the <strong>sub-MIP</strong>, with the MIP solver.
 
-- The sub-MIP is a neighbourhood of $\bar{\vet x}$ in the sense of the notes on definitions, but a very large one, explored exactly by the solver rather than by enumeration. It is the idea of large neighbourhood search of the notes on metaheuristics, with the solver as the repair method.
+- The sub-MIP is a neighbourhood of $\bar{\vet x}$, but a very large one, explored exactly by the solver rather than by enumeration. It is the idea of <strong>large neighbourhood search</strong>, with the solver as the repair method.
 
 - Only solutions <em>better</em> than the incumbent are of interest. With an improvement step $\theta>0$, the sub-MIP contains the <strong>cutoff constraint</strong>
 
@@ -821,13 +589,15 @@ title: "MIP heuristics"
     f(\vet x)\;\ge\; f(\bar{\vet x})+\theta \qquad\text{(maximization)}.
     $$
 
-- When $f$ takes integer values on all the feasible solutions, as for the four problems of these notes, $\theta=1$ excludes exactly the solutions that are not better than $\bar{\vet x}$. If the sub-MIP with the cutoff is infeasible, the neighbourhood contains no better solution: the solver has <em>proved</em> that $\bar{\vet x}$ is a local optimum for that neighbourhood.
+- When $f$ takes integer values on all the feasible solutions, as for all the examples of this chapter, $\theta=1$ excludes exactly the solutions that are not better than $\bar{\vet x}$. If the sub-MIP with the cutoff is infeasible, the neighbourhood contains no better solution: the solver has <em>proved</em> that $\bar{\vet x}$ is a local optimum for that neighbourhood.
 
 - The methods differ in <em>which</em> constraints define the neighbourhood: RINS fixes variables (<strong>hard fixing</strong>), local branching and proximity search bound the number of variables that change (<strong>soft fixing</strong>).
 
 ### 10.6.1 RINS { #sez-sec-rins }
 
-!!! chiave ""
+<a id="box-16-def-rins"></a>
+
+!!! definizione "Definition 10.9: RINS"
 
     <em>RINS</em> (Relaxation Induced Neighbourhood Search) [\[3\]](#ref-DRL05) compares the incumbent $\bar{\vet x}$ with the solution $\tilde{\vet x}$ of the LP relaxation. The integer variables on which the two solutions <em>agree</em> are fixed to their common value; the sub-MIP on the remaining variables, with the cutoff constraint, is solved by the MIP solver.
 
@@ -857,80 +627,25 @@ title: "MIP heuristics"
 
 - <strong>Hard fixing.</strong> A fixed variable cannot change in the sub-MIP. If a better solution needs to change a variable on which $\tilde{\vet x}$ and $\bar{\vet x}$ agree, RINS cannot find it.
 
-<a id="box-11-ex-rinskp"></a>
+<a id="box-17-ex-rins"></a>
 
-!!! esempio "Example 10.9: RINS on the KP"
+!!! esempio "Example 10.8: RINS on $P7$ and on $P42$"
 
-    The incumbent is the solution $\bar{\vet x}=(1,0,1,0)$ of $GR$, of profit $16$, and the LP solution is $\tilde{\vet x}=\big(1,\frac14,1,0\big)$. They agree on $x_1=1$, $x_3=1$, $x_4=0$, which are fixed. The sub-MIP
-
-    $$
-    \max~ 16+7\,x_2 \quad\text{subject to}\quad 8+4\,x_2\le 9,\quad 16+7\,x_2\ge 17,\quad x_2\in\{0,1\}
-    $$
-
-    is infeasible: the capacity requires $x_2=0$, the cutoff $x_2=1$. RINS returns the incumbent. The optimal solution $\{1,2\}$ has $x_3=0$, but $x_3$ is fixed to $1$ because the LP and the incumbent agree on it.
-
-<a id="box-12-ex-rinspcm"></a>
-
-!!! esempio "Example 10.10: RINS on $P\,||\,C_{\max}$"
-
-    The incumbent is the solution of $LPT$ ($J_1=\{1,5,7\}$, $J_2=\{2,6\}$, $J_3=\{3,4\}$, makespan $11$), and $\tilde{\vet x}$ is the LP solution of [Example 10.1](#box-1-ex-lpsol). The table compares, for each job, the machine of the incumbent with the LP solution.
-
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(j=1\)</span></th>
-    <th><span class="arithmatex">\(j=2\)</span></th>
-    <th><span class="arithmatex">\(j=3\)</span></th>
-    <th><span class="arithmatex">\(j=4\)</span></th>
-    <th><span class="arithmatex">\(j=5\)</span></th>
-    <th><span class="arithmatex">\(j=6\)</span></th>
-    <th><span class="arithmatex">\(j=7\)</span></th>
-    </tr>
-    <tr>
-    <td>machine in <span class="arithmatex">\(\bar{\vet x}\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    </tr>
-    <tr>
-    <td>machines in <span class="arithmatex">\(\tilde{\vet x}\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(1\)</span> (<span class="arithmatex">\(\frac35\)</span>), <span class="arithmatex">\(3\)</span> (<span class="arithmatex">\(\frac25\)</span>)</td>
-    <td><span class="arithmatex">\(2\)</span> (<span class="arithmatex">\(\frac12\)</span>), <span class="arithmatex">\(3\)</span> (<span class="arithmatex">\(\frac12\)</span>)</td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    </tr>
-    <tr>
-    <td>fixed variables</td>
-    <td><span class="arithmatex">\(x_{12}=0\)</span></td>
-    <td>—</td>
-    <td><span class="arithmatex">\(x_{31}=0\)</span></td>
-    <td><span class="arithmatex">\(x_{41}=0\)</span></td>
-    <td><span class="arithmatex">\(x_{53}=0\)</span></td>
-    <td><span class="arithmatex">\(x_{63}=0\)</span></td>
-    <td><span class="arithmatex">\(x_{71}=1\)</span>, <span class="arithmatex">\(x_{72}=x_{73}=0\)</span></td>
-    </tr>
-    </table></div>
-
-    Only job $7$ is on the same machine in both solutions; for the other jobs, the two solutions agree only on some machines that the job does <em>not</em> use. Eight of the $21$ binary variables are fixed. The sub-MIP with the cutoff $C_{\max}\le 10$ is solved by Gurobi, which returns
+    <strong>$P7$.</strong> The incumbent is $\bar{\vet x}=(2,0)$, of value $6$ (rounding down), and the LP solution is $\tilde{\vet x}=\big(\frac52,0\big)$. They agree on $x_2=0$, which is fixed. The sub-MIP
 
     $$
-    J_1=\{5,6,7\},\qquad J_2=\{2,3\},\qquad J_3=\{1,4\},
+    \max~ 3\,x_1 \quad\text{subject to}\quad x_1\le 12,\quad 2\,x_1\le 5,\quad 3\,x_1\ge 7,\quad x_1\in\Z_{\ge 0}
     $$
 
-    with all loads equal to $9$: <strong>RINS finds an optimal solution</strong>.
+    is infeasible: the second constraint gives $x_1\le2$, the cutoff $x_1\ge3$. RINS returns the incumbent. The optimal solution $(2,1)$ has $x_2=1$, but $x_2$ is fixed to $0$ because the LP and the incumbent agree on it.
 
-- On the KP the incumbent and the LP solution are too similar, and the neighbourhood of RINS has a single free variable; on $P\,||\,C_{\max}$ they are very different, and the neighbourhood is large enough to contain the optimum.
+    <strong>$P42$.</strong> The incumbent is $\bar{\vet x}=(2,1,0)$, of value $8$ (rounding down), and $\tilde{\vet x}=\big(\frac52,\frac32,0\big)$. They agree on $x_3=0$ only. The sub-MIP on $x_1,x_2$ with the cutoff $3x_1+2x_2\ge 9$ is solved by Gurobi, which returns $(2,2,0)$, of value $10$: <strong>RINS finds an optimal solution</strong>.
+
+- On $P7$ the variable that must change is exactly the one on which the LP and the incumbent agree; on $P42$ the agreement concerns a variable that does not need to change, and the neighbourhood contains the optimum.
 
 ### 10.6.2 Local branching { #sez-sec-lb }
 
-- RINS decides <em>which</em> variables may change. Local branching [\[5\]](#ref-FL03) decides only <em>how many</em> of them may change, and leaves the choice of which ones to the solver. For a MIP whose integer variables are binary, the <strong>local branching constraint</strong> with radius $k\in\Z_{\ge1}$ is
+- RINS decides <em>which</em> variables may change. Local branching [\[5\]](#ref-FL03) decides only <em>how many</em> of them may change, and leaves the choice of which ones to the solver. For a MIP whose integer variables are binary (or, with the auxiliary variables $d_j$ of the distance, general integers), the <strong>local branching constraint</strong> with radius $k\in\Z_{\ge1}$ is
 
 !!! chiave ""
 
@@ -938,15 +653,17 @@ title: "MIP heuristics"
     \Delta(\vet x,\bar{\vet x}) \;=\; \sum_{j\in\mathscr{D}:\ \bar x_j=1} (1-x_j) \;+\; \sum_{j\in\mathscr{D}:\ \bar x_j=0} x_j \;\le\; k
     $$
 
-- $\Delta(\vet x,\bar{\vet x})$ is the distance of [Definition 10.2](#box-7-def-distance) for binary variables: on binary points, it counts the variables whose value differs from the incumbent. The constraint is linear, so it can be added to the MIP like any other constraint.
+- $\Delta(\vet x,\bar{\vet x})$ is the distance of [Definition 10.7](#box-12-def-distance) for binary variables: on binary points, it counts the variables whose value differs from the incumbent. The constraint is linear, so it can be added to the MIP like any other constraint.
 
-!!! chiave ""
+<a id="box-18-def-lb"></a>
+
+!!! definizione "Definition 10.10: local branching"
 
     <em>Local branching</em> solves, with the MIP solver, the sub-MIP made of the MIP, the cutoff constraint and the local branching constraint $\Delta(\vet x,\bar{\vet x})\le k$. If it finds a better solution, the new solution becomes the incumbent and the neighbourhood is centred on it. If it proves that the neighbourhood contains no better solution, the radius $k$ is enlarged. In both cases the explored neighbourhood is excluded from the following sub-MIPs by the <em>reverse</em> constraint $\Delta(\vet x,\bar{\vet x})\ge k+1$.
 
 !!! algoritmo "Algorithm: Local branching"
 
-    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip) with binary integer variables; incumbent $\bar{\vet x}$; radius $k$; maximum radius $k_{\max}$; step $k_{step}$; improvement step $\theta$  
+    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip); incumbent $\bar{\vet x}$; radius $k$; maximum radius $k_{\max}$; step $k_{step}$; improvement step $\theta$  
     <strong>Output:</strong> A solution at least as good as $\bar{\vet x}$  
     <strong>function</strong> LocalBranching(MIP, $\bar{\vet x}$, $k$, $k_{\max}$, $k_{step}$, $\theta$)  
     &emsp;&emsp;$\mathscr{R} := \emptyset$&emsp;*// reverse constraints added so far*  
@@ -967,57 +684,64 @@ title: "MIP heuristics"
 
 - <strong>The radius.</strong> $k$ must be small enough for the sub-MIP to be solved quickly, and large enough for the neighbourhood to contain better solutions. The original method uses small values compared with $|\mathscr{D}|$, a time limit on each sub-MIP, and <em>diversification</em> — a larger $k$, or a jump to a different solution — when no improvement is found.
 
-- <strong>Local branching and local search.</strong> With $k=1$ the neighbourhood is the flip neighbourhood of the KP in the notes on definitions; with $k=2$ it contains the swap neighbourhood as well. For the assignment variables of the BPP and of $P\,||\,C_{\max}$ the distance has a simple meaning.
+- <strong>Local branching and local search.</strong> With $k=1$ the neighbourhood contains the points obtained from $\bar{\vet x}$ by changing a single integer variable by one unit (a binary variable flips); with larger $k$ it contains the points that differ from $\bar{\vet x}$ in several variables, or by several units. It is a local search whose neighbourhood is explored exactly by the solver.
 
-<a id="box-13-obs-assign"></a>
+<a id="box-19-ex-lb"></a>
 
-!!! teorema "Observation 10.3"
+!!! esempio "Example 10.9: Local branching on $P7$ and on $P72$"
 
-    Let $\vet x$ and $\bar{\vet x}$ be two feasible assignments of $P\,||\,C_{\max}$. Then $\Delta(\vet x,\bar{\vet x})=2\,r$, where $r$ is the number of jobs assigned to different machines in $\vet x$ and in $\bar{\vet x}$.
+    <strong>$P7$.</strong> Start from $\bar{\vet x}^1=(2,0)$, of value $6$, with $k=1$, $k_{\max}=3$, $k_{step}=1$ and $\theta=1$.
 
-??? dimostrazione "Proof"
+    <strong>$k=1$.</strong> The sub-MIP with $\Delta(\vet x,\bar{\vet x}^1)\le1$ and the cutoff $3x_1+x_2\ge7$ returns $(2,1)$, of value $7$: the new incumbent $\bar{\vet x}^2$, found at distance $1$ (the variable $x_2$ changes by one unit). Add $\Delta(\vet x,\bar{\vet x}^1)\ge2$.
 
-    A job on the same machine in $\vet x$ and $\bar{\vet x}$ contributes $0$ to $\Delta$. A job on machine $h$ in $\bar{\vet x}$ and on machine $h'\neq h$ in $\vet x$ contributes $1-x_{jh}=1$ and $x_{jh'}=1$, and $0$ for the other machines. <span class="qed">□</span>
+    <strong>$k=1,2,3$, around $\bar{\vet x}^2$.</strong> No solution of value at least $8$: $k$ becomes $4>k_{\max}$ and the method stops with $(2,1)$, the optimum. Where RINS failed, local branching lets the solver choose that $x_2$ changes.
 
-- Hence, for $P\,||\,C_{\max}$, the neighbourhood $\Delta(\vet x,\bar{\vet x})\le 2$ is the <strong>move</strong> neighbourhood of the notes on local search (one job changes machine), and $\Delta(\vet x,\bar{\vet x})\le 4$ contains the <strong>swap</strong> neighbourhood (two jobs change machine). The same holds for the variables $x_{jb}$ of the BPP.
+    <strong>$P72$.</strong> Start from the solution of the feasibility pump, $\bar{\vet x}^1=(0,0,1,3,1)$, of value $2$, with the same parameters.
 
-<a id="box-14-ex-lbkp"></a>
+    <div class="tabella" markdown="0"><table>
+    <tr>
+    <th><span class="arithmatex">\(k\)</span></th>
+    <th>around</th>
+    <th>solution returned</th>
+    <th>value</th>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^1\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^2=(0,0,1,2,1)\)</span>, at distance <span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(4\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^2\)</span></td>
+    <td>no solution of value <span class="arithmatex">\(\ge5\)</span></td>
+    <td>—</td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(2\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^2\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^3=(0,1,1,2,0)\)</span>, at distance <span class="arithmatex">\(2\)</span></td>
+    <td><span class="arithmatex">\(7\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\(2,3\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}^3\)</span></td>
+    <td>no solution of value <span class="arithmatex">\(\ge8\)</span></td>
+    <td>—</td>
+    </tr>
+    </table></div>
 
-!!! esempio "Example 10.11: Local branching on the KP"
+    With $k_{\max}=3$ the method stops with value $7$, the optimum, after two improvements. The radius enlarged from $1$ to $2$ because the improvement of $x_2$ and $x_5$ together needs two units of distance.
 
-    Start from $\bar{\vet x}^1=(1,0,1,0)$, of profit $16$, with $k=1$, $k_{\max}=3$, $k_{step}=1$ and $\theta=1$.
-
-    <strong>$k=1$.</strong> The neighbours at distance $1$ are the flips of $\bar{\vet x}^1$; with the cutoff $\sum_j p_j x_j\ge 17$ no one is feasible. Add $\Delta(\vet x,\bar{\vet x}^1)\ge 2$ and set $k=2$.
-
-    <strong>$k=2$.</strong> The sub-MIP with $2\le\Delta(\vet x,\bar{\vet x}^1)\le 2$ finds the swap $(1,1,0,0)$, of profit $17$: the new incumbent $\bar{\vet x}^2$. Add $\Delta(\vet x,\bar{\vet x}^1)\ge 3$.
-
-    <strong>$k=2$, around $\bar{\vet x}^2$.</strong> No solution of profit at least $18$: add $\Delta(\vet x,\bar{\vet x}^2)\ge 3$ and set $k=3$.  <strong>$k=3$.</strong> No solution of profit at least $18$ either; $k$ becomes $4>k_{\max}$ and the method stops with $\{1,2\}$, of profit $17$: the optimum.
-
-<a id="box-15-ex-lbpcm"></a>
-
-!!! esempio "Example 10.12: Local branching on $P\,||\,C_{\max}$"
-
-    Start from the solution $\bar{\vet x}^1$ of $LPT$, of makespan $11$, with $k=2$, $k_{\max}=6$, $k_{step}=2$ and $\theta=1$, so that the cutoff is $C_{\max}\le 10$, then $9$, and so on.
-
-    <strong>$k=2$.</strong> By [Observation 10.3](#box-13-obs-assign) the neighbourhood is the move neighbourhood, and $LPT$ is a local optimum for it (notes on local search): the sub-MIP is infeasible. Add $\Delta(\vet x,\bar{\vet x}^1)\ge 3$ and set $k=4$.
-
-    <strong>$k=4$.</strong> The best solution with two jobs reassigned has makespan $10$; the solver returns the swap of jobs $1$ and $4$, $\bar{\vet x}^2$ below. Add $\Delta(\vet x,\bar{\vet x}^1)\ge 5$.
-
-    <strong>$k=4$, around $\bar{\vet x}^2$.</strong> The solver returns the swap of jobs $4$ and $6$, of makespan $9$: $\bar{\vet x}^3$. Add $\Delta(\vet x,\bar{\vet x}^2)\ge 5$.
-
-    <strong>$k=4$ and $k=6$, around $\bar{\vet x}^3$.</strong> No solution of makespan $8$: $k$ becomes $8>k_{\max}$, and the method stops with makespan $9$, the optimum.
-
-    ![Figure 4](../img/10-mip-heuristics/fig04.svg){ .fig loading=lazy  }
-
-    The dashed line is the lower bound $9$; the jobs swapped to obtain the next solution are coloured.
-
-- In the language of the notes on local search, local branching performs a local search with a neighbourhood whose size is controlled by $k$, explored exactly by the solver, and it enlarges the neighbourhood when it gets stuck — exactly the idea of variable neighbourhood search, with the solver doing the exploration.
+- Local branching performs a local search with a neighbourhood whose size is controlled by $k$, explored exactly by the solver, and it enlarges the neighbourhood when it gets stuck — exactly the idea of variable neighbourhood search, with the solver doing the exploration.
 
 ### 10.6.3 Proximity search { #sez-sec-ps }
 
 - Local branching keeps the objective and constrains the distance. <strong>Proximity search</strong> of Fischetti and Monaci [\[6\]](#ref-FM14) does the opposite: it keeps the cutoff as a constraint and <em>minimizes</em> the distance.
 
-!!! chiave ""
+<a id="box-20-def-ps"></a>
+
+!!! definizione "Definition 10.11: proximity search"
 
     The <strong>proximity sub-MIP</strong> around the incumbent $\bar{\vet x}$ reads
 
@@ -1033,7 +757,7 @@ title: "MIP heuristics"
 
 !!! algoritmo "Algorithm: Proximity search"
 
-    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip) with binary integer variables; incumbent $\bar{\vet x}$; improvement step $\theta$  
+    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip); incumbent $\bar{\vet x}$; improvement step $\theta$  
     <strong>Output:</strong> A solution at least as good as $\bar{\vet x}$  
     <strong>function</strong> ProximitySearch(MIP, $\bar{\vet x}$, $\theta$)  
     &emsp;&emsp;<strong>while</strong> true <strong>do</strong>  
@@ -1054,9 +778,9 @@ title: "MIP heuristics"
 
 - <strong>The step $\theta$.</strong> A large $\theta$ asks for large improvements, hence large moves and hard sub-MIPs; a small $\theta$ gives easy sub-MIPs and many iterations. With $\theta=1$ and integer objective values, the method also proves optimality.
 
-<a id="box-16-prop-ps"></a>
+<a id="box-21-prop-ps"></a>
 
-!!! teorema "Proposition 10.4"
+!!! teorema "Proposition 10.12"
 
     If $f$ takes integer values on all the feasible solutions of the MIP and the proximity sub-MIP around $\bar{\vet x}$ with $\theta=1$ is infeasible, then $f(\bar{\vet x})=z(I)$.
 
@@ -1064,17 +788,13 @@ title: "MIP heuristics"
 
     The feasible region of the proximity sub-MIP is the set of the feasible solutions $\vet x$ of the MIP with $f(\vet x)\le f(\bar{\vet x})-1$; it does not depend on the objective $\Delta$. If it is empty, every feasible solution has $f(\vet x)>f(\bar{\vet x})-1$, hence $f(\vet x)\ge f(\bar{\vet x})$ since both values are integer. So $\bar{\vet x}$ is optimal. <span class="qed">□</span>
 
-<a id="box-17-ex-pskp"></a>
+<a id="box-22-ex-ps"></a>
 
-!!! esempio "Example 10.13: Proximity search on the KP"
+!!! esempio "Example 10.10: Proximity search on $P7$ and on $P72$"
 
-    From $\bar{\vet x}=(1,0,1,0)$, of profit $16$: the closest solution of profit at least $17$ is $(1,1,0,0)$, at distance $2$ (item $3$ out, item $2$ in), of profit $17$. Around it, no solution has profit at least $18$: by [Proposition 10.4](#box-16-prop-ps), $\{1,2\}$ is <strong>optimal</strong>.
+    <strong>$P7$.</strong> From $\bar{\vet x}=(2,0)$, of value $6$: the closest solution of value at least $7$ is $(2,1)$, at distance $1$. Around it, no solution has value at least $8$ (the LP bound is $\frac{15}{2}$): by [Proposition 10.12](#box-21-prop-ps), $(2,1)$ is <strong>optimal</strong>.
 
-<a id="box-18-ex-pspcm"></a>
-
-!!! esempio "Example 10.14: Proximity search on $P\,||\,C_{\max}$"
-
-    From the solution of $LPT$, of makespan $11$:
+    <strong>$P72$.</strong> From the solution of the feasibility pump, of value $2$:
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1082,67 +802,52 @@ title: "MIP heuristics"
     <th>cutoff</th>
     <th><span class="arithmatex">\(\min\Delta\)</span></th>
     <th>solution returned</th>
-    <th><span class="arithmatex">\(C_{\max}\)</span></th>
+    <th>value</th>
     </tr>
     <tr>
     <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(C_{\max}\le 10\)</span></td>
+    <td><span class="arithmatex">\(f(\vet x)\ge 3\)</span></td>
+    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\((0,0,1,2,1)\)</span></td>
     <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(J_1=\{5,6,7\}\)</span>, <span class="arithmatex">\(J_2=\{1,2\}\)</span>, <span class="arithmatex">\(J_3=\{3,4\}\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
     </tr>
     <tr>
     <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(C_{\max}\le 9\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(J_1=\{5,6,7\}\)</span>, <span class="arithmatex">\(J_2=\{1,4\}\)</span>, <span class="arithmatex">\(J_3=\{2,3\}\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
+    <td><span class="arithmatex">\(f(\vet x)\ge 5\)</span></td>
+    <td><span class="arithmatex">\(2\)</span></td>
+    <td><span class="arithmatex">\((0,1,1,2,0)\)</span></td>
+    <td><span class="arithmatex">\(7\)</span></td>
     </tr>
     <tr>
     <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(C_{\max}\le 8\)</span></td>
+    <td><span class="arithmatex">\(f(\vet x)\ge 8\)</span></td>
     <td>—</td>
     <td>infeasible</td>
     <td>—</td>
     </tr>
     </table></div>
 
-    By [Observation 10.3](#box-13-obs-assign), distance $4$ means two jobs reassigned: jobs $1$ and $6$ at the first iteration, jobs $2$ and $4$ at the second. No solution at distance $2$ improves the makespan, as for local branching with $k=2$. At the third iteration the sub-MIP is infeasible, and [Proposition 10.4](#box-16-prop-ps) proves that makespan $9$ is optimal.
+    At the third iteration the sub-MIP is infeasible, and [Proposition 10.12](#box-21-prop-ps) proves that $7$ is optimal, although the upper bound $\lfloor z(\LP)\rfloor=8$ of the root does not.
 
 - The proof of optimality comes from the solver, which proves the infeasibility of the last sub-MIP with its own dual bounds: proximity search, used with $\theta=1$, is an exact method that improves the incumbent along the way.
 
 ## 10.7 Relax-and-fix and fix-and-optimize { #sez-sec-rf }
 
-- Many MIPs of production planning, scheduling and logistics are <strong>time-indexed</strong>: their variables are indexed by the periods $t=1,2,\dots,T$ of a planning horizon, and the decisions of a period mainly interact with those of the nearby periods. The two methods of this section exploit this structure: they decompose the MIP along the time, and solve a sequence of small MIPs instead of a large one.
+- The variables of many MIPs come in <strong>blocks</strong> with a natural order, for instance because they are indexed by a sequence, and the decisions of a block mainly interact with those of the nearby blocks. The two methods of this section exploit a partition of the integer variables into blocks: they solve a sequence of small MIPs instead of a large one.
 
-- They are illustrated on the <strong>lot sizing</strong> problem of the MIP modelling course: in each period $t$ a demand $d_t$ must be satisfied, from the production $q_t$ of the period or from the stock $s_{t-1}$ of the previous one; producing in period $t$ requires a set-up, $y_t=1$, which costs $F$, and each unit in stock at the end of a period costs $h$. The production of a period is at most $Q$ (the capacity), or unbounded.
-
-!!! chiave ""
-
-    With $M_t=\min\big\{Q,\ \sum_{\tau=t}^{T} d_\tau\big\}$ (only the sum for the uncapacitated problem) and $s_0=0$:
-
-    <a id="eq-eq-ls"></a>
-
-    \begin{align*}
-    && \min ~~ \sum_{t=1}^{T} \big(F\, y_t + h\, s_t\big) \label{eq:ls-obj} \tag{10.6a}\\[1ex]
-    && \text{subject to} \quad s_{t-1}+q_t-s_t &= d_t, & \forall t\in\{1,2,\dots,T\}, \label{eq:ls-bal} \tag{10.6b}\\[1ex]
-    && q_t &\le M_t\, y_t, & \forall t\in\{1,2,\dots,T\}, \label{eq:ls-setup} \tag{10.6c}\\[1ex]
-    && q_t &\ge 0, & \forall t\in\{1,2,\dots,T\}, \label{eq:ls-domq} \tag{10.6d}\\[1ex]
-    && s_t &\ge 0, & \forall t\in\{1,2,\dots,T\}, \label{eq:ls-doms} \tag{10.6e}\\[1ex]
-    && y_t &\in\{0,1\}, & \forall t\in\{1,2,\dots,T\}. \label{eq:ls-domy} \tag{10.6f}
-    \end{align*}
-
-- Once the set-ups $y$ are fixed, the rest is an LP: the hard decisions are the $T$ binary variables. The LP relaxation is weak, because a fraction $y_t=q_t/M_t$ of a set-up is enough to produce $q_t$.
+- Once the integer variables are fixed, the rest is an LP: the hard decisions are the integer variables, and the LP relaxation is the tool that estimates the effect of the decisions not yet taken.
 
 ### 10.7.1 Relax-and-fix
 
-!!! chiave ""
+<a id="box-23-def-rf"></a>
 
-    <em>Relax-and-fix</em> splits the integer variables into blocks $B_1,B_2,\dots,B_p$, ordered in time. At step $r$ it solves the MIP in which the variables of $B_r$ are integer, those of $B_1,\dots,B_{r-1}$ are fixed to the values decided at the previous steps, and those of $B_{r+1},\dots,B_p$ are <em>relaxed</em> (continuous). Then it fixes the variables of $B_r$ to their values, and moves to the next block. The solution of the last step is feasible.
+!!! definizione "Definition 10.13: relax-and-fix"
+
+    <em>Relax-and-fix</em> splits the integer variables into blocks $B_1,B_2,\dots,B_p$, in a given order. At step $r$ it solves the MIP in which the variables of $B_r$ are integer, those of $B_1,\dots,B_{r-1}$ are fixed to the values decided at the previous steps, and those of $B_{r+1},\dots,B_p$ are <em>relaxed</em> (continuous). Then it fixes the variables of $B_r$ to their values, and moves to the next block. The solution of the last step is feasible.
 
 !!! algoritmo "Algorithm: Relax-and-fix"
 
-    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip); partition $B_1,B_2,\dots,B_p$ of $\mathscr{D}$, ordered in time  
+    <strong>Input:</strong> MIP [(10.1)](#eq-eq-mip); partition $B_1,B_2,\dots,B_p$ of $\mathscr{D}$, in a given order  
     <strong>Output:</strong> Feasible solution, or FAIL  
     <strong>function</strong> RelaxAndFix(MIP, $B_1,\dots,B_p$)  
     &emsp;&emsp;<strong>for</strong> $r := 1$ <strong>to</strong> $p$ <strong>do</strong>  
@@ -1153,74 +858,58 @@ title: "MIP heuristics"
     &emsp;&emsp;&emsp;&emsp;fix $x_j:=x'_j$ for all $j\in B_r$  
     &emsp;&emsp;<strong>return</strong> $\vet x'$&emsp;*// all the integer variables are integer*
 
-- <strong>Why.</strong> The decisions of the first periods are taken with care (integer), while the future is only estimated (relaxed). Each MIP has the integer variables of a single block, so it is small.
+- <strong>Why.</strong> The decisions of the first blocks are taken with care (integer), while the others are only estimated (relaxed). Each MIP has the integer variables of a single block, so it is small.
 
-- <strong>Myopia.</strong> The relaxed future is optimistic: a fraction of a set-up costs a fraction of $F$. A decision that looks good because the future is cheap may turn out to be bad when the future becomes integer. With capacities, the fixed decisions can even make a later step infeasible.
+- <strong>Myopia.</strong> The relaxed blocks are optimistic: the relaxation can buy a fraction of a decision for a fraction of its cost. A decision that looks good because the rest is cheap may turn out to be bad when the rest becomes integer. The fixed decisions can even make a later step infeasible.
 
-- <strong>Variants.</strong> Larger blocks give better solutions and harder MIPs; <em>overlapping</em> blocks solve $B_r\cup B_{r+1}$ as integer but fix only $B_r$, to see a little further into the future.
+- <strong>Variants.</strong> Larger blocks give better solutions and harder MIPs; <em>overlapping</em> blocks solve $B_r\cup B_{r+1}$ as integer but fix only $B_r$, to see a little further.
 
-<a id="box-19-ex-rfcourse"></a>
+<a id="box-24-ex-rf"></a>
 
-!!! esempio "Example 10.15: Relax-and-fix on the lot sizing instance of the MIP course"
+!!! esempio "Example 10.11: Relax-and-fix on $P46$"
 
-    The instance of the MIP course has $T=5$, $d=(20,10,30,40,10)$, $F=50$, $h=1$, no capacity. Its LP relaxation has value $\frac{36985}{396}\approx 93.40$, the constructive heuristic least unit cost of the course gives $200$, and the optimal value is $170$. Relax-and-fix with one period per block, $B_t=\{y_t\}$, finds a solution of value $170$: <strong>optimal</strong>.
+    The integer variables are $x_1,x_2,x_3$. The LP relaxation has value $\frac{499}{25}$, the upper bound is $19$ and $z(\ILP)=16$, attained by $(0,1,1)$.
 
-<a id="box-20-ex-rfcap"></a>
-
-!!! esempio "Example 10.16: Relax-and-fix on a capacitated instance"
-
-    Consider $T=6$, $d=(50,30,10,10,40,10)$, $F=40$, $h=1$ and capacity $Q=80$. The LP relaxation has value $\frac{2150}{21}\approx 102.38$ and the optimal value is $160$, with set-ups in periods $1$, $2$, $5$. Relax-and-fix with $B_t=\{y_t\}$:
+    <strong>One variable per block, $B_1=\{x_1\}$, $B_2=\{x_2\}$, $B_3=\{x_3\}$.</strong>
 
     <div class="tabella" markdown="0"><table>
     <tr>
     <th>step <span class="arithmatex">\(r\)</span></th>
     <th>value of the MIP of step <span class="arithmatex">\(r\)</span></th>
-    <th><span class="arithmatex">\(y\)</span> of the solution</th>
+    <th>solution of the MIP</th>
     <th>fixing</th>
     </tr>
     <tr>
     <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(\frac{2465}{21}\approx 117.38\)</span></td>
-    <td><span class="arithmatex">\(\big(1,\,0.375,\,0.143,\,0.167,\,1,\,0\big)\)</span></td>
-    <td><span class="arithmatex">\(y_1:=1\)</span></td>
+    <td><span class="arithmatex">\(\frac{296}{15}\approx19.73\)</span></td>
+    <td><span class="arithmatex">\(\big(0,\frac{26}{15},\frac{14}{15}\big)\)</span></td>
+    <td><span class="arithmatex">\(x_1:=0\)</span></td>
     </tr>
     <tr>
     <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(\frac{2780}{21}\approx 132.38\)</span></td>
-    <td><span class="arithmatex">\(\big(1,\,0,\,0.143,\,0.167,\,1,\,0\big)\)</span></td>
-    <td><span class="arithmatex">\(y_2:=0\)</span></td>
+    <td><span class="arithmatex">\(\frac{56}{3}\approx18.67\)</span></td>
+    <td><span class="arithmatex">\(\big(0,2,\frac23\big)\)</span></td>
+    <td><span class="arithmatex">\(x_2:=2\)</span></td>
     </tr>
     <tr>
     <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(\frac{500}{3}\approx 166.67\)</span></td>
-    <td><span class="arithmatex">\(\big(1,\,0,\,1,\,0.167,\,1,\,0\big)\)</span></td>
-    <td><span class="arithmatex">\(y_3:=1\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(170\)</span></td>
-    <td><span class="arithmatex">\((1,0,1,0,1,0)\)</span></td>
-    <td><span class="arithmatex">\(y_4:=0\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(170\)</span></td>
-    <td><span class="arithmatex">\((1,0,1,0,1,0)\)</span></td>
-    <td><span class="arithmatex">\(y_5:=1\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(170\)</span></td>
-    <td><span class="arithmatex">\((1,0,1,0,1,0)\)</span></td>
-    <td><span class="arithmatex">\(y_6:=0\)</span></td>
+    <td><span class="arithmatex">\(12\)</span></td>
+    <td><span class="arithmatex">\((0,2,0)\)</span></td>
+    <td><span class="arithmatex">\(x_3:=0\)</span></td>
     </tr>
     </table></div>
 
-    (the fractional values are rounded to three decimals). The result has set-ups in periods $1$, $3$, $5$: production $80$, $20$, $50$, stocks $30$, $10$, $10$ at the end of periods $1$, $3$, $5$, cost $3\cdot 40+50=170$. The wrong decision is taken at step $2$: with the future relaxed, $y_2=0$ gives $132.38$ and $y_2=1$ gives $142.38$, so relax-and-fix saves the set-up of period $2$; but then the capacity forces a set-up in period $3$, which the relaxation had paid only for a fraction $0.143$.
+    The result is $(0,2,0)$, of value $12$, with a gap of $\frac{19-12}{12}\approx58.3\%$. The wrong decision is taken at step $2$: with $x_3$ relaxed, $x_2=2$ gives $\frac{56}{3}\approx18.67$ and $x_2=1$ gives $\frac{122}{7}\approx17.43$, so $x_2:=2$; but then the second constraint leaves room only for $x_3\le\frac23$, and $x_3$ becomes $0$ when it is integer.
+
+    <strong>Larger blocks, $B_1=\{x_1\}$, $B_2=\{x_2,x_3\}$.</strong> Step $1$ is the same. At step $2$ the MIP on $x_2,x_3$ is solved with both variables integer: it returns $(0,1,1)$, of value $16$, the <strong>optimum</strong>.
+
+- The size of the blocks trades the quality of the solution against the difficulty of the MIPs: the larger block sees the interaction between $x_2$ and $x_3$ that the single-variable blocks miss.
 
 ### 10.7.2 Fix-and-optimize
 
-!!! chiave ""
+<a id="box-25-def-fo"></a>
+
+!!! definizione "Definition 10.14: fix-and-optimize"
 
     <em>Fix-and-optimize</em> improves an incumbent $\bar{\vet x}$. It considers a sequence of <em>windows</em> $W_1,W_2,\dots,W_q\subseteq\mathscr{D}$, typically consecutive periods. For each window it fixes all the integer variables <em>outside</em> the window to their values in $\bar{\vet x}$, and solves the sub-MIP on the variables of the window, with the cutoff constraint. A better solution becomes the incumbent. The passes over the windows are repeated until a whole pass gives no improvement.
 
@@ -1238,15 +927,11 @@ title: "MIP heuristics"
     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;$\bar{\vet x}\leftarrow \vet x'$;   $improved\leftarrow$ true  
     &emsp;&emsp;<strong>return</strong> $\bar{\vet x}$
 
-- Fix-and-optimize is a <strong>local search</strong> whose moves change all the integer variables of a window at once, explored exactly by the solver: the integer-programming counterpart of the neighbourhoods of the notes on local search. It stops in a local optimum with respect to all the windows.
+<a id="box-26-ex-fo"></a>
 
-- Relax-and-fix and fix-and-optimize are natural partners: the first builds a solution looking forward in time, the second repairs the myopic decisions looking at the past and the future together.
+!!! esempio "Example 10.12: Fix-and-optimize on $P46$ and on $P72$"
 
-<a id="box-21-ex-fo"></a>
-
-!!! esempio "Example 10.17: Fix-and-optimize on the capacitated instance"
-
-    Start from the solution of relax-and-fix of [Example 10.16](#box-20-ex-rfcap), $\bar{\vet y}=(1,0,1,0,1,0)$ of cost $170$, with the windows of two consecutive periods $W_t=\{y_t,y_{t+1}\}$, $t=1,2,\dots,5$.
+    <strong>$P46$.</strong> Start from the solution of relax-and-fix, $\bar{\vet x}=(0,2,0)$, of value $12$, with the windows $W_1=\{x_1\}$ and $W_2=\{x_2,x_3\}$ and $\theta=1$.
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1255,32 +940,33 @@ title: "MIP heuristics"
     <th></th>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\{y_1,y_2\}\)</span></td>
-    <td><span class="arithmatex">\(170\)</span></td>
-    <td>no improvement</td>
+    <td><span class="arithmatex">\(\{x_1\}\)</span></td>
+    <td><span class="arithmatex">\(12\)</span></td>
+    <td>no improvement (<span class="arithmatex">\(x_1=1\)</span> violates the first constraint)</td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\{y_2,y_3\}\)</span></td>
-    <td><span class="arithmatex">\(160\)</span></td>
-    <td><span class="arithmatex">\(\bar{\vet y}=(1,1,0,0,1,0)\)</span></td>
+    <td><span class="arithmatex">\(\{x_2,x_3\}\)</span></td>
+    <td><span class="arithmatex">\(16\)</span></td>
+    <td><span class="arithmatex">\(\bar{\vet x}=(0,1,1)\)</span></td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(\{y_3,y_4\}\)</span>, <span class="arithmatex">\(\{y_4,y_5\}\)</span>, <span class="arithmatex">\(\{y_5,y_6\}\)</span></td>
-    <td><span class="arithmatex">\(160\)</span></td>
-    <td>no improvement</td>
-    </tr>
-    <tr>
-    <td>second pass, all windows</td>
-    <td><span class="arithmatex">\(160\)</span></td>
+    <td>second pass, both windows</td>
+    <td><span class="arithmatex">\(16\)</span></td>
     <td>no improvement: stop</td>
     </tr>
     </table></div>
 
-    The window $\{y_2,y_3\}$ revises the wrong decision of relax-and-fix: the set-up moves from period $3$ to period $2$. The plan produces $50$, $50$, $50$ in periods $1$, $2$, $5$, with stocks $20$ and $10$ at the end of periods $2$, $3$ and $10$ at the end of period $5$: cost $3\cdot 40+40=160$, the <strong>optimum</strong>.
+    With the three windows of one variable each, $\{x_1\}$, $\{x_2\}$, $\{x_3\}$, no window improves $(0,2,0)$: it is a local optimum for those windows. The window $\{x_2,x_3\}$ revises the wrong decision of relax-and-fix and reaches the optimum $16$.
+
+    <strong>$P72$.</strong> Start from the solution of the feasibility pump, $(0,0,1,3,1)$, of value $2$, with the windows $\{x_1,x_2\}$, $\{x_3,x_4\}$, $\{x_5\}$. The first window gives no improvement; the second gives $(0,0,2,4,1)$, of value $5$; the third and the second pass give none. The method stops with $5<7=z(\ILP)$: a local optimum with respect to these windows, since the optimal solution $(0,1,1,2,0)$ differs from it in $x_2$, $x_3$, $x_4$ and $x_5$, more variables than any window contains.
+
+- Fix-and-optimize is a <strong>local search</strong> whose moves change all the integer variables of a window at once, explored exactly by the solver: the integer-programming counterpart of the neighbourhoods of local search. It stops in a local optimum with respect to all the windows.
+
+- Relax-and-fix and fix-and-optimize are natural partners: the first builds a solution block by block, the second repairs the myopic decisions looking at several blocks together.
 
 ## 10.8 Heuristics inside the solver { #sez-sec-gurobi }
 
-- A modern MIP solver is not only a branch-and-bound algorithm: it runs, automatically, most of the heuristics of these notes. In Gurobi (the chapter on Gurobi of the MIP modelling course explains how to use it from Python):
+- A modern MIP solver is not only a branch-and-bound algorithm: it runs, automatically, most of the heuristics of this chapter (the chapter «MIP solvers: what they do» shows real logs). In Gurobi:
 
     - <em>before the root LP</em>, heuristics that need no relaxation look for a first solution;
 
@@ -1333,176 +1019,110 @@ title: "MIP heuristics"
 </tr>
 </table></div>
 
-- A heuristic solution computed outside the solver — by $FFD$, $LPT$, a local search — can be passed to it as a <strong>MIP start</strong> (the attribute <code>Start</code> of the variables): the solver starts from it as incumbent, uses it for pruning and for RINS, and never returns anything worse.
+- A heuristic solution computed outside the solver — by any of the methods of this chapter — can be passed to it as a <strong>MIP start</strong> (the attribute <code>Start</code> of the variables): the solver starts from it as incumbent, uses it for pruning and for RINS, and never returns anything worse.
 
-<a id="box-22-ex-gurobi"></a>
-
-!!! esempio "Example 10.18: The effect of the heuristics of Gurobi on a medium BPP instance"
-
-    The instance has $n=60$ items, with weights $w_j=20+(s_j \bmod 41)$, where $s_1,s_2,\dots$ is the Park–Miller sequence from the seed $1$, and capacity $c=100$:
-
-    $$
-    \begin{array}{cccccccccc}
-    {58} & {29} & {22} & {22} & {55} & {45} & {38} & {40} & {34} & {32} \\
-    {43} & {57} & {20} & {57} & {53} & {32} & {40} & {57} & {50} & {33} \\
-    {29} & {49} & {37} & {20} & {27} & {22} & {55} & {40} & {48} & {40} \\
-    {52} & {24} & {21} & {48} & {31} & {36} & {38} & {46} & {30} & {20} \\
-    {31} & {58} & {40} & {28} & {54} & {50} & {26} & {31} & {27} & {54} \\
-    {26} & {26} & {22} & {30} & {33} & {55} & {27} & {50} & {47} & {26}
-    \end{array}
-    $$
-
-    The total weight is $2271$, so $LB=\lceil 2271/100\rceil=23$; $FFD$ uses $24$ bins, and the model is built with $|\mathscr{B}|=24$ bins. Gurobi 13.0.3 is run on one thread with a limit of $10$ <em>work units</em> (a deterministic measure of the computing effort, roughly a second each), with different parameters.
-
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th>parameters</th>
-    <th>incumbent</th>
-    <th>bound</th>
-    <th>nodes</th>
-    <th>work</th>
-    <th>incumbents found (work: value)</th>
-    </tr>
-    <tr>
-    <td>default</td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(2533\)</span></td>
-    <td><span class="arithmatex">\(5.27\)</span></td>
-    <td><span class="arithmatex">\(0.007\)</span>: <span class="arithmatex">\(24\)</span>; <span class="arithmatex">\(5.273\)</span>: <span class="arithmatex">\(23\)</span></td>
-    </tr>
-    <tr>
-    <td><code>Heuristics=0</code></td>
-    <td><span class="arithmatex">\(24\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(4809\)</span></td>
-    <td><span class="arithmatex">\(10.00\)</span></td>
-    <td><span class="arithmatex">\(1.610\)</span>: <span class="arithmatex">\(24\)</span></td>
-    </tr>
-    <tr>
-    <td><code>Heuristics=0.5</code></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(0.16\)</span></td>
-    <td><span class="arithmatex">\(0.007\)</span>: <span class="arithmatex">\(24\)</span>; <span class="arithmatex">\(0.163\)</span>: <span class="arithmatex">\(23\)</span></td>
-    </tr>
-    <tr>
-    <td><code>MIPFocus=1</code></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(1\)</span></td>
-    <td><span class="arithmatex">\(0.16\)</span></td>
-    <td><span class="arithmatex">\(0.007\)</span>: <span class="arithmatex">\(24\)</span>; <span class="arithmatex">\(0.160\)</span>: <span class="arithmatex">\(23\)</span></td>
-    </tr>
-    <tr>
-    <td><code>NoRelHeurWork=1</code></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(2533\)</span></td>
-    <td><span class="arithmatex">\(6.48\)</span></td>
-    <td><span class="arithmatex">\(0.007\)</span>: <span class="arithmatex">\(24\)</span>; <span class="arithmatex">\(6.477\)</span>: <span class="arithmatex">\(23\)</span></td>
-    </tr>
-    <tr>
-    <td><code>RINS=0</code></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(2959\)</span></td>
-    <td><span class="arithmatex">\(5.86\)</span></td>
-    <td><span class="arithmatex">\(0.007\)</span>: <span class="arithmatex">\(24\)</span>; <span class="arithmatex">\(5.861\)</span>: <span class="arithmatex">\(23\)</span></td>
-    </tr>
-    </table></div>
-
-    ![Figure 5](../img/10-mip-heuristics/fig05.svg){ .fig loading=lazy  }
-
-    With the default parameters, a solution of $24$ bins is found at once, and the optimal one only after $2533$ nodes. Spending more effort in the heuristics (<code>Heuristics=0.5</code> or <code>MIPFocus=1</code>) finds $23$ at the root, about $30$ times faster; without heuristics the first solution arrives after $1.61$ work units, and the optimum is not found within the limit. Since the bound is $23$ from the root, the whole difficulty of this instance is primal: finding the solution, not proving it optimal.
-
-- The numbers depend on the instance, on the version of the solver and on the machine; a single instance proves nothing (notes on definitions). The lesson is qualitative: on instances whose bound is strong, as the BPP with $LB=z(I)$, the time to solve is the time to find a good solution, and the heuristics of the solver — or a good MIP start — decide it.
+- The numbers depend on the instance, on the version of the solver and on the machine; a single instance proves nothing. The lesson is qualitative: when the bound is strong, the time to solve is the time to find a good solution, and the heuristics of the solver — or a good MIP start — decide it.
 
 ## 10.9 What MIP-based heuristics give { #sez-sec-give }
 
-- The notes on definitions ended with a warning: a heuristic gives only one side of the gap, and without a dual bound nothing can be said about the quality of its solution. The heuristics of the previous notes give <em>only</em> primal bounds.
+- A heuristic gives only one side of the gap, and without a dual bound nothing can be said about the quality of its solution. A MIP-based heuristic works with a MIP model, and the model comes with its LP relaxation; run inside a MIP solver, it comes with the dual bound of the branch-and-bound as well. The heuristic <strong>knows how far it is from the optimum</strong> while it runs: the optimality gap
 
-- A MIP-based heuristic works with a MIP model, and the model comes with its LP relaxation; run inside a MIP solver, it comes with the dual bound of the branch-and-bound as well. For the first time, the heuristic <strong>knows how far it is from the optimum</strong> while it runs: the gap of the notes on definitions is computed at every moment, and when it is $0$ the solution is <em>proved</em> optimal.
+    $$
+    \text{optimality gap} = \frac{\UB - \LB}{|\LB|}
+    $$
+
+    is computed at every moment, and when it is $0$ the solution is <em>proved</em> optimal.
 
 <div class="tabella" markdown="0"><table>
 <tr>
-<th></th>
-<th colspan="3">heuristics of the previous notes</th>
-<th colspan="3">MIP-based heuristics</th>
+<th>instance</th>
+<th>solution</th>
+<th><span class="arithmatex">\(\LB\)</span></th>
+<th><span class="arithmatex">\(\UB=\lfloor z(\LP)\rfloor\)</span></th>
+<th>gap</th>
+<th>certified by</th>
 </tr>
 <tr>
-<td>instance</td>
-<td>solution</td>
-<td>dual bound</td>
-<td>gap</td>
-<td>solution</td>
-<td>dual bound</td>
-<td>gap</td>
+<td>car, rounding down</td>
+<td><span class="arithmatex">\((3,2)\)</span></td>
+<td><span class="arithmatex">\(13\)</span></td>
+<td><span class="arithmatex">\(15\)</span></td>
+<td><span class="arithmatex">\(15.4\%\)</span></td>
+<td>—</td>
 </tr>
 <tr>
-<td>KP</td>
-<td><span class="arithmatex">\(GR\)</span>: <span class="arithmatex">\(16\)</span></td>
-<td>LP: <span class="arithmatex">\(17\)</span></td>
-<td><span class="arithmatex">\(5.9\%\)</span></td>
-<td>LB, PS: <span class="arithmatex">\(17\)</span></td>
-<td>PS: <span class="arithmatex">\(17\)</span></td>
+<td>car, diving</td>
+<td><span class="arithmatex">\((4,1)\)</span></td>
+<td><span class="arithmatex">\(14\)</span></td>
+<td><span class="arithmatex">\(15\)</span></td>
+<td><span class="arithmatex">\(7.1\%\)</span></td>
+<td>proximity search from <span class="arithmatex">\((3,2)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P7\)</span>, rounding down</td>
+<td><span class="arithmatex">\((2,0)\)</span></td>
+<td><span class="arithmatex">\(6\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
+<td><span class="arithmatex">\(16.7\%\)</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(P7\)</span>, local branching</td>
+<td><span class="arithmatex">\((2,1)\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
 <td><span class="arithmatex">\(0\%\)</span></td>
+<td>the bound</td>
 </tr>
 <tr>
-<td>BPP</td>
-<td><span class="arithmatex">\(FF\)</span>: <span class="arithmatex">\(4\)</span></td>
-<td><span class="arithmatex">\(\lceil 21/7\rceil=3\)</span></td>
-<td><span class="arithmatex">\(33.3\%\)</span></td>
-<td>pump (seed <span class="arithmatex">\(7\)</span>): <span class="arithmatex">\(3\)</span></td>
-<td>LP: <span class="arithmatex">\(3\)</span></td>
+<td><span class="arithmatex">\(P42\)</span>, RINS</td>
+<td><span class="arithmatex">\((2,2,0)\)</span></td>
+<td><span class="arithmatex">\(10\)</span></td>
+<td><span class="arithmatex">\(10\)</span></td>
 <td><span class="arithmatex">\(0\%\)</span></td>
+<td>the bound</td>
 </tr>
 <tr>
-<td>TSP</td>
-<td><span class="arithmatex">\(NN\)</span>: <span class="arithmatex">\(25\)</span></td>
-<td>two-edge: <span class="arithmatex">\(17\)</span></td>
-<td><span class="arithmatex">\(47.1\%\)</span></td>
-<td>rounding: <span class="arithmatex">\(18\)</span></td>
-<td>LP: <span class="arithmatex">\(18\)</span></td>
-<td><span class="arithmatex">\(0\%\)</span></td>
+<td><span class="arithmatex">\(P46\)</span>, relax-and-fix</td>
+<td><span class="arithmatex">\((0,2,0)\)</span></td>
+<td><span class="arithmatex">\(12\)</span></td>
+<td><span class="arithmatex">\(19\)</span></td>
+<td><span class="arithmatex">\(58.3\%\)</span></td>
+<td>—</td>
 </tr>
 <tr>
-<td><span class="arithmatex">\(P\,||\,C_{\max}\)</span></td>
-<td><span class="arithmatex">\(LPT\)</span>: <span class="arithmatex">\(11\)</span></td>
-<td><span class="arithmatex">\(9\)</span></td>
-<td><span class="arithmatex">\(22.2\%\)</span></td>
-<td>RINS, LB, PS: <span class="arithmatex">\(9\)</span></td>
-<td>LP: <span class="arithmatex">\(9\)</span></td>
-<td><span class="arithmatex">\(0\%\)</span></td>
+<td><span class="arithmatex">\(P46\)</span>, fix-and-optimize</td>
+<td><span class="arithmatex">\((0,1,1)\)</span></td>
+<td><span class="arithmatex">\(16\)</span></td>
+<td><span class="arithmatex">\(19\)</span></td>
+<td><span class="arithmatex">\(18.8\%\)</span></td>
+<td>proximity search</td>
 </tr>
 <tr>
-<td>lot sizing, capacitated</td>
-<td>RF: <span class="arithmatex">\(170\)</span></td>
-<td>LP: <span class="arithmatex">\(102.38\)</span></td>
-<td><span class="arithmatex">\(66.0\%\)</span></td>
-<td>FO: <span class="arithmatex">\(160\)</span></td>
-<td>solver: <span class="arithmatex">\(160\)</span></td>
-<td><span class="arithmatex">\(0\%\)</span></td>
+<td><span class="arithmatex">\(P72\)</span>, feasibility pump</td>
+<td><span class="arithmatex">\((0,0,1,3,1)\)</span></td>
+<td><span class="arithmatex">\(2\)</span></td>
+<td><span class="arithmatex">\(8\)</span></td>
+<td><span class="arithmatex">\(300\%\)</span></td>
+<td>—</td>
 </tr>
 <tr>
-<td>medium BPP</td>
-<td><span class="arithmatex">\(FFD\)</span>: <span class="arithmatex">\(24\)</span></td>
-<td><span class="arithmatex">\(23\)</span></td>
-<td><span class="arithmatex">\(4.3\%\)</span></td>
-<td>Gurobi: <span class="arithmatex">\(23\)</span></td>
-<td><span class="arithmatex">\(23\)</span></td>
-<td><span class="arithmatex">\(0\%\)</span></td>
+<td><span class="arithmatex">\(P72\)</span>, local branching</td>
+<td><span class="arithmatex">\((0,1,1,2,0)\)</span></td>
+<td><span class="arithmatex">\(7\)</span></td>
+<td><span class="arithmatex">\(8\)</span></td>
+<td><span class="arithmatex">\(14.3\%\)</span></td>
+<td>proximity search</td>
 </tr>
 </table></div>
 
-- On the KP the integer rounding of the LP value is $\lfloor 17.75\rfloor=17$, and proximity search proves the optimality of $17$ by itself ([Proposition 10.4](#box-16-prop-ps)). On the capacitated lot sizing instance the LP bound is weak, and the gap is closed by the branch-and-bound of the solver, which proves that $160$ is optimal.
+- On $P7$ and $P42$ the integer rounding of the LP value is already the optimal value: the difficulty is to find a solution that attains the bound, not to prove it. On the other instances the bound $\lfloor z(\LP)\rfloor$ is not tight, and the certificate comes from proximity search ([Proposition 10.12](#box-21-prop-ps)) or from the branch-and-bound of the solver.
 
 !!! chiave ""
 
     A MIP-based heuristic does not only find solutions: inside a MIP solver it works with a dual bound, so the gap of its solution is always known, and a gap equal to $0$ certifies optimality.
 
-- The methods of these notes, in summary:
+- The methods of this chapter, in summary:
 
 <div class="tabella" markdown="0"><table>
 <tr>
@@ -1675,91 +1295,21 @@ def note(trace, *items):
         trace.append(items)
 ```
 
-- The models of Section [10.2](#sez-sec-models) and of the lot sizing problem (<code>models.py</code>):
+- The model of the examples (<code>models.py</code>): <code>max c x</code> subject to <code>A x &lt;= b</code>, with integer variables in $\Z_{\ge0}$ and optional upper bounds.
 
 ```python
-from itertools import combinations
+from common import *
 
-def build_kp(p, w, c):
-    m = gp.Model("KP", env=ENV)
-    n = len(p)
-    x = m.addVars(n, vtype=GRB.BINARY, name="x")
-    m.setObjective(gp.quicksum(p[i] * x[i] for i in range(n)), GRB.MAXIMIZE)
-    m.addConstr(gp.quicksum(w[i] * x[i] for i in range(n)) <= c, name="capacity")
+def build_mip(c, A, b, ub=None, name="MIP"):
+    """max c x subject to A x <= b, 0 <= x <= ub, x integer"""
+    m = gp.Model(name, env=ENV)
+    n = len(c)
+    x = m.addVars(n, lb=0, ub=GRB.INFINITY if ub is None else ub, vtype=GRB.INTEGER, name="x")
+    m.setObjective(gp.quicksum(c[j] * x[j] for j in range(n)), GRB.MAXIMIZE)
+    for i in range(len(b)):
+        m.addConstr(gp.quicksum(A[i][j] * x[j] for j in range(n)) <= b[i], name=f"c{i}")
     m.update()
     return m
-
-def build_bpp(w, c, nb):
-    m = gp.Model("BPP", env=ENV)
-    n = len(w)
-    x = m.addVars(n, nb, vtype=GRB.BINARY, name="x")
-    y = m.addVars(nb, vtype=GRB.BINARY, name="y")
-    m.setObjective(y.sum(), GRB.MINIMIZE)
-    m.addConstrs((x.sum(i, "*") == 1 for i in range(n)), name="assign")
-    m.addConstrs((gp.quicksum(w[i] * x[i, b] for i in range(n)) <= c * y[b]
-                  for b in range(nb)), name="capacity")
-    m.update()
-    return m
-
-def build_tsp(d):
-    """symmetric TSP: one binary variable per edge, degree and subtour elimination constraints"""
-    m = gp.Model("TSP", env=ENV)
-    n = len(d)
-    E = [(i, j) for i in range(n) for j in range(i + 1, n)]
-    x = m.addVars(E, vtype=GRB.BINARY, name="x")
-    m.setObjective(gp.quicksum(d[i][j] * x[i, j] for i, j in E), GRB.MINIMIZE)
-    m.addConstrs((gp.quicksum(x[e] for e in E if i in e) == 2 for i in range(n)), name="degree")
-    for k in range(2, n - 1):
-        for S in combinations(range(n), k):
-            m.addConstr(gp.quicksum(x[i, j] for i, j in E if i in S and j in S) <= len(S) - 1)
-    m.update()
-    return m
-
-def build_pcm(t, m):
-    model = gp.Model("PCmax", env=ENV)
-    n = len(t)
-    x = model.addVars(n, m, vtype=GRB.BINARY, name="x")
-    Cmax = model.addVar(name="Cmax")
-    model.setObjective(Cmax, GRB.MINIMIZE)
-    model.addConstrs((x.sum(j, "*") == 1 for j in range(n)), name="assign")
-    model.addConstrs((gp.quicksum(t[j] * x[j, h] for j in range(n)) <= Cmax
-                      for h in range(m)), name="load")
-    model.update()
-    return model
-
-def build_lot_sizing(d, f, h, cap=None):
-    """single-item lot sizing: production q_t, stock s_t, set-up y_t; capacity cap (None = uncapacitated)"""
-    m = gp.Model("LS", env=ENV)
-    T = len(d)
-    y = m.addVars(T, vtype=GRB.BINARY, name="y")
-    q = m.addVars(T, name="q")
-    s = m.addVars(T, name="s")
-    m.setObjective(f * y.sum() + h * s.sum(), GRB.MINIMIZE)
-    for t in range(T):
-        m.addConstr((s[t - 1] if t > 0 else 0) + q[t] - s[t] == d[t], name=f"balance[{t}]")
-        M = sum(d[t:]) if cap is None else min(cap, sum(d[t:]))
-        m.addConstr(q[t] <= M * y[t], name=f"setup[{t}]")
-    m.update()
-    return m
-
-def build_ip2(A, b, c, U):
-    """max c1 x1 + c2 x2 subject to A x <= b, 0 <= x <= U, x integer"""
-    m = gp.Model("IP2", env=ENV)
-    x = m.addVars(2, lb=0, ub=U, vtype=GRB.INTEGER, name="x")
-    m.setObjective(c[0] * x[0] + c[1] * x[1], GRB.MAXIMIZE)
-    for k in range(len(A)):
-        m.addConstr(A[k][0] * x[0] + A[k][1] * x[1] <= b[k])
-    m.update()
-    return m
-
-def pcm_solution(m, sets):
-    """the solution of the P||Cmax model with job sets J_1, ..., J_m (1-based jobs)"""
-    x = [0] * m.NumVars
-    index = {v.VarName: k for k, v in enumerate(m.getVars())}
-    for h, J in enumerate(sets):
-        for j in J:
-            x[index[f"x[{j - 1},{h}]"]] = 1
-    return evaluate(m, x)[1]
 ```
 
 - Rounding and diving:
@@ -1949,44 +1499,25 @@ def fix_and_optimize(m, x_tilde, windows, theta=1, trace=None):
     return z_tilde, x_tilde
 ```
 
-- The experiment of [Example 10.18](#box-22-ex-gurobi), with a callback that records every new incumbent:
-
-```python
-def run_with_parameters(m, params, work_limit):
-    """solve m with the given Gurobi parameters for at most work_limit work units;
-       returns incumbent, dual bound, nodes, work and the list of the incumbents found (work, value)"""
-    s = m.copy()
-    s.Params.WorkLimit = work_limit
-    for name, value in params.items():
-        s.setParam(name, value)
-    found = []
-    def callback(model, where):                # called by Gurobi at every new incumbent
-        if where == GRB.Callback.MIPSOL:
-            found.append((model.cbGet(GRB.Callback.WORK), model.cbGet(GRB.Callback.MIPSOL_OBJ)))
-    s.optimize(callback)
-    z = s.ObjVal if s.SolCount > 0 else None
-    return z, s.ObjBound, int(s.NodeCount), s.Work, found
-```
-
-- All the functions of this section are in the folder <code>MIP\_HEUR\_CODE</code>, together with <code>instances.py</code>, which contains the instances of the notes and of the exercises. The command <code>python3 run\_tests.py</code> runs every example of these notes and every instance of the exercises, checking each value against the expected value, written in the file.
+- All the functions of this section are in the folder <code>MIP\_HEUR\_CODE</code>, together with <code>instances.py</code>, which contains the instances of the chapter and of the exercises. The command <code>python3 run\_tests.py</code> runs every example of the chapter and every instance of the exercises, checking each value against the expected value, written in the file.
 
 ## 10.11 Typical mistakes { #sez-sec-mistakes }
 
 !!! attenzione "Warning"
 
-    - <strong>Rounding a problem with equality constraints.</strong> Independent roundings of an assignment constraint almost never sum to $1$: on the BPP and on $P\,||\,C_{\max}$ rounding fails.
+    - <strong>Rounding a problem with equality constraints.</strong> Independent roundings of the variables of an equality constraint almost never satisfy it: rounding fails, and a dive is needed.
 
-    - <strong>Believing that a dive can undo a decision.</strong> A dive is one path of the tree, without backtracking: the first wrong fixing (on the KP, $x_2:=0$) is never revised.
+    - <strong>Believing that a dive can undo a decision.</strong> A dive is one path of the tree, without backtracking: a wrong fixing is never revised, and a fixing that makes the LP infeasible ends the dive.
 
-    - <strong>Using the feasibility pump to get a good solution.</strong> After the first LP the pump ignores the objective: it returns a feasible solution, possibly with empty bins left open.
+    - <strong>Using the feasibility pump to get a good solution.</strong> After the first LP the pump ignores the objective: on $P72$ it returns a solution of value $2$, against the optimal value $7$.
 
-    - <strong>Trusting hard fixing.</strong> RINS fixes the variables on which the LP and the incumbent agree, so it cannot find a better solution that changes one of them.
+    - <strong>Trusting hard fixing.</strong> RINS fixes the variables on which the LP and the incumbent agree, so it cannot find a better solution that changes one of them ($P7$).
 
     - <strong>Forgetting the cutoff constraint.</strong> Without $f(\vet x)\le f(\bar{\vet x})-\theta$ the sub-MIP returns the incumbent solution again; with it, an infeasible sub-MIP proves a local optimum.
 
-    - <strong>Claiming optimality without the conditions.</strong> [Proposition 10.4](#box-16-prop-ps) needs $\theta=1$ and integer objective values on all the feasible solutions.
+    - <strong>Claiming optimality without the conditions.</strong> [Proposition 10.12](#box-21-prop-ps) needs $\theta=1$ and integer objective values on all the feasible solutions.
 
-    - <strong>Ignoring the myopia of relax-and-fix.</strong> The relaxed future is optimistic: a decision that looks cheap can force a set-up later.
+    - <strong>Ignoring the myopia of relax-and-fix.</strong> The relaxed blocks are optimistic: a decision that looks cheap can force a bad one later ($P46$).
 
     - <strong>Generalizing from one instance or one solver run.</strong> Paths and times depend on the version of the solver and on the tie-breaking rules, so the lessons are qualitative.
 
@@ -1998,48 +1529,54 @@ def run_with_parameters(m, params, work_limit):
 
     - Rounding and diving build a solution from the LP; the feasibility pump looks only for feasibility; RINS, local branching and proximity search improve an incumbent solution with a sub-MIP.
 
-    - Relax-and-fix builds a solution along the time, fix-and-optimize improves it window by window.
+    - Relax-and-fix builds a solution block by block, fix-and-optimize improves it window by window.
 
     - Inside a MIP solver the dual bound is available: the gap of the heuristic solution is known, and a gap equal to $0$ certifies optimality.
 
-    <strong>Dashboard of the reference instances.</strong> Best solution found by the methods of this chapter against the dual bound ($\max$ for the KP, $\min$ for the others):
+    <strong>Dashboard of the car example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>
-    <th>instance</th>
-    <th>solution</th>
-    <th>dual bound</th>
-    <th>gap</th>
+    <th>Chapter</th>
+    <th>Lower bound</th>
+    <th>Upper bound</th>
+    <th>From</th>
     </tr>
     <tr>
-    <td>KP</td>
-    <td><span class="arithmatex">\(17\)</span></td>
-    <td><span class="arithmatex">\(17\)</span></td>
-    <td><span class="arithmatex">\(0\%\)</span></td>
+    <td>Integer linear programming</td>
+    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
+    <td>–</td>
+    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
     </tr>
     <tr>
-    <td>BPP</td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(0\%\)</span></td>
+    <td>LP relaxation and dual bounds</td>
+    <td>–</td>
+    <td><span class="arithmatex">\(15\)</span></td>
+    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     <tr>
-    <td><span class="arithmatex">\(P\,||\,C_{\max}\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(0\%\)</span></td>
+    <td>Cutting plane algorithm</td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    <td><span class="arithmatex">\(5\)</span> Gomory fractional cuts</td>
     </tr>
     <tr>
-    <td>lot sizing, capacitated</td>
-    <td><span class="arithmatex">\(160\)</span></td>
-    <td><span class="arithmatex">\(160\)</span></td>
-    <td><span class="arithmatex">\(0\%\)</span></td>
+    <td>LP-based branch-and-bound</td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    <td><span class="arithmatex">\(6\)</span> LP problems solved</td>
     </tr>
     <tr>
-    <td>medium BPP</td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(23\)</span></td>
-    <td><span class="arithmatex">\(0\%\)</span></td>
+    <td>This chapter, rounding down</td>
+    <td><span class="arithmatex">\(13\)</span></td>
+    <td><span class="arithmatex">\(15\)</span></td>
+    <td><span class="arithmatex">\((3,2)\)</span></td>
+    </tr>
+    <tr>
+    <td>This chapter, diving</td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    <td><span class="arithmatex">\(15\)</span></td>
+    <td><span class="arithmatex">\((4,1)\)</span>, certified optimal by proximity search</td>
     </tr>
     </table></div>
 

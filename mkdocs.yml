@@ -127,15 +127,15 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraphcore.js
   - javascripts/interattivi.js?v=21dd4bf4df
   - javascripts/gi-comune.js?v=40df75e3e5
-  - javascripts/gi-pli-dati.js?v=2ceb07c747
-  - javascripts/gi-pli.js?v=4a489dfe2c
+  - javascripts/gi-pli-dati.js?v=61cf8f4da2
+  - javascripts/gi-pli.js?v=4397b5b462
 
 nav:
   - Home: index.md
   - Bounds:
       - models-and-bounds/index.md
       - "1. Integer linear programming": models-and-bounds/ilp.md
-      - "2. LP relaxation": models-and-bounds/lp-relaxation.md
+      - "2. Primal and dual bounds": models-and-bounds/lp-relaxation.md
   - Formulations:
       - formulations/index.md
       - "3. Ideal formulations": formulations/ideal-formulations.md

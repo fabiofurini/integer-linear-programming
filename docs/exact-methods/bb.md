@@ -12,11 +12,11 @@ title: "LP-based branch-and-bound"
 
 !!! nota "Prerequisites"
 
-    - From the module <em>Linear Programming</em>, Chapter 10 «Dual simplex algorithm»: simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
+    - From the module <em>Linear Programming</em>, [Chapter 10 «Dual Simplex algorithm»](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/): simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
 
     - From this module, the chapter «Integer linear programming»: ILP problems, feasible and optimal solutions, and the car example.
 
-    - From this module, the chapter «LP relaxation and dual bounds»: the LP relaxation, lower bounds from feasible solutions, upper bounds from the LP relaxation, and the optimality gap.
+    - From this module, the chapter «Primal and dual bounds»: the LP relaxation, lower bounds from feasible solutions, upper bounds from the LP relaxation, and the optimality gap.
 
 !!! chiave "Objectives"
 
@@ -32,40 +32,11 @@ title: "LP-based branch-and-bound"
 
     - compare different branching-variable and branching-node selection strategies on the same instance.
 
-## 7.1 Why a branch-and-bound algorithm?
+- This chapter defines the LP-based branch-and-bound algorithm for ILP problems in canonical maximization form with integer data, with its branching and bounding operations.
 
-- We start from the <strong>car example</strong>. A company produces $x_1$ sports cars and $x_2$ family cars per week; the two constraints describe the available labour hours and special materials, and the objective is the weekly profit (in thousands of euros). The ILP problem reads as follows:
+- The guiding instance is the car example, $\max \{ 3\,x_1 + 2\,x_2 : 10\,x_1 + 4\,x_2 \le 45,~ 4\,x_1 + 14\,x_2 \le 49,~ x_1, x_2 \in \Z_{\ge 0} \}$, whose LP relaxation has the fractional optimal solution $(\frac{7}{2},\frac{5}{2})$, with $z(\LP) = \frac{31}{2}$.
 
-$$
-\begin{array}{rrrrrrr}
-{\max} & {3}\, {x_1} & {+} & {2}\, {x_2} \\[1ex]
-\text{subject to} & {10}\, {x_1} & {+} & {4}\, {x_2} & {\le} & {45} \\[1ex]
-& {4}\, {x_1} & {+} & {14}\, {x_2} & {\le} & {49} \\[1ex]
-& {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
-\end{array}
-$$
-
-- The optimal solution of the LP relaxation is fractional:
-
-    $$
-    \tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}, \qquad z(\LP) = \dfrac{31}{2}.
-    $$
-
-- Rounding it down we get the feasible solution $\bar{\vet x} = (3, 2)$ of value $13$. Since the costs are integer, the LP relaxation also gives the upper bound $\lfloor z(\LP) \rfloor = 15$:
-
-    $$
-    13 ~~\le~~ z(\ILP) ~~\le~~ 15.
-    $$
-
-- The feasible region contains $16$ integer points. Enumerating them all is still possible here, but the number of integer points grows exponentially with the number of variables.
-
-![Figure 1](../img/07-bb/fig01.svg){ .fig .ovale loading=lazy  }
-
-<em>The car example: the feasible region of the LP relaxation (red), its $16$ integer points (black) and the optimal solution of the LP relaxation (blue), with the objective line through it (dashed).</em>
-
-- <strong>A challenge.</strong> Before reading on, try to answer two questions. Which production plan is optimal? How can we <u>prove</u> that no better plan exists, solving only a few LP problems and without listing all the integer points? The worked examples of this chapter answer both questions.
-
-## 7.2 The idea in words and in a picture
+## 7.1 The idea in words and in a picture
 
 - The <strong>LP-based branch-and-bound algorithm</strong> (<strong>B&amp;B algorithm</strong>, for short) is an exact method for ILP problems. It is called <strong>LP-based</strong> because it solves LP relaxations to guide the search for an optimal solution.
 
@@ -81,7 +52,7 @@ $$
     \rightsquigarrow~\textbf{bounding operations}.
     $$
 
-![Figure 2](../img/07-bb/fig02.svg){ .fig .ovale loading=lazy  }
+![Figure 1](../img/07-bb/fig01.svg){ .fig .ovale loading=lazy  }
 
 <em>Branching on $x_1$ at the root of the car example: the two red regions are the feasible regions of the children ($x_1 \le 3$ and $x_1 \ge 4$); the gray strip $3 < x_1 < 4$ is cut off, and it contains no integer point.</em>
 
@@ -89,9 +60,9 @@ $$
 
     A branch-and-bound algorithm explores implicitly all the feasible solutions: it divides the feasible region into smaller regions (branching) and discards every region that cannot contain a better solution than the best one found so far (bounding).
 
-## 7.3 Definitions and notation
+## 7.2 Definitions and notation
 
-### 7.3.1 ILP problems in canonical maximization form
+### 7.2.1 ILP problems in canonical maximization form
 
 - Given $n$ values $c_j \in \Z$, $m \cdot n$ values $a_{ij} \in \Z$ and $m$ values $b_i \in \Z$, an <strong>integer linear programming</strong> (ILP) problem in canonical maximization form, with $n$ <u>integer variables</u> and integer data, reads as follows:
 
@@ -112,7 +83,7 @@ $$
 
 - The <strong>LP relaxation</strong> of the problem [(7.1)](#eq-bb-MIP), called the $\LP_1$ problem, is obtained by replacing the integrality constraints $\eqref{bb:MIP-int}$ with the non-negativity constraints $x_j \ge 0$, for all $j \in \{1, 2, \dots, n\}$.
 
-### 7.3.2 Branch-and-bound tree, incumbent solution and lower bound
+### 7.2.2 Branch-and-bound tree, incumbent solution and lower bound
 
 !!! chiave ""
 
@@ -134,7 +105,7 @@ $$
     z(\ILP) = \LB \qquad \text{and} \qquad \tilde{\vet x}(\ILP) = \bar{\vet x}. \tag{7.2}
     \end{equation*}
 
-### 7.3.3 Branching operations
+### 7.2.3 Branching operations
 
 - The most common branching operation is the <strong>binary branching</strong>: it acts on a single <strong>branching variable</strong> and produces two child branching nodes, one with an additional <strong>upper bound</strong> and one with an additional <strong>lower bound</strong> on the branching variable.
 
@@ -160,7 +131,7 @@ $$
 
     Every feasible solution of the ILP problem contained in the region of $\LP_k$ satisfies either $\eqref{bb:down}$ or $\eqref{bb:up}$, so it is contained in the region of one of the two children. <strong>This ensures the correctness of the B&amp;B algorithm</strong>.
 
-### 7.3.4 Bounding operations and the bound of a node
+### 7.2.4 Bounding operations and the bound of a node
 
 - The value $z(\LP_k)$ is an upper bound on the value of every feasible solution of the ILP problem in the region of $\LP_k$. When all the values are integer, this bound can be rounded down.
 
@@ -198,13 +169,13 @@ $$
 
     The criteria are checked in this order: infeasibility, integrality, bound. When both integrality and bound apply, the node is pruned by integrality.
 
-### 7.3.5 The list of LP problems
+### 7.2.5 The list of LP problems
 
 - A branching node that is not pruned is inserted into a <strong>list</strong> $L$ of LP problems waiting for a branching operation.
 
 - The order in which the LP problems are extracted from the list determines the <strong>branching-node selection strategy</strong>; the choice of the branching variable determines the <strong>branching-variable selection strategy</strong>. Both are discussed after the algorithm.
 
-### 7.3.6 Upper bound and optimality gap
+### 7.2.6 Upper bound and optimality gap
 
 - If the list $L$ is not empty, every feasible solution better than the incumbent one lies in the region of some node of the list. Accordingly, the B&amp;B algorithm has the <strong>upper bound</strong>
 
@@ -222,7 +193,7 @@ $$
     \text{optimality gap} = \frac{\UB - \LB}{|\LB|}, \qquad \text{for } \LB \ne 0 . \tag{7.7}
     \end{equation*}
 
-### 7.3.7 Heuristic initialization
+### 7.2.7 Heuristic initialization
 
 !!! chiave ""
 
@@ -232,9 +203,9 @@ $$
 
 - If the initial lower bound already satisfies $\mathrm{UB}(\LP_1) \le \LB$, the root is pruned by bound: the heuristic solution is optimal and no branching is needed.
 
-## 7.4 The algorithm
+## 7.3 The algorithm
 
-### 7.4.1 Pseudocode
+### 7.3.1 Pseudocode
 
 !!! algoritmo "Algorithm"
 
@@ -306,9 +277,9 @@ $$
 
 - The pseudocode does not say how the LP problems are solved: any method for LP problems can be used.
 
-- If the <strong>dual simplex algorithm</strong> is used, each child is solved starting from the optimal dictionary of its parent: after adding the branching constraint this dictionary is still dual feasible, so in general a few pivot operations are enough (Section [7.5](#sez-bb-sec-dualsimplex)).
+- If the <strong>dual simplex algorithm</strong> is used, each child is solved starting from the optimal dictionary of its parent: after adding the branching constraint this dictionary is still dual feasible, so in general a few pivot operations are enough (Section [7.4](#sez-bb-sec-dualsimplex)).
 
-### 7.4.2 The skip rule and the numbering of the nodes
+### 7.3.2 The skip rule and the numbering of the nodes
 
 - The bound of a child never exceeds the bound of its parent, since the child has one more constraint. Accordingly, if after the solution of the first child we have $\mathrm{UB}(\LP_k) \le \LB$, the second child cannot contain a better solution, and it is <strong>not solved</strong>. This is the <strong>skip rule</strong>.
 
@@ -316,7 +287,7 @@ $$
 
 - The order in which the two children are solved also determines the order in which they enter the list $L$. In these notes the down-branching node is solved first, unless otherwise stated.
 
-### 7.4.3 Number of branching nodes
+### 7.3.3 Number of branching nodes
 
 - A <strong>complete</strong> binary branch-and-bound tree with $n \ge 1$ levels has $2^{n-1}$ leaf branching nodes, and along every root-to-leaf path exactly $n-1$ branching constraints are imposed.
 
@@ -362,7 +333,7 @@ $$
 
 - With $p$ binary variables the complete tree has $p + 1$ levels and $2^{p+1} - 1$ nodes: the pruning criteria are what makes the algorithm practical.
 
-## 7.5 A short recap of the dual simplex algorithm { #sez-bb-sec-dualsimplex }
+## 7.4 A short recap of the dual simplex algorithm { #sez-bb-sec-dualsimplex }
 
 - A child differs from its parent by <u>one</u> constraint. Solving it from scratch would waste the work done for the parent: the B&amp;B algorithm starts instead from the <strong>optimal dictionary of the parent</strong> and re-optimizes it with the <strong>dual simplex algorithm</strong>.
 
@@ -423,7 +394,7 @@ $$
 
 - In a child node one or two dual pivoting operations are often enough, while the simplex algorithm from the slack basis would need several pivoting operations for every node.
 
-## 7.6 Branching-variable selection strategies
+## 7.5 Branching-variable selection strategies
 
 - The choice of the branching variable has a large impact on the size of the branch-and-bound tree.
 
@@ -433,7 +404,7 @@ $$
 
 - In all the strategies below, ties are broken by the <strong>smallest index</strong>.
 
-### 7.6.1 Lexicographic
+### 7.5.1 Lexicographic
 
 !!! chiave ""
 
@@ -441,7 +412,7 @@ $$
 
 - It requires no computation, but it takes into account neither the decrease of the bounds nor the search for feasible solutions. It is the rule used in the exercises, because it makes the execution easy to reproduce.
 
-### 7.6.2 Minimum and maximum infeasibility
+### 7.5.2 Minimum and maximum infeasibility
 
 !!! chiave ""
 
@@ -470,7 +441,7 @@ $$
 
     The two values are equal: both minimum and maximum infeasibility have a tie, which is broken by the smallest index, so both strategies select $x_1$.
 
-### 7.6.3 Strong branching
+### 7.5.3 Strong branching
 
 !!! chiave ""
 
@@ -538,15 +509,15 @@ $$
 
     The largest minimum decrease is $1$: strong branching selects $x_1$, the same variable chosen by the smallest-index rule.
 
-### 7.6.4 Further strategies
+### 7.5.4 Further strategies
 
 - Solvers estimate the decreases $\delta^d_k$ and $\delta^u_k$ from the history of the search, without solving the children, by means of <strong>pseudocosts</strong>; the same estimates give a branching-node selection rule called <strong>best estimate</strong>. These strategies are a possible extension of this chapter.
 
-## 7.7 Branching-node selection strategies
+## 7.6 Branching-node selection strategies
 
 - The order in which the nodes of the list $L$ are processed is the <strong>branching-node selection strategy</strong>: it decides where the search goes next.
 
-### 7.7.1 Best bound
+### 7.6.1 Best bound
 
 !!! chiave ""
 
@@ -554,7 +525,7 @@ $$
 
 - The selected node gives the upper bound $\eqref{bb:UB}$: processing it is the only way to decrease $\UB$. The rule tends to explore few nodes, but the list can become long.
 
-### 7.7.2 LIFO and FIFO
+### 7.6.2 LIFO and FIFO
 
 !!! chiave ""
 
@@ -576,11 +547,11 @@ $$
 
     1. If the down-branching node is solved first, we have:
 
-        ![Figure 3](../img/07-bb/fig03.svg){ .fig loading=lazy  }
+        ![Figure 2](../img/07-bb/fig02.svg){ .fig loading=lazy  }
 
     2. If the up-branching node is solved first, we have:
 
-        ![Figure 4](../img/07-bb/fig04.svg){ .fig loading=lazy  }
+        ![Figure 3](../img/07-bb/fig03.svg){ .fig loading=lazy  }
 
 <a id="box-8-ex-bb-fifo"></a>
 
@@ -590,13 +561,13 @@ $$
 
     1. If the down-branching node is solved first, we have:
 
-        ![Figure 5](../img/07-bb/fig05.svg){ .fig loading=lazy  }
+        ![Figure 4](../img/07-bb/fig04.svg){ .fig loading=lazy  }
 
     2. If the up-branching node is solved first, we have:
 
-        ![Figure 6](../img/07-bb/fig06.svg){ .fig loading=lazy  }
+        ![Figure 5](../img/07-bb/fig05.svg){ .fig loading=lazy  }
 
-## 7.8 Worked examples on the car example
+## 7.7 Worked examples on the car example
 
 - We now solve the car example with two executions of the B&amp;B algorithm, which differ only in the selection strategies. Since all the variables and all the costs are integer, the bound of a node is $\mathrm{UB}(\LP_k) = \lfloor z(\LP_k) \rfloor$.
 
@@ -640,7 +611,7 @@ $$
         \tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}, \qquad z(\LP_1) = \dfrac{31}{2}.
         $$
 
-        ![Figure 7](../img/07-bb/fig07.svg){ .fig .ovale loading=lazy  }
+        ![Figure 6](../img/07-bb/fig06.svg){ .fig .ovale loading=lazy  }
 
         <em>Node $1$: the feasible region of $\LP_1$, the integer points, the optimal solution of $\LP_1$ (blue) and the objective line through it (dashed).</em>
 
@@ -716,7 +687,7 @@ $$
             \tilde x_1 = 3,~~\tilde x_2 = \dfrac{37}{14}, \qquad z(\LP_{2}) = \dfrac{100}{7}.
             $$
 
-            ![Figure 8](../img/07-bb/fig08.svg){ .fig .ovale loading=lazy  }
+            ![Figure 7](../img/07-bb/fig07.svg){ .fig .ovale loading=lazy  }
 
             <em>Node $2$: the feasible region of $\LP_{2}$ (red) inside the region of its parent $\LP_{1}$ (gray), and the optimal solution of $\LP_{2}$ (blue) with the objective line through it (dashed).</em>
 
@@ -782,7 +753,7 @@ $$
             \tilde x_1 = 4,~~\tilde x_2 = \dfrac{5}{4}, \qquad z(\LP_{3}) = \dfrac{29}{2}.
             $$
 
-            ![Figure 9](../img/07-bb/fig09.svg){ .fig .ovale loading=lazy  }
+            ![Figure 8](../img/07-bb/fig08.svg){ .fig .ovale loading=lazy  }
 
             <em>Node $3$: the feasible region of $\LP_{3}$ (red) inside the region of its parent $\LP_{1}$ (gray), and the optimal solution of $\LP_{3}$ (blue) with the objective line through it (dashed).</em>
 
@@ -802,7 +773,7 @@ $$
 
         This is the portion of the branch-and-bound tree built in the first iteration, with the LP problems of the branching nodes:
 
-        ![Figure 10](../img/07-bb/fig10.svg){ .fig loading=lazy  }
+        ![Figure 9](../img/07-bb/fig09.svg){ .fig loading=lazy  }
 
     - <span style="color:#e03131"><strong>Iteration 2</strong></span>
 
@@ -874,7 +845,7 @@ $$
             \tilde x_1 = \dfrac{41}{10},~~\tilde x_2 = 1, \qquad z(\LP_{4}) = \dfrac{143}{10}.
             $$
 
-            ![Figure 11](../img/07-bb/fig11.svg){ .fig .ovale loading=lazy  }
+            ![Figure 10](../img/07-bb/fig10.svg){ .fig .ovale loading=lazy  }
 
             <em>Node $4$: the feasible region of $\LP_{4}$ (red) inside the region of its parent $\LP_{3}$ (gray), and the optimal solution of $\LP_{4}$ (blue) with the objective line through it (dashed).</em>
 
@@ -918,7 +889,7 @@ $$
 
             for every non-negative value of the non-basic variables. By the dual simplex algorithm, the $\LP_{5}$ problem is <strong>infeasible</strong>.
 
-            ![Figure 12](../img/07-bb/fig12.svg){ .fig .ovale loading=lazy  }
+            ![Figure 11](../img/07-bb/fig11.svg){ .fig .ovale loading=lazy  }
 
             <em>Node $5$: the constraint $x_2 \ge 2$ leaves no point of the region of its parent $\LP_{3}$ (gray): $\LP_{5}$ is infeasible.</em>
 
@@ -932,7 +903,7 @@ $$
 
         This is the portion of the branch-and-bound tree built in the second iteration, with the LP problems of the branching nodes:
 
-        ![Figure 13](../img/07-bb/fig13.svg){ .fig loading=lazy  }
+        ![Figure 12](../img/07-bb/fig12.svg){ .fig loading=lazy  }
 
     - <span style="color:#e03131"><strong>Iteration 3</strong></span>
 
@@ -1002,7 +973,7 @@ $$
             \tilde x_1 = 4,~~\tilde x_2 = 1, \qquad z(\LP_{6}) = 14.
             $$
 
-            ![Figure 14](../img/07-bb/fig14.svg){ .fig .ovale loading=lazy  }
+            ![Figure 13](../img/07-bb/fig13.svg){ .fig .ovale loading=lazy  }
 
             <em>Node $6$: the feasible region of $\LP_{6}$ (red) inside the region of its parent $\LP_{4}$ (gray), and the optimal solution of $\LP_{6}$ (blue) with the objective line through it (dashed).</em>
 
@@ -1038,7 +1009,7 @@ $$
 
         This is the portion of the branch-and-bound tree built in the third iteration, with the LP problems of the branching nodes:
 
-        ![Figure 15](../img/07-bb/fig15.svg){ .fig loading=lazy  }
+        ![Figure 14](../img/07-bb/fig14.svg){ .fig loading=lazy  }
 
     - <span style="color:#e03131"><strong>Termination</strong></span>
 
@@ -1050,7 +1021,7 @@ $$
 
     This is the final branch-and-bound tree. For each branching node it shows the bound of the node, the lower bound $\LB$ when the node was solved (or removed from the list) and the pruning criterion.
 
-    ![Figure 16](../img/07-bb/fig16.svg){ .fig loading=lazy  }
+    ![Figure 15](../img/07-bb/fig15.svg){ .fig loading=lazy  }
 
     The same execution in a table:
 
@@ -1127,7 +1098,7 @@ $$
     </tr>
     </table></div>
 
-    ![Figure 17](../img/07-bb/fig17.svg){ .fig .ovale loading=lazy  }
+    ![Figure 16](../img/07-bb/fig16.svg){ .fig .ovale loading=lazy  }
 
     <em>Execution A in the plane: the branching constraints (black, dashed) inside the regions of the parent nodes, and the optimal solutions of the solved nodes (violet), from $\LP_1$ (blue).</em>
 
@@ -1299,7 +1270,7 @@ $$
 
     This is the final branch-and-bound tree:
 
-    ![Figure 18](../img/07-bb/fig18.svg){ .fig loading=lazy  }
+    ![Figure 17](../img/07-bb/fig17.svg){ .fig loading=lazy  }
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1394,7 +1365,7 @@ $$
     </tr>
     </table></div>
 
-    ![Figure 19](../img/07-bb/fig19.svg){ .fig .ovale loading=lazy  }
+    ![Figure 18](../img/07-bb/fig18.svg){ .fig .ovale loading=lazy  }
 
     <em>Execution B in the plane: branching constraints and optimal solutions of the solved nodes.</em>
 
@@ -1408,7 +1379,7 @@ $$
 
     We execute the B&amp;B algorithm of <span style="color:#1971c2">[Example 7.5](#box-9-ex-bb-runA)</span> (smallest index, LIFO), starting from a heuristic solution of the car example.
 
-    - The heuristic that produces only sports cars fixes $x_1$ as large as possible and $x_2 = 0$: it gives $\bar{\vet x} = (4, 0)$ of value $12$. Starting execution A with $\LB = 12$, the algorithm solves $6$ LP problems, as many as without the heuristic: this lower bound is too weak to prune any node earlier.
+    - The one-variable heuristic of Chapter 1 fixes $x_1$ as large as possible and $x_2 = 0$: it gives $\bar{\vet x} = (4, 0)$ of value $12$. Starting execution A with $\LB = 12$, the algorithm solves $6$ LP problems, as many as without the heuristic: this lower bound is too weak to prune any node earlier.
 
     - The heuristic that fixes first $x_1$ and then $x_2$ as large as possible gives $\bar{\vet x} = (4, 1)$ of value $14$. Starting with $\LB = 14$, the root is not pruned, since $\lfloor z(\LP_1) \rfloor = 15 > 14$, but both children are pruned by bound and the algorithm stops after $3$ LP problems:
 
@@ -1457,7 +1428,7 @@ $$
 
     The incumbent solution given by the heuristic is optimal, and the branch-and-bound algorithm <strong>certifies</strong> its optimality.
 
-## 7.9 Typical mistakes
+## 7.8 Typical mistakes
 
 !!! attenzione "Warning"
 
@@ -1473,13 +1444,13 @@ $$
 
     - <strong>Solving every node from scratch.</strong> The answer is correct, but much slower: each child starts from the optimal dictionary of its parent, which is dual feasible.
 
-## 7.10 Extensions
+## 7.9 Extensions
 
-- The LP problems of the nodes can also be solved with the <strong>bounded-variable simplex algorithm</strong>, which handles the branching constraints as bounds on the variables instead of new constraints. This extension is not covered in this course.
+- The LP problems of the nodes can also be solved with the <strong>bounded-variable simplex algorithm</strong>, which handles the branching constraints as bounds on the variables instead of new constraints.
 
 - In a <strong>mixed</strong> problem, where only some variables are integer, one branches only on the integer variables and the bound of a node is $z(\LP_k)$, without rounding.
 
-## 7.11 In summary
+## 7.10 In summary
 
 !!! chiave "In summary"
 
@@ -1503,22 +1474,16 @@ $$
     <th>From</th>
     </tr>
     <tr>
-    <td>Integer linear programming</td>
-    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
-    <td>–</td>
-    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
-    </tr>
-    <tr>
-    <td>LP relaxation and dual bounds</td>
-    <td>–</td>
+    <td>Primal and dual bounds</td>
+    <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
+    <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     <tr>
     <td>Cutting plane algorithm</td>
     <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(14\)</span></td>
-    <td><span class="arithmatex">\(13\)</span> Gomory fractional cuts</td>
+    <td><span class="arithmatex">\(5\)</span> Gomory fractional cuts</td>
     </tr>
     <tr>
     <td>This chapter, execution A</td>

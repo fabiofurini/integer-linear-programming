@@ -30,4 +30,22 @@ Rounding, diving, feasibility pump, RINS, local branching, relax-and-fix and fix
 
 [:material-file-pdf-box: Lecture notes 4 (PDF)](pdf/lecture-notes-4-mip-heuristics.pdf){ .md-button }
 
+## Exercises 1 · Models, bounds and formulations
+
+What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds and the gap; the LP relaxation; ideal formulations, valid inequalities and cover inequalities. Worked examples and exercises with complete solutions.
+
+[:material-file-pdf-box: Exercises 1 (PDF)](pdf/exercises-1-models-bounds-formulations.pdf){ .md-button }
+
+## Exercises 2 · Exact methods
+
+The cutting plane algorithm with Gomory fractional cuts, LP-based branch-and-bound and branch-and-cut. Examples worked out step by step and exercises with complete solutions.
+
+[:material-file-pdf-box: Exercises 2 (PDF)](pdf/exercises-2-exact-methods.pdf){ .md-button }
+
+## Exercises 4 · MIP heuristics
+
+Rounding, diving, feasibility pump, RINS, local branching, relax-and-fix and fix-and-optimize. Examples and exercises with complete solutions.
+
+[:material-file-pdf-box: Exercises 4 (PDF)](pdf/exercises-4-mip-heuristics.pdf){ .md-button }
+
 

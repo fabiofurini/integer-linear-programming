@@ -6,7 +6,7 @@ title: "Exercises · LP-based branch-and-bound"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 7** · each solution opens with a click · [:material-book-open-variant: Chapter 7](../exact-methods/bb.md)
+**Exercises · Chapter 7** · each solution opens with a click · [:material-book-open-variant: Chapter 7](../exact-methods/bb.md) · [:material-file-pdf-box: Exercises, volume 2 (PDF)](../pdf/exercises-2-exact-methods.pdf)
 
 </div>
 

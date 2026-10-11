@@ -10,15 +10,15 @@
 
     ---
 
-    Why integer linear programming? · A first model: the car example · Definitions · Feasible and optimal solutions of the car example · …
+    Canonical maximization form · Possible outcomes · Complete enumeration · Typical mistakes · …
 
     [:octicons-arrow-right-24: Read the chapter](ilp.md)
 
--   **2. LP relaxation and dual bounds**
+-   **2. Primal and dual bounds**
 
     ---
 
-    Why a relaxation? · The LP relaxation · Rounding the solution of the LP relaxation · Upper bounds on the variables · …
+    Primal and dual bounds · Primal bounds: heuristic solutions · The LP relaxation · Rounding the solution of the LP relaxation · …
 
     [:octicons-arrow-right-24: Read the chapter](lp-relaxation.md)
 

@@ -12,9 +12,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 !!! nota "Prerequisites"
 
-    - From the module <em>Linear Programming</em>, Chapter 10 «Dual simplex algorithm»: simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
+    - From the module <em>Linear Programming</em>, [Chapter 10 «Dual Simplex algorithm»](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/): simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
 
-    - From this module, the chapters «Integer linear programming» and «LP relaxation and dual bounds»: ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
+    - From this module, the chapters «Integer linear programming» and «Primal and dual bounds»: ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
 
     - From this module, the chapter «Valid inequalities»: valid inequalities and cuts that remove fractional points.
 
@@ -32,15 +32,13 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     - explain why these cuts are valid only for ILP problems with integer data.
 
-## 6.1 Why a cutting plane algorithm?
+## 6.1 Gomory fractional cuts
 
-- We start from the <strong>car example</strong>: maximize $3x_1+2x_2$ subject to $10x_1+4x_2\le 45$, $4x_1+14x_2\le 49$ and $x_1,x_2\in\Z_{\ge 0}$. The optimal solution of its LP relaxation is the fractional point $(\frac{7}{2},\frac{5}{2})$, with value $\frac{31}{2}$.
+<a id="box-1-def-cutting-plane"></a>
 
-- The idea is to add inequalities that cut off this point without removing any integer feasible solution, and to solve the LP relaxation again.
+!!! definizione "Definition 6.1: cutting plane"
 
-- <strong>A challenge.</strong> Before reading on, try to guess how many cuts are needed to reach the optimal integer solution. The last section answers the question.
-
-## 6.2 Gomory fractional cuts
+    Given an ILP problem and a fractional optimal solution $\tilde{\vet x}(\LP)$ of its LP relaxation, a <strong>cutting plane</strong> (or <strong>cut</strong>) is a valid inequality for the ILP problem that cuts off $\tilde{\vet x}(\LP)$.
 
 !!! chiave ""
 
@@ -48,7 +46,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - <strong>We consider ILP problems in canonical maximization form with integer input data</strong>. For these problems, the slack variables introduced in the standard-form LP relaxation also take integer values in every integer feasible solution of the ILP problem.
 
-- Gomory fractional cuts are valid <u>only</u> if all the variables, slack variables included, are integer. For MIP problems with continuous variables they can cut off feasible solutions, and a different family of cuts is needed (not covered in these notes).
+- Gomory fractional cuts are valid <u>only</u> if all the variables, slack variables included, are integer. For MIP problems with continuous variables they can cut off feasible solutions, and a different family of cuts is needed.
 
 - We recall that a simplex dictionary of the LP relaxation in standard form reads as follows
 
@@ -74,9 +72,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - Gomory fractional cuts are obtained from the rows of a simplex dictionary associated with a fractional feasible basic solution of the LP relaxation in standard form of an ILP problem.
 
-    <a id="box-1-defXX"></a>
+    <a id="box-2-defXX"></a>
 
-    !!! definizione "Definition 6.1: Gomory fractional cut"
+    !!! definizione "Definition 6.2: Gomory fractional cut"
 
         Given a row $i \in \pazocal{B}$ of a simplex dictionary associated with a feasible basic solution such that $\bar{b}_i$ is fractional, the linear inequality
 
@@ -96,7 +94,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - We will prove that any Gomory fractional cut does not cut off any integer feasible solution of the ILP problem and that it cuts off the fractional feasible basic solution.
 
-<a id="box-2-gfc-canonical-form"></a>
+<a id="box-3-gfc-canonical-form"></a>
 
 !!! esempio "Example 6.1: ILP in canonical form, LP relaxation in standard form and dictionaries"
 
@@ -158,7 +156,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     ~~~\text{of value   } \bar z = 17
     $$
 
-<a id="box-3-texexpbox1"></a>
+<a id="box-4-texexpbox1"></a>
 
 !!! esempio "Example 6.2: Gomory fractional cuts"
 
@@ -303,7 +301,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     \label{GFC_OBJ} \tag{6.2}
     \end{equation*}
 
-<a id="box-4-texexpbox1"></a>
+<a id="box-5-texexpbox1"></a>
 
 !!! esempio "Example 6.3: Gomory fractional cuts"
 
@@ -396,11 +394,11 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     ![Figure 3](../img/06-gomory/fig03.svg){ .fig .ovale loading=lazy style="width:59%" }
 
-### 6.2.1 Validity of the Gomory fractional cuts
+### 6.1.1 Validity of the Gomory fractional cuts
 
-<a id="box-5-theoWD"></a>
+<a id="box-6-theoWD"></a>
 
-!!! teorema "Observation 6.2"
+!!! teorema "Observation 6.3"
 
     Any Gomory fractional cut cuts off the fractional basic feasible solution associated with the simplex dictionary from which it is generated.
 
@@ -443,9 +441,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
         Therefore, the Gomory fractional cut cuts off the basic feasible solution associated with the dictionary from which it is generated. <span class="qed">□</span>
 
-<a id="box-6-gfc-validity"></a>
+<a id="box-7-gfc-validity"></a>
 
-!!! teorema "Observation 6.3"
+!!! teorema "Observation 6.4"
 
     Every integer feasible solution of the ILP problem satisfies every Gomory fractional cut generated from the rows of a simplex dictionary.
 
@@ -620,99 +618,35 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     \bar z - \left\lfloor \bar z \right\rfloor .
     $$
 
-### 6.2.2 Inclusion of Gomory fractional cuts into the simplex dictionary
+### 6.1.2 Inclusion of Gomory fractional cuts into the simplex dictionary
 
-- A Gomory fractional cut is first obtained as a valid inequality from a row of the current simplex dictionary. In general, both its coefficients and its right-hand side may be fractional.
+- A Gomory fractional cut is obtained from a row of the current simplex dictionary. In general, both its coefficients and its right-hand side are fractional.
 
-- To insert the cut into the simplex dictionary, we introduce a new non-negative surplus variable $s$ in the fractional cut itself, before clearing denominators:
+- To insert the cut into the simplex dictionary we proceed in three steps:
 
-    $$
-    s = \sum_{j \in \pazocal{N}} \left( \bar{a}_{ij} - \lfloor \bar{a}_{ij} \rfloor \right) x_j - \left( \bar{b}_i - \lfloor \bar{b}_i \rfloor \right) \ge 0 .
-    $$
+    1. substituting the definitions of the slack variables, we rewrite the cut in the original variables as an inequality $\sum_{j=1}^{n} a_j x_j \le b$ with integer $a_j$ and $b$;
 
-- The surplus variable is integer in every integer feasible solution: by the row of the dictionary, $s = \lfloor \bar{b}_i \rfloor - x_i - \sum_{j \in \pazocal{N}} \lfloor \bar{a}_{ij} \rfloor x_j$. Clearing denominators is needed only for readability; if it is done, the scaling factor must multiply also the surplus variable.
+    2. we make it <strong>primitive</strong>: we divide it by the greatest common divisor $g$ of $a_1, \dots, a_n$ and we round down the right-hand side,
 
-<a id="box-7-gfc-cut-in-dictionary"></a>
+        $$
+        \sum_{j=1}^{n} \frac{a_j}{g} \, x_j \le \left\lfloor \frac{b}{g} \right\rfloor ;
+        $$
+
+    3. only then we add the non-negative slack variable $s = \lfloor b/g \rfloor - \sum_{j=1}^{n} (a_j/g) \, x_j$, and we substitute the current rows of the dictionary to obtain the row of $s$.
+
+- The rounding is valid: the left-hand side is integer for every integer $\vet x$. The slack variable $s$ is integer in every integer feasible solution of the ILP problem.
+
+!!! chiave ""
+
+    First the cut is made primitive, then its slack variable is added. A surplus variable added directly to the fractional cut corresponds to the inequality before rounding, which is weaker when $g$ does not divide $b$.
+
+<a id="box-8-gfc-projection-original-space"></a>
 
 !!! esempio "Example 6.4: Gomory fractional cut"
 
     Consider the ILP problem of <span style="color:#1971c2">Example 1</span>.
 
-    - The first Gomory fractional cut is
-
-        \begin{align*}
-        \frac{4}{5}\;x_3 + \frac{1}{10}\;x_4 \ge \frac{1}{2}.
-        \end{align*}
-
-        To insert this cut into the simplex dictionary, we first introduce a non-negative surplus variable:
-
-        \begin{align*}
-        \frac{4}{5}\;x_3 + \frac{1}{10}\;x_4 - x_5 = \frac{1}{2},
-        \qquad x_5 \ge 0.
-        \end{align*}
-
-        We then clear denominators by multiplying the whole equality by $10$:
-
-        \begin{align*}
-        8\;x_3 + x_4 - 10\;x_5 = 5,
-        \qquad x_5 \ge 0.
-        \end{align*}
-
-        Solving for the new basic variable $x_5$, the corresponding dictionary row is
-
-        \begin{align*}
-        x_5
-        =
-        -\frac{1}{2}
-        +
-        \frac{4}{5}\;x_3
-        +
-        \frac{1}{10}\;x_4.
-        \end{align*}
-
-    - The second Gomory fractional cut is
-
-        \begin{align*}
-        \frac{1}{4}\;x_2 + \frac{1}{8}\;x_4 \ge \frac{3}{8}.
-        \end{align*}
-
-        To insert this cut into the simplex dictionary, we first introduce a non-negative surplus variable:
-
-        \begin{align*}
-        \frac{1}{4}\;x_2 + \frac{1}{8}\;x_4 - x_5 = \frac{3}{8},
-        \qquad x_5 \ge 0.
-        \end{align*}
-
-        We then clear denominators by multiplying the whole equality by $8$:
-
-        \begin{align*}
-        2\;x_2 + x_4 - 8\;x_5 = 3,
-        \qquad x_5 \ge 0.
-        \end{align*}
-
-        Solving for the new variable $x_5$, the corresponding dictionary row is
-
-        \begin{align*}
-        x_5
-        =
-        -\frac{3}{8}
-        +
-        \frac{1}{4}\;x_2
-        +
-        \frac{1}{8}\;x_4.
-        \end{align*}
-
-- The Gomory fractional cut can also be rewritten as a primitive inequality in the original integer variables, with integer coprime coefficients, and the slack variable is added to this inequality.
-
-- This gives the same dictionary row as above if the coefficients of the inequality have no common divisor to be removed; otherwise the new slack variable is a scaled copy of the surplus variable, and the following cuts may change.
-
-<a id="box-8-gfc-projection-original-space"></a>
-
-!!! esempio "Example 6.5: Gomory fractional cut"
-
-    Consider the ILP problem of <span style="color:#1971c2">Example 1</span>.
-
-    - The first Gomory fractional cut in the space of the original variables is:
+    - The first Gomory fractional cut in the space of the original variables is the following inequality, already primitive ($g = 1$):
 
         \begin{align*}
         x_2 \le 3.
@@ -749,7 +683,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \frac{1}{10}\;x_4.
         \end{align*}
 
-    - The second Gomory fractional cut in the space of the original variables is:
+    - The second Gomory fractional cut in the space of the original variables is the following inequality, already primitive ($g = 1$):
 
         \begin{align*}
         x_1 \le 2.
@@ -786,9 +720,15 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \frac{1}{8}\;x_4.
         \end{align*}
 
-## 6.3 A cutting-plane algorithm based on Gomory fractional cuts
+- In Example 1 the coefficients have no common divisor and nothing is rounded. In the car example of the last sections the second cut in the original variables is $6\,x_1 + 14\,x_2 \le 55$: with $g = 2$ the primitive inequality is $3\,x_1 + 7\,x_2 \le \lfloor 55/2 \rfloor = 27$, and its slack variable is $27 - 3\,x_1 - 7\,x_2$.
 
-- A <strong>cutting-plane algorithm based on Gomory fractional cuts</strong> is an exact method for solving ILP problems based on the repeated solution of LP relaxations. Starting from the LP relaxation of the ILP problem, the algorithm progressively adds Gomory fractional cuts with the goal of removing fractional LP optimal solutions while preserving all integer feasible solutions:
+## 6.2 A cutting-plane algorithm based on Gomory fractional cuts
+
+<a id="box-9-def-cpa"></a>
+
+!!! definizione "Definition 6.5: cutting plane algorithm based on Gomory fractional cuts"
+
+    A <strong>cutting plane algorithm based on Gomory fractional cuts</strong> is an exact method for solving ILP problems based on the repeated solution of LP relaxations. Starting from the LP relaxation of the ILP problem, the algorithm progressively adds Gomory fractional cuts with the goal of removing fractional LP optimal solutions while preserving all integer feasible solutions:
 
     $$
     \rightsquigarrow~\textbf{cut generation operations}
@@ -804,7 +744,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - We consider ILP problems in <strong>canonical maximization form with integer input data</strong>.
 
-### 6.3.1 Cut generation operations
+### 6.2.1 Cut generation operations
 
 - The <strong>cut generation operations</strong> generate a sequence of increasingly tighter LP relaxations:
 
@@ -830,7 +770,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - The algorithm may remove points that are feasible for the LP relaxation, but it does not remove any feasible integer solution of the original ILP problem. In this sense, each new cut tightens the current LP relaxation without excluding any feasible integer solution of the original ILP problem.
 
-### 6.3.2 High-level pseudocode
+### 6.2.2 High-level pseudocode
 
 !!! algoritmo "Algorithm"
 
@@ -865,7 +805,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
             \left\lfloor \bar{b}_i \right\rfloor .
             $$
 
-        2. Add the generated cuts to the $\LP_k$ problem, and obtain the new LP relaxation $\LP_{k+1}$. Update the iteration counter $k \leftarrow k+1.$
+        2. Rewrite each cut in the original variables in primitive form, add its slack variable, and add it to the $\LP_k$ problem: this gives the new LP relaxation $\LP_{k+1}$. Update the iteration counter $k \leftarrow k+1.$
 
     - **Step 2:** <strong>Optimality check</strong>
 
@@ -879,11 +819,11 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - The pseudocode does not say how the LP problems are re-optimized after the insertion of the cuts: the next section explains the use of the dual simplex algorithm.
 
-### 6.3.3 Re-optimization with the dual simplex algorithm
+### 6.2.3 Re-optimization with the dual simplex algorithm
 
 - A new cut differs from the previous $\LP_k$ problem by <u>one</u> constraint, so we do not solve the new problem from scratch: we start from the <strong>optimal dictionary</strong> of the $\LP_k$ problem and we re-optimize it with the <strong>dual simplex algorithm</strong>.
 
-- The cut gives a new row with the surplus variable $x_s$ in the basis, and its value in the current basic solution is $-(\bar b_i - \lfloor \bar b_i \rfloor) < 0$. The reduced costs do not change.
+- The cut gives a new row with the slack variable $x_s$ of the primitive inequality in the basis. Its value in the current basic solution is negative, since the cut removes this solution. The reduced costs do not change.
 
 !!! chiave ""
 
@@ -914,9 +854,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - If the new $\LP_{k+1}$ problem is infeasible, the dual simplex algorithm detects it in step b, and the ILP problem is infeasible. Usually one or two pivoting operations are enough.
 
-<a id="box-9-texexpbox2"></a>
+<a id="box-10-texexpbox2"></a>
 
-!!! esempio "Example 6.6: cutting plane algorithm"
+!!! esempio "Example 6.5: cutting plane algorithm"
 
     We now describe the execution of the cutting-plane algorithm for the ILP problem of <span style="color:#1971c2">Example 1</span> using:
 
@@ -939,8 +879,6 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     \end{array}
     $$
 
-    <div class="minipage" style="width:29%" markdown>
-
     An optimal solution $\tilde{\vet x}(\LP_1)$ is:
 
     $$
@@ -953,13 +891,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     z(~\LP_1~)  = 17
     $$
 
-    </div>
-
-    <div class="minipage" style="width:24%" markdown>
-
     ![Figure 4](../img/06-gomory/fig04.svg){ .fig .ovale loading=lazy style="width:100%" }
-
-    </div>
 
     The optimal solution $\tilde{\vet x}(\LP_1)$ is <strong>fractional</strong> and the $\LP_1$ problem is <strong>feasible</strong>.
 
@@ -1066,7 +998,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \end{array}
         $$
 
-        - The cut is inserted with the surplus variable $x_5 \ge 0$, introduced before clearing the denominators. The new row is
+        - In the original variables the cut is $x_2 \le 3$, already primitive (its coefficients have no common divisor).
+
+        - The slack variable $x_5 = 3 - x_2 \ge 0$ of the primitive inequality is added. Substituting the current rows of the dictionary, the new row is
 
             $$
             x_5 = -\dfrac{1}{2} + \dfrac{4}{5} \, x_3 + \dfrac{1}{10} \, x_4.
@@ -1104,8 +1038,6 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \end{cases}
         \end{equation*}
 
-        <div class="minipage" style="width:29%" markdown>
-
         An optimal solution $\tilde{\vet x}(\LP_2)$ is:
 
         $$
@@ -1118,13 +1050,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         z(~\LP_2~)=\frac{61}{4}
         $$
 
-        </div>
-
-        <div class="minipage" style="width:24%" markdown>
-
         ![Figure 6](../img/06-gomory/fig06.svg){ .fig .ovale loading=lazy style="width:100%" }
-
-        </div>
 
         We have the upper bound on the optimal value of the ILP problem:
 
@@ -1269,7 +1195,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \end{array}
         $$
 
-        - The cut is inserted with the surplus variable $x_6 \ge 0$, introduced before clearing the denominators. The new row is
+        - In the original variables the cut is $x_1 + x_2 \le 4$, already primitive (its coefficients have no common divisor).
+
+        - The slack variable $x_6 = 4 - \left(x_1 + x_2\right) \ge 0$ of the primitive inequality is added. Substituting the current rows of the dictionary, the new row is
 
             $$
             x_6 = -\dfrac{5}{8} + \dfrac{1}{8} \, x_4 + \dfrac{3}{4} \, x_5.
@@ -1309,8 +1237,6 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \end{cases}
         \end{equation*}
 
-        <div class="minipage" style="width:29%" markdown>
-
         An optimal solution $\tilde{\vet x}(\LP_3)$ is:
 
         $$
@@ -1323,13 +1249,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         z(~\LP_3~)=14
         $$
 
-        </div>
-
-        <div class="minipage" style="width:24%" markdown>
-
         ![Figure 9](../img/06-gomory/fig09.svg){ .fig .ovale loading=lazy style="width:100%" }
-
-        </div>
 
     The optimal solution $\tilde{\vet x}(\LP_3)$ is <strong>integer</strong>. Accordingly, an optimal solution $\tilde{\vet x}(\ILP)$ is:
 
@@ -1339,7 +1259,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     The optimal value $z(\ILP)$ is $14$.
 
-### 6.3.4 Cut selection strategies
+### 6.2.4 Cut selection strategies
 
 - During the cut generation phase, several Gomory fractional cuts can be generated and added to the LP relaxation. The <strong>cut selection strategy</strong> decides which ones.
 
@@ -1357,7 +1277,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - <strong>Ties.</strong> Cuts with the same right-hand side can be different, so the choice must be fixed to make the execution reproducible: we select the row of the basic variable with the <u>smallest index</u>, and the objective-function row is considered <u>last</u>.
 
-### 6.3.5 Heuristic initialization
+### 6.2.5 Heuristic initialization
 
 !!! chiave ""
 
@@ -1379,7 +1299,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     The cutting-plane algorithm can be stopped when this gap is zero, then the heuristic solution is proven to be optimal.
 
-### 6.3.6 Additional remarks
+### 6.2.6 Additional remarks
 
 - The finite termination of a cutting plane algorithm with Gomory fractional cuts is guaranteed only with precise rules (a lexicographic dual simplex algorithm and a suitable choice of the rows). With arbitrary rules the algorithm may require a very large number of iterations.
 
@@ -1387,22 +1307,24 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - For this reason, Gomory fractional cuts are often used to strengthen the LP relaxations solved at the nodes of a branch-and-bound tree: the resulting method is a <strong>branch-and-cut algorithm</strong>.
 
-## 6.4 The car example
+## 6.3 The car example
 
-- We answer the challenge. The car example is solved by the cutting plane algorithm with the same rules as in Example 1: one cut per iteration, largest right-hand side, ties by the smallest index of the basic variable and objective-function row last.
+- The car example is solved by the cutting plane algorithm with the same rules as in Example 1: one cut per iteration, largest right-hand side, ties by the smallest index of the basic variable and objective-function row last.
 
-- The table reports, for every cut, the inequality in the original variables, the solution and the value of the next LP problem, and the upper bound $\UB = \lfloor z(\LP_{k+1}) \rfloor$.
+- The table reports, for every cut, the inequality in the original variables before rounding (when $g > 1$) and in primitive form, the solution and the value of the next LP problem, and the upper bound $\UB = \lfloor z(\LP_{k+1}) \rfloor$.
 
 <div class="tabella" markdown="0"><table>
 <tr>
 <th>Cut</th>
-<th>Gomory fractional cut</th>
+<th>Before rounding</th>
+<th>Primitive cut</th>
 <th><span class="arithmatex">\(\tilde{\vet x}(\LP_{k+1})\)</span></th>
 <th><span class="arithmatex">\(z(\LP_{k+1})\)</span></th>
 <th><span class="arithmatex">\(\UB\)</span></th>
 </tr>
 <tr>
 <td>1</td>
+<td>—</td>
 <td><span class="arithmatex">\(5\,x_1 + 14\,x_2 \le 52\)</span></td>
 <td><span class="arithmatex">\((\tfrac{211}{60}, \tfrac{59}{24})\)</span></td>
 <td><span class="arithmatex">\(\tfrac{232}{15}\)</span></td>
@@ -1411,94 +1333,44 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 <tr>
 <td>2</td>
 <td><span class="arithmatex">\(6\,x_1 + 14\,x_2 \le 55\)</span></td>
-<td><span class="arithmatex">\((\tfrac{205}{58}, \tfrac{70}{29})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{895}{58}\)</span></td>
+<td><span class="arithmatex">\(3\,x_1 + 7\,x_2 \le 27\)</span></td>
+<td><span class="arithmatex">\((\tfrac{207}{58}, \tfrac{135}{58})\)</span></td>
+<td><span class="arithmatex">\(\tfrac{891}{58}\)</span></td>
 <td><span class="arithmatex">\(15\)</span></td>
 </tr>
 <tr>
 <td>3</td>
-<td><span class="arithmatex">\(7\,x_1 + 14\,x_2 \le 58\)</span></td>
-<td><span class="arithmatex">\((\tfrac{199}{56}, \tfrac{265}{112})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{431}{28}\)</span></td>
+<td>—</td>
+<td><span class="arithmatex">\(4\,x_1 + 7\,x_2 \le 30\)</span></td>
+<td><span class="arithmatex">\((\tfrac{65}{18}, \tfrac{20}{9})\)</span></td>
+<td><span class="arithmatex">\(\tfrac{275}{18}\)</span></td>
 <td><span class="arithmatex">\(15\)</span></td>
 </tr>
 <tr>
 <td>4</td>
-<td><span class="arithmatex">\(5\,x_1 + 7\,x_2 \le 34\)</span></td>
-<td><span class="arithmatex">\((\tfrac{179}{50}, \tfrac{23}{10})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{767}{50}\)</span></td>
-<td><span class="arithmatex">\(15\)</span></td>
+<td><span class="arithmatex">\(7\,x_1 + 7\,x_2 \le 40\)</span></td>
+<td><span class="arithmatex">\(x_1 + x_2 \le 5\)</span></td>
+<td><span class="arithmatex">\((\tfrac{25}{6}, \tfrac{5}{6})\)</span></td>
+<td><span class="arithmatex">\(\tfrac{85}{6}\)</span></td>
+<td><span class="arithmatex">\(14\)</span></td>
 </tr>
 <tr>
 <td>5</td>
-<td><span class="arithmatex">\(15\,x_1 + 14\,x_2 \le 85\)</span></td>
-<td><span class="arithmatex">\((\tfrac{29}{8}, \tfrac{35}{16})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{61}{4}\)</span></td>
-<td><span class="arithmatex">\(15\)</span></td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="arithmatex">\(16\,x_1 + 10\,x_2 \le 79\)</span></td>
-<td><span class="arithmatex">\((\tfrac{128}{37}, \tfrac{175}{74})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{559}{37}\)</span></td>
-<td><span class="arithmatex">\(15\)</span></td>
-</tr>
-<tr>
-<td>7</td>
-<td><span class="arithmatex">\(22\,x_1 + 16\,x_2 \le 113\)</span></td>
-<td><span class="arithmatex">\((\tfrac{67}{18}, \tfrac{35}{18})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{271}{18}\)</span></td>
-<td><span class="arithmatex">\(15\)</span></td>
-</tr>
-<tr>
-<td>8</td>
-<td><span class="arithmatex">\(16\,x_1 + 11\,x_2 \le 80\)</span></td>
-<td><span class="arithmatex">\((\tfrac{175}{46}, \tfrac{40}{23})\)</span></td>
-<td><span class="arithmatex">\(\tfrac{685}{46}\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-</tr>
-<tr>
-<td>9</td>
-<td><span class="arithmatex">\(3\,x_1 + 2\,x_2 \le 14\)</span></td>
-<td><span class="arithmatex">\((\tfrac{49}{17}, \tfrac{91}{34})\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-</tr>
-<tr>
-<td>10</td>
-<td><span class="arithmatex">\(5\,x_1 + 14\,x_2 \le 51\)</span></td>
-<td><span class="arithmatex">\((\tfrac{47}{16}, \tfrac{83}{32})\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-</tr>
-<tr>
-<td>11</td>
-<td><span class="arithmatex">\(6\,x_1 + 14\,x_2 \le 53\)</span></td>
-<td><span class="arithmatex">\((3, \tfrac{5}{2})\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-</tr>
-<tr>
-<td>12</td>
-<td><span class="arithmatex">\(3\,x_1 + 3\,x_2 \le 16\)</span></td>
-<td><span class="arithmatex">\((\tfrac{10}{3}, 2)\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-<td><span class="arithmatex">\(14\)</span></td>
-</tr>
-<tr>
-<td>13</td>
-<td><span class="arithmatex">\(x_1 + x_2 \le 5\)</span></td>
+<td>—</td>
+<td><span class="arithmatex">\(9\,x_1 + 4\,x_2 \le 40\)</span></td>
 <td><span class="arithmatex">\((4, 1)\)</span></td>
 <td><span class="arithmatex">\(14\)</span></td>
 <td><span class="arithmatex">\(14\)</span></td>
 </tr>
 </table></div>
 
-- The algorithm needs $13$ cuts. The upper bound stays at $15$ for the first $7$ cuts, and the integer solution is found only at the last cut: the effect of the cuts is small after the first iterations.
+- The algorithm needs $5$ cuts. The upper bound stays at $15$ for the first $3$ cuts, and the integer solution is found only at the last cut.
 
-- The optimal solution is $\tilde x_1 = 4$, $\tilde x_2 = 1$, with value $z(\ILP) = 14$.
+- In cuts 2 and 4 the coefficients have a common divisor: the primitive cut is stronger than the inequality before rounding.
 
-## 6.5 Typical mistakes
+- The optimal solution is $\tilde{\vet x} = (4, 1)$, with value $z(\ILP) = 14$.
+
+## 6.4 Typical mistakes
 
 !!! attenzione "Warning"
 
@@ -1508,13 +1380,15 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     - <strong>Forgetting the objective-function row.</strong> It is a candidate cut if $\bar z$ is fractional; with the largest right-hand side strategy it can be the selected one.
 
+    - <strong>Adding the surplus variable before making the cut primitive.</strong> The cut in the original variables must first be divided by the greatest common divisor of its coefficients, with the right-hand side rounded down; only then is its slack variable added. Otherwise the cut is weaker.
+
     - <strong>Choosing among equal right-hand sides without a rule.</strong> Different choices give different executions; use the smallest index of the basic variable, and the objective-function row last.
 
     - <strong>Solving every $\LP_k$ problem from scratch.</strong> The answer is the same, but much slower: the dictionary with the new row is dual feasible, and the dual simplex algorithm starts from it.
 
     - <strong>Stopping when the upper bound stops improving.</strong> The algorithm stops only when the solution of the $\LP_k$ problem is integer.
 
-## 6.6 In summary
+## 6.5 In summary
 
 !!! chiave "In summary"
 
@@ -1526,7 +1400,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     - The upper bound is $\lfloor z(\LP_k) \rfloor$; the algorithm ends when the LP solution is integer.
 
-    - Cuts work well at the beginning and then lose effectiveness: on the car example $13$ cuts are needed.
+    - Each cut is rewritten in the original variables, made primitive (divided by the greatest common divisor of its coefficients, right-hand side rounded down), and only then its slack variable is added.
+
+    - Cuts work well at the beginning and then lose effectiveness: on the car example $5$ cuts are needed.
 
     <strong>Dashboard of the car example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
 
@@ -1538,22 +1414,16 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     <th>From</th>
     </tr>
     <tr>
-    <td>Integer linear programming</td>
-    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
-    <td>–</td>
-    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
-    </tr>
-    <tr>
-    <td>LP relaxation and dual bounds</td>
-    <td>–</td>
+    <td>Primal and dual bounds</td>
+    <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
+    <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     <tr>
     <td>This chapter</td>
     <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(14\)</span></td>
-    <td><span class="arithmatex">\(13\)</span> Gomory fractional cuts</td>
+    <td><span class="arithmatex">\(5\)</span> Gomory fractional cuts</td>
     </tr>
     </table></div>
 

@@ -1,8 +1,8 @@
 ---
-title: "LP relaxation and dual bounds"
+title: "Primal and dual bounds"
 ---
 
-# LP relaxation and dual bounds
+# Primal and dual bounds
 
 <div class="info-capitolo" markdown>
 
@@ -12,62 +12,179 @@ title: "LP relaxation and dual bounds"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapter «Integer linear programming»: ILP problems, feasible and optimal solutions, lower bounds, and the car example.
+    - From this module, the chapter «Integer linear programming»: ILP problems, feasible and optimal solutions, complete enumeration, and the car example.
 
-    - From the module <em>Linear Programming</em>, Chapter 9 «Duality theory»: the dual problem, weak duality and strong duality.
+    - From the module <em>Linear Programming</em>, [Chapter 9 «Duality theory»](https://fabiofurini.github.io/linear-programming/duality/09-duality/): the dual problem, weak duality and strong duality.
 
-    - From the same module, Chapter 6 «Simplex algorithm»: an LP problem that has an optimal solution has an optimal vertex.
+    - From the same module, [Chapter 6 «Simplex algorithm»](https://fabiofurini.github.io/linear-programming/simplex/06-simplex/): an LP problem that has an optimal solution has an optimal vertex.
 
 !!! chiave "Objectives"
 
     At the end of this chapter you will be able to:
 
-    - build the LP relaxation of an ILP problem and use its optimal value as an upper bound, rounded down when it is valid;
+    - obtain a primal bound (a lower bound) on the optimal value from a feasible solution, also with a simple heuristic algorithm;
 
-    - compute the optimality gap from a lower bound and an upper bound;
+    - build the LP relaxation of an ILP problem and use its optimal value as a dual bound (an upper bound), rounded down when it is valid;
+
+    - compute the optimality gap from a primal bound and a dual bound;
 
     - explain why rounding an optimal LP solution gives a feasible solution at best;
 
     - derive upper bounds on the variables from the constraints, and say when they help;
 
-    - obtain an upper bound from non-negative multipliers of the constraints, and recognize the dual problem as the problem of the best multipliers.
+    - obtain a dual bound from non-negative multipliers of the constraints, and recognize the dual problem as the problem of the best multipliers.
 
 !!! nota "Where we were"
 
-    In the previous chapter we found the feasible solution $(4,1)$ of the car example, with $\LB = 14$, but we could not tell whether a plan with a larger profit exists. We now look for the other side of the sandwich, an <strong>upper bound</strong>.
+    In the previous chapter we saw that complete enumeration is not an option, and that we need bounds on the optimal value from both sides. We now obtain them: <strong>primal bounds</strong> from feasible solutions, and <strong>dual bounds</strong> from relaxations.
 
-## 2.1 Why a relaxation?
+## 2.1 Primal and dual bounds
 
-- To prove that no production plan earns more than $14$ thousand euros we cannot look at the solutions one by one. We need a statement that holds for <u>all</u> the feasible solutions at once.
+<a id="box-1-def-bounds"></a>
 
-- The idea is to <strong>relax</strong> the problem: we replace it with an easier problem whose feasible region contains the original one. A maximization over a larger region cannot give a smaller value, so the optimal value of the relaxed problem is an upper bound.
+!!! definizione "Definition 2.1: primal bound, dual bound and optimality gap"
 
-- The easier problem we choose is the one we know how to solve: a linear programming problem.
+    Consider an ILP problem in canonical maximization form, with feasible region $F$ and optimal value $z(\ILP)$.
 
-## 2.2 The LP relaxation
+    - Given a feasible solution $\bar{\vet x} \in F$, its value $\LB(\bar{\vet x}) = \sum_{j=1}^n c_j \, \bar{x}_j$ is a <strong>primal bound</strong> on $z(\ILP)$.
 
-- The <strong>linear programming (LP) relaxation</strong> of an ILP problem consists in replacing the integrality constraints with the non-negativity constraints $x_j \ge 0$, for all $j \in \{1,2,\dots,n\}$. In other words, we transform the integer variables into continuous variables, and we get the following problem:
+    - A value $\UB$ such that $\sum_{j=1}^n c_j \, x_j \le \UB$ for every $\vet x \in F$ is a <strong>dual bound</strong> on $z(\ILP)$.
+
+    - Given a primal bound $\LB \ne 0$ and a dual bound $\UB$, the <strong>optimality gap</strong> is
+
+        \begin{equation*}
+        \label{gap}
+        \text{optimality gap} = \frac{\UB - \LB}{|\LB|} . \tag{2.1}
+        \end{equation*}
+
+- In a maximization problem the primal bounds are <strong>lower bounds</strong> and the dual bounds are <strong>upper bounds</strong>. A primal bound comes from one feasible solution; a dual bound is a statement on <u>all</u> the feasible solutions at once.
 
 !!! chiave ""
+
+    For every feasible solution $\bar{\vet x}$ and every dual bound $\UB$:
+
+    $$
+    \LB(\bar{\vet x}) ~\le~ z(\ILP) ~\le~ \UB .
+    $$
+
+    A feasible solution is <strong>certified optimal</strong> when the optimality gap is zero.
+
+<a id="box-2-def-relaxation"></a>
+
+!!! definizione "Definition 2.2: relaxation"
+
+    Given an ILP problem $\max \{ \vet c\T \vet x : \vet x \in F \}$, the problem $\max \{ \vet c\T \vet x : \vet x \in R \}$ is a <strong>relaxation</strong> of the ILP problem if $F \subseteq R$. We denote its optimal value by $z(R)$.
+
+- A maximization over a larger region cannot give a smaller value: the optimal value of a relaxation is a dual bound, $z(\ILP) \le z(R)$.
+
+## 2.2 Primal bounds: heuristic solutions { #sez-sec-primal }
+
+<a id="box-3-def-heuristic"></a>
+
+!!! definizione "Definition 2.3: heuristic algorithm"
+
+    A <strong>heuristic algorithm</strong> is a method that finds feasible solutions quickly, with no guarantee of optimality. The value of every solution it finds is a primal bound.
+
+!!! chiave ""
+
+    A good feasible solution is a good primal bound.
+
+<a id="box-4-ex-primal-car"></a>
+
+!!! esempio "Example 2.1: primal bound"
+
+    For the feasible solution $(2,2)$ of the car example we get $\LB = 3 \cdot 2 + 2 \cdot 2 = 10$, so $z(\ILP) \ge 10$.
+
+<a id="box-5-def-floor"></a>
+
+!!! definizione "Definition 2.4: of integer part of a number"
+
+    Given $y \in \R$, the <strong>integer part</strong> of $y$ is $\lfloor y \rfloor = \max \{ q \in \Z : q \le y \}$.
+
+<a id="box-6-ex-heur-car"></a>
+
+!!! esempio "Example 2.2: two heuristic algorithms for the car example"
+
+    - The <strong>one-variable heuristic</strong> sets a single variable to its maximum value, with the other one equal to $0$, and keeps the better of the two solutions.
+
+        1. Only $x_1$ ($x_2 = 0$): $\bar{x}_1 = \min\{\lfloor \frac{45}{10} \rfloor, \lfloor \frac{49}{4} \rfloor\} = \min\{4, 12\} = 4$, so $\bar{\vet x} = (4,0)$ and $\LB = 12$.
+
+        2. Only $x_2$ ($x_1 = 0$): $\bar{x}_2 = \min\{\lfloor \frac{45}{4} \rfloor, \lfloor \frac{49}{14} \rfloor\} = \min\{11, 3\} = 3$, so $\bar{\vet x} = (0,3)$ and $\LB = 6$.
+
+    - The <strong>two-step heuristic</strong> sets first one variable to its maximum value, and then the other one to its maximum value with the <strong>residual right-hand sides</strong>. It keeps the better of the two solutions.
+
+        1. $x_1$ first: $\bar{x}_1 = 4$ uses $40$ and $16$, leaving $5$ and $33$. Then $\bar{x}_2 = \min\{\lfloor \frac{5}{4} \rfloor, \lfloor \frac{33}{14} \rfloor\} = \min\{1, 2\} = 1$, so $\bar{\vet x} = (4,1)$ and $\LB = 14$.
+
+        2. $x_2$ first: $\bar{x}_2 = 3$ uses $12$ and $42$, leaving $33$ and $7$. Then $\bar{x}_1 = \min\{\lfloor \frac{33}{10} \rfloor, \lfloor \frac{7}{4} \rfloor\} = \min\{3, 1\} = 1$, so $\bar{\vet x} = (1,3)$ and $\LB = 9$.
+
+    <div class="tabella" markdown="0"><table>
+    <tr>
+    <th>Heuristic</th>
+    <th>Order</th>
+    <th><span class="arithmatex">\(\bar{x}_1\)</span></th>
+    <th><span class="arithmatex">\(\bar{x}_2\)</span></th>
+    <th><span class="arithmatex">\(\LB\)</span></th>
+    </tr>
+    <tr>
+    <td>one-variable</td>
+    <td><span class="arithmatex">\(x_1\)</span></td>
+    <td><span class="arithmatex">\(4\)</span></td>
+    <td><span class="arithmatex">\(0\)</span></td>
+    <td><span class="arithmatex">\(12\)</span></td>
+    </tr>
+    <tr>
+    <td>one-variable</td>
+    <td><span class="arithmatex">\(x_2\)</span></td>
+    <td><span class="arithmatex">\(0\)</span></td>
+    <td><span class="arithmatex">\(3\)</span></td>
+    <td><span class="arithmatex">\(6\)</span></td>
+    </tr>
+    <tr>
+    <td>two-step</td>
+    <td><span class="arithmatex">\(x_1\)</span> first</td>
+    <td><span class="arithmatex">\(4\)</span></td>
+    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(14\)</span></td>
+    </tr>
+    <tr>
+    <td>two-step</td>
+    <td><span class="arithmatex">\(x_2\)</span> first</td>
+    <td><span class="arithmatex">\(1\)</span></td>
+    <td><span class="arithmatex">\(3\)</span></td>
+    <td><span class="arithmatex">\(9\)</span></td>
+    </tr>
+    </table></div>
+
+- The two-step heuristic gives a better primal bound, but it needs more computation. This trade-off between the quality of the solution and the computational effort is typical of heuristic algorithms.
+
+- Here the best primal bound is $\LB = 14$, in $(4,1)$. A primal bound alone is not a certificate of optimality: a dual bound is needed.
+
+## 2.3 The LP relaxation
+
+<a id="box-7-def-lp-relax"></a>
+
+!!! definizione "Definition 2.5: LP relaxation"
+
+    The <strong>linear programming (LP) relaxation</strong> of an ILP problem in canonical maximization form is the LP problem obtained by replacing the integrality constraints $x_j \in \Z_{\ge 0}$ with the non-negativity constraints $x_j \ge 0$, for all $j \in \{1,2,\dots,n\}$:
 
     <a id="eq-LP"></a>
 
     \begin{align*}
-    &&   \max \;\;{\sum_{j =1}^n c_j \, x_j}                               \label{ObjFunc_LP}  \tag{2.1a}\\[2ex]
-    && \text{subject to} \quad  {\sum_{j =1}^n a_{ij} \, x_j}  &\leq b_i,   & \forall i \in \{1,2,\dots,m\},                    \label{Cons_LP}  \tag{2.1b}\\[2ex]
-    &&x_j                        &\ge  0, & \forall j \in \{1,2,\dots,n\}. \label{non_negativity_LP} \tag{2.1c}
+    &&   \max \;\;{\sum_{j =1}^n c_j \, x_j}                               \label{ObjFunc_LP}  \tag{2.2a}\\[2ex]
+    && \text{subject to} \quad  {\sum_{j =1}^n a_{ij} \, x_j}  &\leq b_i,   & \forall i \in \{1,2,\dots,m\},                    \label{Cons_LP}  \tag{2.2b}\\[2ex]
+    &&x_j                        &\ge  0, & \forall j \in \{1,2,\dots,n\}. \label{non_negativity_LP} \tag{2.2c}
     \end{align*}
 
 - We denote by $z(\LP)$ the optimal value of the LP relaxation, and by $\tilde{\vet x}(\LP)$ an optimal solution. We always write the argument, because in the same example $\tilde{\vet x}(\ILP)$ and $\tilde{\vet x}(\LP)$ are different points.
 
-<a id="box-1-prop-lp-bound"></a>
+<a id="box-8-prop-lp-bound"></a>
 
-!!! teorema "Proposition 2.1: upper bound from the LP relaxation"
+!!! teorema "Proposition 2.6: upper bound from the LP relaxation"
 
     Every feasible solution of the ILP problem is feasible for its LP relaxation, hence
 
     \begin{equation*}
-    z(\ILP) \le z(\LP). \label{LP_BOUND} \tag{2.2}
+    z(\ILP) \le z(\LP). \label{LP_BOUND} \tag{2.3}
     \end{equation*}
 
     Moreover, if an optimal solution of the LP relaxation is integer, then it is an optimal solution of the ILP problem.
@@ -76,66 +193,63 @@ title: "LP relaxation and dual bounds"
 
     The feasible region $F$ of the ILP problem is contained in the polyhedron of the LP relaxation, and the objective function is the same. The maximum over a larger set is not smaller than the maximum over a subset. If $\tilde{\vet x}(\LP)$ is integer, it belongs to $F$ and has value $z(\LP) \ge z(\ILP)$: it is optimal for the ILP problem. <span class="qed">□</span>
 
-<a id="box-2-def-floor"></a>
+- The value of a feasible solution can be an integer, and it is at most $z(\LP)$: then it is at most the largest integer not exceeding $z(\LP)$.
 
-!!! definizione "Definition 2.2: of integer part of a number"
+<a id="box-9-obs-floor"></a>
 
-    Given $y \in \R$, the <strong>integer part</strong> of $y$ is $\lfloor y \rfloor = \max \{ q \in \Z : q \le y \}$.
-
-- The value of every feasible solution of an ILP problem with integer costs $c_j$ is an integer. Since it is at most $z(\LP)$, it is at most the largest integer not exceeding $z(\LP)$.
-
-<a id="box-3-obs-floor"></a>
-
-!!! teorema "Observation 2.3: rounding the upper bound"
+!!! teorema "Observation 2.7: rounding the upper bound"
 
     If all the variables are integer and all the costs $c_j$ are integer, then
 
     \begin{equation*}
-    z(\ILP) \le \lfloor z(\LP) \rfloor. \label{LP_BOUND_2} \tag{2.3}
+    z(\ILP) \le \lfloor z(\LP) \rfloor. \label{LP_BOUND_2} \tag{2.4}
     \end{equation*}
 
     In all the other cases the bound $\lfloor z(\LP) \rfloor$ is <u>not</u> valid.
 
-- In this module all the ILP problems have integer data, so the bound $\eqref{LP_BOUND_2}$ always holds. The case of a MIP problem is different: if a variable is continuous, the value of a feasible solution is not necessarily an integer, and the bound cannot be rounded.
+- In this module all the ILP problems have integer data, so the bound $\eqref{LP_BOUND_2}$ always holds. In a MIP problem with a continuous variable the value of a feasible solution is not necessarily an integer, and the bound cannot be rounded.
 
-### 2.2.1 The LP relaxation of the car example
+<a id="box-10-ex-lp-car"></a>
 
-- The LP relaxation of the car example has the optimal solution
+!!! esempio "Example 2.3: the LP relaxation of the car example"
 
-    $$
-    \tilde{x}_1 = \frac{7}{2}, \quad \tilde{x}_2 = \frac{5}{2}, \qquad z(\LP) = \frac{31}{2},
-    $$
+    - The LP relaxation of the car example has the optimal solution
 
-    and it is fractional: it is not a production plan.
+        $$
+        \tilde{x}_1 = \frac{7}{2}, \quad \tilde{x}_2 = \frac{5}{2}, \qquad z(\LP) = \frac{31}{2},
+        $$
 
-- Since the costs are integer, we have the upper bound $\lfloor z(\LP) \rfloor = 15$. Together with the lower bound of the previous chapter:
+        and it is fractional: it is not feasible for the ILP problem.
 
-    $$
-    14 ~\le~ z(\ILP) ~\le~ 15.
-    $$
+    - Since the costs are integer, we have the upper bound $\lfloor z(\LP) \rfloor = 15$. Together with the primal bound $14$ of the feasible solution $(4,1)$ of <span style="color:#1971c2">[Example 2.2](#box-6-ex-heur-car)</span>:
 
-![Figure 1](../img/02-lp-relaxation/fig01.svg){ .fig .ovale loading=lazy  }
+        $$
+        14 ~\le~ z(\ILP) ~\le~ 15.
+        $$
 
-<em>The LP relaxation of the car example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The dotted line is the objective line of the optimal ILP solution.</em>
+    ![Figure 1](../img/02-lp-relaxation/fig01.svg){ .fig .ovale loading=lazy  }
 
-- We know that the optimal value is $14$ or $15$. The <strong>optimality gap</strong> measures how far the two bounds are:
+    <em>The LP relaxation of the car example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The dotted line is the objective line of the optimal ILP solution.</em>
 
-    \begin{equation*}
-    \label{gap}
-    \text{optimality gap} = \frac{\UB - \LB}{|\LB|}, \qquad \text{for } \LB \ne 0 . \tag{2.4}
-    \end{equation*}
+    - The optimal value is $14$ or $15$. With $\UB = 15$ and $\LB = 14$ the optimality gap $\eqref{gap}$ is $\frac{1}{14} \approx 7.1\%$: the solution $(4,1)$ is not yet certified optimal.
 
-    Here $\UB = 15$ and $\LB = 14$, so the gap is $\frac{1}{14} \approx 7.1\%$. The solution $(4,1)$ is certified optimal only when the gap is zero.
-
-## 2.3 Rounding the solution of the LP relaxation
+## 2.4 Rounding the solution of the LP relaxation
 
 !!! chiave ""
 
     Feasible ILP solutions can typically be obtained by rounding an optimal solution of the LP relaxation. But no rounding technique guarantees to find an optimal ILP solution.
 
-<a id="box-4-ex-round-good"></a>
+<a id="box-11-ex-round-car"></a>
 
-!!! esempio "Example 2.1: rounding works, but the bound is not tight"
+!!! esempio "Example 2.4: rounding in the car example"
+
+    - The optimal solution of the LP relaxation is $\tilde{\vet x}(\LP) = (\frac{7}{2},\frac{5}{2})$. Rounding to the nearest integer gives $(4,3)$, which is infeasible: $10 \cdot 4 + 4 \cdot 3 = 52 > 45$.
+
+    - Rounding down both components gives the feasible solution $\bar{\vet x} = (3,2)$, with $\LB = 3 \cdot 3 + 2 \cdot 2 = 13$. The optimal ILP solution is $\tilde{\vet x}(\ILP) = (4,1)$, with $z(\ILP) = 14$: rounding does not give the optimum, and the bounds are $13 \le z(\ILP) \le 15$.
+
+<a id="box-12-ex-round-good"></a>
+
+!!! esempio "Example 2.5: rounding works, but the bound is not tight"
 
     Consider the following ILP problem; its LP relaxation has $x_1, x_2 \ge 0$ instead of the integrality constraints:
 
@@ -158,9 +272,9 @@ title: "LP relaxation and dual bounds"
 
     <em>The second example: the feasible region of the LP relaxation (red), the integer points (black) and the optimal solution of the LP relaxation (blue), with the objective line $2\,x_1 + 4\,x_2 = 17$ (dashed).</em>
 
-<a id="box-5-ex-round-bad"></a>
+<a id="box-13-ex-round-bad"></a>
 
-!!! esempio "Example 2.2: rounding fails"
+!!! esempio "Example 2.6: rounding fails"
 
     Consider the following ILP problem:
 
@@ -187,13 +301,11 @@ title: "LP relaxation and dual bounds"
 
     Optimal ILP solutions can be quite far from optimal solutions of the LP relaxation. The value of the LP relaxation, instead, is often a good bound: here $125 \le z(\LP) \approx 127.46$.
 
-## 2.4 Upper bounds on the variables
+## 2.5 Upper bounds on the variables
 
-- Some constraints give a bound on a single variable. If a constraint has all the coefficients non-negative, then each term is non-negative, so no term can exceed the right-hand side.
+<a id="box-14-prop-vub"></a>
 
-<a id="box-6-prop-vub"></a>
-
-!!! teorema "Proposition 2.4: upper bounds on the variables"
+!!! teorema "Proposition 2.8: upper bounds on the variables"
 
     Let $\sum_{j=1}^n a_{ij} \, x_j \le b_i$ be a constraint with $a_{ij} \ge 0$ for all $j$. Then every feasible solution of the ILP problem satisfies
 
@@ -206,7 +318,17 @@ title: "LP relaxation and dual bounds"
 
     Since all the variables are non-negative and all the coefficients are non-negative, $a_{ij} \, x_j \le \sum_{k=1}^n a_{ik} \, x_k \le b_i$, so $x_j \le \frac{b_i}{a_{ij}}$. The variable is integer, so it does not exceed the integer part of $\frac{b_i}{a_{ij}}$. <span class="qed">□</span>
 
-- If several constraints give a bound on $x_j$, we keep the smallest. In the car example both constraints have non-negative coefficients:
+- If several constraints give a bound on $x_j$, we keep the smallest. The bounds cut off parts of the polyhedron of the LP relaxation, and no integer point.
+
+!!! chiave ""
+
+    The upper bounds on the variables improve the LP relaxation only if they cut off its optimal solution.
+
+<a id="box-15-ex-vub-car"></a>
+
+!!! esempio "Example 2.7: upper bounds on the variables of the car example"
+
+    Both constraints of the car example have non-negative coefficients:
 
     \begin{align*}
     x_1 &\le \min \left\{ \left\lfloor \tfrac{45}{10} \right\rfloor, \left\lfloor \tfrac{49}{4} \right\rfloor \right\}
@@ -215,113 +337,35 @@ title: "LP relaxation and dual bounds"
     = \min\{11, 3\} = 3.
     \end{align*}
 
-- The inequalities $x_1 \le 4$ and $x_2 \le 3$ are satisfied by all the integer points of the car example, and they can be added to the model. They cut off two regions of the polyhedron, and no integer point.
+    - The inequalities $x_1 \le 4$ and $x_2 \le 3$ are satisfied by all the integer points of the car example, and they can be added to the model. They cut off two regions of the polyhedron, and no integer point.
 
-![Figure 4](../img/02-lp-relaxation/fig04.svg){ .fig .ovale loading=lazy  }
+    ![Figure 4](../img/02-lp-relaxation/fig04.svg){ .fig .ovale loading=lazy  }
 
-<em>The variable upper bounds $x_1 \le 4$ and $x_2 \le 3$ (green) cut off the two gray regions of the LP relaxation (red) and no integer point. The optimal solution of the LP relaxation (blue) is not cut off.</em>
+    <em>The variable upper bounds $x_1 \le 4$ and $x_2 \le 3$ (green) cut off the two gray regions of the LP relaxation (red) and no integer point. The optimal solution of the LP relaxation (blue) is not cut off.</em>
 
-- The optimal solution of the LP relaxation, $(\frac{7}{2},\frac{5}{2})$, satisfies both inequalities. It is not cut off, so the optimal value of the LP relaxation does not change, and the upper bound is still $15$.
+    - The optimal solution of the LP relaxation, $(\frac{7}{2},\frac{5}{2})$, satisfies both inequalities. It is not cut off, so the optimal value of the LP relaxation does not change, and the upper bound is still $15$.
 
-- The bounds help when the optimal LP solution lies in a cut-off region. Consider the objective function $x_1 - x_2$ on the same constraints, whose optimal ILP solution is $(4,0)$ with $z(\ILP) = 4$. Before the bounds, the optimal solution of the LP relaxation is $(\frac{9}{2},0)$ with $z(\LP) = \frac{9}{2}$; after $x_1 \le 4$ it is $(4,0)$ with $z(\LP) = 4$, which is integer and therefore optimal.
+<a id="box-16-ex-vub-help"></a>
 
-![Figure 5](../img/02-lp-relaxation/fig05.svg){ .fig .ovale loading=lazy  }
+!!! esempio "Example 2.8: upper bounds that cut off the LP optimum"
 
-<em>The objective $x_1 - x_2$: the variable upper bound $x_1 \le 4$ (green) cuts off the gray triangle and the optimal solution $(\frac{9}{2},0)$ of the LP relaxation (blue circle). The new optimal solution $(4,0)$ (blue) is integer. The dashed line is $x_1 - x_2 = \frac{9}{2}$.</em>
+    - Consider the objective function $x_1 - x_2$ on the constraints of the car example, whose optimal ILP solution is $(4,0)$ with $z(\ILP) = 4$. Before the bounds, the optimal solution of the LP relaxation is $(\frac{9}{2},0)$ with $z(\LP) = \frac{9}{2}$; after $x_1 \le 4$ it is $(4,0)$ with $z(\LP) = 4$, which is integer and therefore optimal.
 
-- In this case the value of the LP relaxation improves from $\frac{9}{2}$ to $4$. The rounded bound $\lfloor \frac{9}{2} \rfloor = 4$ was already $4$: a better formulation does not always improve the rounded bound.
+    ![Figure 5](../img/02-lp-relaxation/fig05.svg){ .fig .ovale loading=lazy  }
 
-## 2.5 Dual bounds
+    <em>The objective $x_1 - x_2$: the variable upper bound $x_1 \le 4$ (green) cuts off the gray triangle and the optimal solution $(\frac{9}{2},0)$ of the LP relaxation (blue circle). The new optimal solution $(4,0)$ (blue) is integer. The dashed line is $x_1 - x_2 = \frac{9}{2}$.</em>
 
-- The LP relaxation gives a bound only after it has been solved. Can we obtain an upper bound <u>without</u> solving it? A feasible solution of the LP relaxation does not help: its value is neither a lower bound nor an upper bound on $z(\ILP)$.
+    - The value of the LP relaxation improves from $\frac{9}{2}$ to $4$. The rounded bound $\lfloor \frac{9}{2} \rfloor = 4$ was already $4$: a better formulation does not always improve the rounded bound.
 
-<div class="tabella" markdown="0"><table>
-<tr>
-<th><span class="arithmatex">\((x_1, x_2)\)</span></th>
-<th>feasible for the LP relaxation</th>
-<th>integer</th>
-<th><span class="arithmatex">\(3\,x_1 + 2\,x_2\)</span></th>
-</tr>
-<tr>
-<td><span class="arithmatex">\((4, \frac{5}{4})\)</span></td>
-<td>yes</td>
-<td>no</td>
-<td><span class="arithmatex">\(\frac{29}{2} > 14\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\((2, \frac{5}{2})\)</span></td>
-<td>yes</td>
-<td>no</td>
-<td><span class="arithmatex">\(11 < 14\)</span></td>
-</tr>
-</table></div>
+## 2.6 Dual bounds
 
-- The right tool is to <strong>combine the constraints</strong>. Multiplying the first constraint of the car example by $\frac{3}{4}$ we get
+- A dual bound can also be obtained without solving the LP relaxation, by combining the constraints with <strong>non-negative multipliers</strong> $\pi_i$, one for each constraint.
 
-    $$
-    \frac{15}{2}\,x_1 + 3\,x_2 \le \frac{135}{4}.
-    $$
+<a id="box-17-def-dlp"></a>
 
-    Since $x_1, x_2 \ge 0$ and the coefficients $\frac{15}{2}$ and $3$ are at least the costs $3$ and $2$, we have $3\,x_1 + 2\,x_2 \le \frac{15}{2}\,x_1 + 3\,x_2 \le \frac{135}{4}$: an upper bound of $\frac{135}{4}$.
+!!! definizione "Definition 2.9: dual problem of the LP relaxation"
 
-- The same works with any <strong>non-negative</strong> multipliers $\pi_1$ and $\pi_2$ of the two constraints, provided that the coefficients of the sum are at least the costs:
-
-    \begin{align*}
-    (10\,\pi_1 + 4\,\pi_2)\,x_1 + (4\,\pi_1 + 14\,\pi_2)\,x_2 &\le 45\,\pi_1 + 49\,\pi_2,\\
-    10\,\pi_1 + 4\,\pi_2 \ge 3, \qquad 4\,\pi_1 + 14\,\pi_2 &\ge 2.
-    \end{align*}
-
-    The multipliers must be non-negative: a negative multiplier would reverse the inequality.
-
-<div class="tabella" markdown="0"><table>
-<tr>
-<th><span class="arithmatex">\((\pi_1, \pi_2)\)</span></th>
-<th>valid multipliers</th>
-<th>upper bound <span class="arithmatex">\(45\,\pi_1 + 49\,\pi_2\)</span></th>
-</tr>
-<tr>
-<td><span class="arithmatex">\((\frac{3}{4}, 0)\)</span></td>
-<td>yes</td>
-<td><span class="arithmatex">\(\frac{135}{4}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\((0, \frac{3}{4})\)</span></td>
-<td>yes</td>
-<td><span class="arithmatex">\(\frac{147}{4}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\((\frac{1}{5}, \frac{1}{4})\)</span></td>
-<td>yes</td>
-<td><span class="arithmatex">\(\frac{85}{4}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\((\frac{1}{2}, 0)\)</span></td>
-<td>yes</td>
-<td><span class="arithmatex">\(\frac{45}{2}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\((\frac{1}{5}, 0)\)</span></td>
-<td>no: <span class="arithmatex">\(10 \cdot \frac{1}{5} = 2 < 3\)</span></td>
-<td>–</td>
-</tr>
-</table></div>
-
-- To get the <strong>best</strong> bound we look for the multipliers with the smallest value $45\,\pi_1 + 49\,\pi_2$: this is itself an LP problem.
-
-!!! chiave ""
-
-    $$
-    \begin{array}{rrrrrrr}
-    {\min} & {45}\, {\pi_1} & {+} & {49}\, {\pi_2} \\[1ex]
-    \text{subject to} & {10}\, {\pi_1} & {+} & {4}\, {\pi_2} & {\ge} & {3} \\[1ex]
-    & {4}\, {\pi_1} & {+} & {14}\, {\pi_2} & {\ge} & {2} \\[1ex]
-    & {\pi_1,} &  & {\pi_2} & {\ge} & {0}
-    \end{array}
-    $$
-
-- This is the <strong>dual problem</strong> of the LP relaxation, called D(LP), and its optimal value is $z(\mathrm{D(LP)})$. For a general ILP problem in canonical form, with one multiplier $\pi_i \ge 0$ for each constraint, it reads:
-
-!!! chiave ""
+    The <strong>dual problem</strong> D(LP) of the LP relaxation [(2.2)](#eq-LP) is the following LP problem, with optimal value $z(\mathrm{D(LP)})$:
 
     <a id="eq-DLP"></a>
 
@@ -331,9 +375,11 @@ title: "LP relaxation and dual bounds"
     &&\pi_i                        &\ge  0, & \forall i \in \{1,2,\dots,m\}. \label{non_negativity_D} \tag{2.6c}
     \end{align*}
 
-<a id="box-7-prop-dual-bound"></a>
+- Multiplying the constraint $i$ by $\pi_i \ge 0$ and summing, we get an inequality whose coefficients are at least the costs, by $\eqref{Cons_D}$. The multipliers must be non-negative: a negative multiplier would reverse the inequality.
 
-!!! teorema "Proposition 2.5: dual bounds"
+<a id="box-18-prop-dual-bound"></a>
+
+!!! teorema "Proposition 2.10: dual bounds"
 
     For every feasible solution $\bar{\vet \pi}$ of the dual problem [(2.6)](#eq-DLP),
 
@@ -347,7 +393,101 @@ title: "LP relaxation and dual bounds"
 
     Let $\vet x$ be feasible for the LP relaxation. Multiplying the constraint $i$ by $\bar{\pi}_i \ge 0$ and summing, $\sum_{j=1}^n \big( \sum_{i=1}^m a_{ij} \, \bar{\pi}_i \big) x_j \le \sum_{i=1}^m b_i \, \bar{\pi}_i$. By $\eqref{Cons_D}$ and $x_j \ge 0$, the left-hand side is at least $\sum_{j=1}^n c_j \, x_j$. Hence $\sum_{j=1}^n c_j \, x_j \le \sum_{i=1}^m b_i \, \bar{\pi}_i$ for every feasible $\vet x$. <span class="qed">□</span>
 
-- In the car example the optimal solution of D(LP) is $\tilde{\vet \pi}(\mathrm{D(LP)}) = (\frac{17}{62},\frac{2}{31})$, and
+!!! chiave ""
+
+    Every feasible solution of the dual problem is a certificate of an upper bound, found without solving the LP relaxation. The best certificate is an optimal dual solution, and it has the same value as the LP relaxation.
+
+<a id="box-19-ex-mult-car"></a>
+
+!!! esempio "Example 2.9: multipliers for the car example"
+
+    - A feasible solution of the LP relaxation does not give a dual bound: its value is neither a lower bound nor an upper bound on $z(\ILP)$.
+
+    <div class="tabella" markdown="0"><table>
+    <tr>
+    <th><span class="arithmatex">\((x_1, x_2)\)</span></th>
+    <th>feasible for the LP relaxation</th>
+    <th>integer</th>
+    <th><span class="arithmatex">\(3\,x_1 + 2\,x_2\)</span></th>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((4, \frac{5}{4})\)</span></td>
+    <td>yes</td>
+    <td>no</td>
+    <td><span class="arithmatex">\(\frac{29}{2} > 14\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((2, \frac{5}{2})\)</span></td>
+    <td>yes</td>
+    <td>no</td>
+    <td><span class="arithmatex">\(11 < 14\)</span></td>
+    </tr>
+    </table></div>
+
+    - Multiplying the first constraint of the car example by $\frac{3}{4}$ we get
+
+        $$
+        \frac{15}{2}\,x_1 + 3\,x_2 \le \frac{135}{4}.
+        $$
+
+        Since $x_1, x_2 \ge 0$ and the coefficients $\frac{15}{2}$ and $3$ are at least the costs $3$ and $2$, we have $3\,x_1 + 2\,x_2 \le \frac{15}{2}\,x_1 + 3\,x_2 \le \frac{135}{4}$: an upper bound of $\frac{135}{4}$.
+
+    - With multipliers $\pi_1, \pi_2 \ge 0$ of the two constraints, the coefficients of the sum must be at least the costs:
+
+        \begin{align*}
+        (10\,\pi_1 + 4\,\pi_2)\,x_1 + (4\,\pi_1 + 14\,\pi_2)\,x_2 &\le 45\,\pi_1 + 49\,\pi_2,\\
+        10\,\pi_1 + 4\,\pi_2 \ge 3, \qquad 4\,\pi_1 + 14\,\pi_2 &\ge 2.
+        \end{align*}
+
+    <div class="tabella" markdown="0"><table>
+    <tr>
+    <th><span class="arithmatex">\((\pi_1, \pi_2)\)</span></th>
+    <th>valid multipliers</th>
+    <th>upper bound <span class="arithmatex">\(45\,\pi_1 + 49\,\pi_2\)</span></th>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((\frac{3}{4}, 0)\)</span></td>
+    <td>yes</td>
+    <td><span class="arithmatex">\(\frac{135}{4}\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((0, \frac{3}{4})\)</span></td>
+    <td>yes</td>
+    <td><span class="arithmatex">\(\frac{147}{4}\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((\frac{1}{5}, \frac{1}{4})\)</span></td>
+    <td>yes</td>
+    <td><span class="arithmatex">\(\frac{85}{4}\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((\frac{1}{2}, 0)\)</span></td>
+    <td>yes</td>
+    <td><span class="arithmatex">\(\frac{45}{2}\)</span></td>
+    </tr>
+    <tr>
+    <td><span class="arithmatex">\((\frac{1}{5}, 0)\)</span></td>
+    <td>no: <span class="arithmatex">\(10 \cdot \frac{1}{5} = 2 < 3\)</span></td>
+    <td>–</td>
+    </tr>
+    </table></div>
+
+    - The best multipliers, with the smallest value $45\,\pi_1 + 49\,\pi_2$, solve the dual problem [(2.6)](#eq-DLP) of the car example:
+
+    $$
+    \begin{array}{rrrrrrr}
+    {\min} & {45}\, {\pi_1} & {+} & {49}\, {\pi_2} \\[1ex]
+    \text{subject to} & {10}\, {\pi_1} & {+} & {4}\, {\pi_2} & {\ge} & {3} \\[1ex]
+    & {4}\, {\pi_1} & {+} & {14}\, {\pi_2} & {\ge} & {2} \\[1ex]
+    & {\pi_1,} &  & {\pi_2} & {\ge} & {0}
+    \end{array}
+    $$
+
+<a id="box-20-ex-dual-car"></a>
+
+!!! esempio "Example 2.10: optimal dual solution of the car example"
+
+    The optimal solution of the dual problem of <span style="color:#1971c2">[Example 2.9](#box-19-ex-mult-car)</span> is $\tilde{\vet \pi}(\mathrm{D(LP)}) = (\frac{17}{62},\frac{2}{31})$, and
 
     $$
     z(\mathrm{D(LP)}) = 45 \cdot \frac{17}{62} + 49 \cdot \frac{2}{31} = \frac{765}{62} +
@@ -356,29 +496,29 @@ title: "LP relaxation and dual bounds"
 
     The other two vertices of the dual feasible region give the bounds $\frac{45}{2}$ and $\frac{147}{4}$.
 
-![Figure 6](../img/02-lp-relaxation/fig06.svg){ .fig .ovale loading=lazy  }
+    ![Figure 6](../img/02-lp-relaxation/fig06.svg){ .fig .ovale loading=lazy  }
 
-<em>The feasible region of the dual LP problem (red, unbounded) and its optimal solution $(\frac{17}{62},\frac{2}{31})$ (blue), with the objective line $45\,\pi_1 + 49\,\pi_2 = \frac{31}{2}$ (dashed). The other vertices (black) give the bounds $\frac{45}{2}$ and $\frac{147}{4}$.</em>
+    <em>The feasible region of the dual LP problem (red, unbounded) and its optimal solution $(\frac{17}{62},\frac{2}{31})$ (blue), with the objective line $45\,\pi_1 + 49\,\pi_2 = \frac{31}{2}$ (dashed). The other vertices (black) give the bounds $\frac{45}{2}$ and $\frac{147}{4}$.</em>
 
-!!! chiave ""
+### 2.6.1 Summary of the notation
 
-    Every feasible solution of the dual problem is a certificate of an upper bound, found without solving the LP relaxation. The best certificate is an optimal dual solution, and it has the same value as the LP relaxation.
+- <strong>ILP problem</strong>: optimal solution $\tilde{\vet x}(\ILP)$, optimal value $z(\ILP)$.
 
-### 2.5.1 Summary of the notation
-
-- <strong>ILP problem</strong>: optimal solution $\tilde{\vet x}(\ILP)$, optimal value $z(\ILP)$, feasible solution $\bar{\vet x}$ with $\LB(\bar{\vet x}) = \sum_{j} c_j \, \bar{x}_j \le z(\ILP)$.
+- <strong>Primal bound</strong>: feasible solution $\bar{\vet x}$ with $\LB(\bar{\vet x}) = \sum_{j} c_j \, \bar{x}_j \le z(\ILP)$.
 
 - <strong>LP relaxation</strong>: optimal solution $\tilde{\vet x}(\LP)$, optimal value $z(\LP)$, upper bound $z(\ILP) \le z(\LP)$.
 
 - <strong>Dual problem</strong>: optimal solution $\tilde{\vet \pi}(\mathrm{D(LP)})$, optimal value $z(\mathrm{D(LP)}) = z(\LP)$, and $z(\ILP) \le \sum_i b_i \, \bar{\pi}_i$ for every dual feasible $\bar{\vet \pi}$.
 
-## 2.6 Typical mistakes
+## 2.7 Typical mistakes
 
 !!! attenzione "Warning"
 
+    - <strong>Taking a heuristic solution as optimal.</strong> A feasible solution gives only a primal bound. Without a dual bound with the same value there is no certificate of optimality.
+
     - <strong>Rounding the bound when it is not valid.</strong> The bound $\lfloor z(\LP) \rfloor$ requires all the variables and all the costs to be integer. In a MIP problem the bound is $z(\LP)$.
 
-    - <strong>Rounding the solution and calling it optimal.</strong> A rounded solution is feasible at best, and in general not optimal. It may even be infeasible, as the nearest integer point $(2,5)$ of <span style="color:#1971c2">[Example 2.2](#box-5-ex-round-bad)</span>.
+    - <strong>Rounding the solution and calling it optimal.</strong> A rounded solution is feasible at best, and in general not optimal. It may even be infeasible, as the nearest integer point $(2,5)$ of <span style="color:#1971c2">[Example 2.6](#box-13-ex-round-bad)</span>.
 
     - <strong>Using the value of a feasible LP solution as a bound.</strong> Only the optimal value of the LP relaxation, or the value of a dual feasible solution, is an upper bound.
 
@@ -388,21 +528,23 @@ title: "LP relaxation and dual bounds"
 
     - <strong>Believing that a stronger formulation always improves the bound.</strong> The bounds $x_1 \le 4$ and $x_2 \le 3$ leave the bound $15$ of the car example unchanged.
 
-## 2.7 In summary
+## 2.8 In summary
 
 !!! chiave "In summary"
 
-    - The LP relaxation drops integrality, so $z(\ILP) \le z(\LP)$; with integer variables and integer costs the bound can be rounded down to $\lfloor z(\LP) \rfloor$.
+    - Every feasible solution is a primal bound (a lower bound) on $z(\ILP)$, and heuristic algorithms find good feasible solutions quickly.
 
-    - Lower and upper bound define the optimality gap; optimality is certified when the gap is zero.
+    - The LP relaxation drops integrality, so $z(\ILP) \le z(\LP)$; with integer variables and integer costs this dual bound (an upper bound) can be rounded down to $\lfloor z(\LP) \rfloor$.
+
+    - Primal and dual bound define the optimality gap; optimality is certified when the gap is zero.
 
     - Rounding an optimal LP solution gives a feasible solution at best, never a certificate.
 
     - The upper bounds on the variables $x_j \le \lfloor b_i / a_{ij} \rfloor$ come from constraints with non-negative coefficients, and they help only if they cut off the LP optimum.
 
-    - Non-negative multipliers of the constraints give upper bounds; the best ones solve the dual problem, whose optimal value is $z(\LP)$.
+    - Non-negative multipliers of the constraints give dual bounds; the best ones solve the dual problem, whose optimal value is $z(\LP)$.
 
-    <strong>Dashboard of the car example.</strong> The bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car example.</strong> The bounds on $z(\ILP)$ found so far in this module (primal bound: lower; dual bound: upper):
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -412,16 +554,10 @@ title: "LP relaxation and dual bounds"
     <th>From</th>
     </tr>
     <tr>
-    <td>Integer linear programming</td>
-    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
-    <td>–</td>
-    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
-    </tr>
-    <tr>
-    <td>LP relaxation and dual bounds</td>
+    <td>Primal and dual bounds</td>
     <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
+    <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     </table></div>
 

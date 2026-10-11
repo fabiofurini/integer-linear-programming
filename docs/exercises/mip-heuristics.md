@@ -6,7 +6,7 @@ title: "Exercises · MIP heuristics"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 10** · each solution opens with a click · [:material-book-open-variant: Chapter 10](../mip-heuristics/mip-heuristics.md)
+**Exercises · Chapter 10** · each solution opens with a click · [:material-book-open-variant: Chapter 10](../mip-heuristics/mip-heuristics.md) · [:material-file-pdf-box: Exercises, volume 4 (PDF)](../pdf/exercises-4-mip-heuristics.pdf)
 
 </div>
 
@@ -14,170 +14,95 @@ title: "Exercises · MIP heuristics"
 
 <a id="esercizio-10-1"></a>
 
-!!! esercizio "Exercise 10.1: Rounding and diving 1"
+!!! esercizio "Exercise 10.1: Rounding and diving (P5)"
 
-    We consider a knapsack of capacity $c=16$ and a set $\mathscr{I}=\{1,2,3,4,5\}$ of $5$ items, with the following profits and weights:
+    !!! nota ""
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(i=1\)</span></th>
-    <th><span class="arithmatex">\(i=2\)</span></th>
-    <th><span class="arithmatex">\(i=3\)</span></th>
-    <th><span class="arithmatex">\(i=4\)</span></th>
-    <th><span class="arithmatex">\(i=5\)</span></th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(p_i\)</span></td>
-    <td><span class="arithmatex">\(11\)</span></td>
-    <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(18\)</span></td>
-    <td><span class="arithmatex">\(14\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(w_i\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(7\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    </tr>
-    </table></div>
+        Consider the following ILP problem in canonical maximization form with $n=2$ integer variables and $m=2$ constraints:
+
+        $$
+        \begin{array}{rrrrrrr}
+        {\max} & {2}\, {x_1} & {+} & {3}\, {x_2} \\[2ex]
+        & {6}\, {x_1} & {+} & {21}\, {x_2} & {\le} & {77} \\[2ex]
+        & {8}\, {x_1} & {+} & {3}\, {x_2} & {\le} & {36} \\[2ex]
+        & {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
+        \end{array}
+        $$
 
     **Questions**
 
-    1. Verify that the items are sorted by non-increasing efficiency, and compute the optimal solution $x^*$ of the LP relaxation of the KP model and its value $z_{LP}(I)$.
+    1. Compute the optimal solution $\tilde{\vet x}$ of the LP relaxation and its value $z(\LP)$.
 
-    2. Apply rounding: round $x^*$ to the nearest integer point $\tilde x$, check whether $\tilde x$ is feasible, and give its profit.
+    2. Apply rounding: round $\tilde{\vet x}$ to the nearest integer point, check whether it is feasible, and then round it down.
 
-    3. Apply fractional diving: at each step solve the LP relaxation with the variables fixed so far, fix the least fractional variable to its nearest integer, and repeat until the LP solution is integer.
+    3. Apply fractional diving: at each step solve the LP relaxation with the variables fixed so far, fix the least fractional variable to its nearest integer (ties: smallest index), and repeat until the LP solution is integer.
 
-    4. The dive is a path of the branch-and-bound tree. Compute the value of the LP relaxation of the branches that the dive does not visit, and use them to decide whether the solution of the dive is optimal.
+    4. Compute the optimality gap of the solution of the dive with respect to the upper bound $\lfloor z(\LP)\rfloor$, and prove that the solution is optimal by examining the possible values of $x_2$.
 
 ??? soluzione "Solution"
 
-    1. The efficiencies are
+    1. The two constraints are tight at the optimal vertex: from $8x_1+3x_2=36$ we get $x_2=12-\frac83x_1$, and $6x_1+21x_2=77$ becomes $6x_1+252-56x_1=77$, i.e., $x_1=\frac72$ and $x_2=\frac83$:
 
         $$
-        \frac{11}{3}\approx 3.67,\quad \frac{15}{5}=3,\quad \frac{18}{7}\approx 2.57,\quad \frac{14}{10}=1.4,\quad
-        \frac{10}{9}\approx 1.11,
+        \tilde{\vet x}=\Big(\frac72,\frac83\Big),\qquad z(\LP)=7+8=15 .
         $$
 
-        non-increasing. The LP takes items $1,2,3$ (weight $3+5+7=15$), and the residual capacity $1$ is filled by the fraction $\frac{1}{10}$ of item $4$:
+    2. $\big(\rnd{\frac72},\rnd{\frac83}\big)=(4,3)$ violates the second constraint: $8\cdot4+3\cdot3=41>36$. <strong>Rounding fails.</strong> Rounding down gives $(3,2)$: $60\le77$ and $30\le36$, feasible, of value $12$.
 
-        $$
-        x^*=\Big(1,1,1,\frac{1}{10},0\Big),\qquad z_{LP}(I)=11+15+18+\frac{14}{10}=\frac{227}{5}=45.4 .
-        $$
+    3. <strong>Step 1.</strong> The distances from the nearest integer are $\frac12$ for $x_1$ and $\frac13$ for $x_2$: fix $x_2:=3$.
 
-    2. $\rnd{\frac1{10}}=0$, so $\tilde x=(1,1,1,0,0)$: weight $15\le16$, feasible, profit $44$.
+        <strong>Step 2.</strong> With $x_2=3$ the constraints become $6x_1\le14$ and $8x_1\le27$, so $\tilde{\vet x}=\big(\frac73,3\big)$, of value $\frac{14}{3}+9=\frac{41}{3}$. Fix $x_1:=\rnd{\frac73}=2$.
 
-    3. <strong>Step 1.</strong> The only fractional variable is $x_4=\frac1{10}$: fix $x_4:=0$.
+        <strong>Step 3.</strong> The LP solution $(2,3)$, of value $13$, is integer: the dive returns $(2,3)$.
 
-        <strong>Step 2.</strong> Without item $4$, the LP takes items $1,2,3$ and the fraction $\frac19$ of item $5$: $x^*=\big(1,1,1,0,\frac19\big)$, of value $44+\frac{10}{9}=\frac{406}{9}\approx45.11$. Fix $x_5:=\rnd{\frac19}=0$.
-
-        <strong>Step 3.</strong> The LP solution $(1,1,1,0,0)$, of value $44$, is integer: the dive returns $S=\{1,2,3\}$, of profit $44$.
-
-    4. The dive does not visit the branches $x_4=1$ and ($x_4=0$, $x_5=1$).
-
-        - $x_4=1$: item $4$ uses $10$ of the capacity, profit $14$; the LP adds item $1$ (residual $3$) and the fraction $\frac35$ of item $2$: value $14+11+9=34$.
-
-        - $x_4=0$, $x_5=1$: item $5$ uses $9$, profit $10$; the LP adds item $1$ (residual $4$) and the fraction $\frac45$ of item $2$: value $10+11+12=33$.
-
-        Both values are smaller than $44$: no solution in the abandoned branches is better than the solution of the dive, which is therefore <strong>optimal</strong>, $z(I)=44$. The dive, together with the bounds of the branches it leaves, is a complete branch-and-bound.
+    4. The upper bound is $\lfloor15\rfloor=15$, so the gap is $\frac{15-13}{13}\approx15.4\%$. To prove optimality, let $x_2$ vary: $x_2\ge4$ is infeasible ($21\cdot4=84>77$); $x_2=3$ gives $x_1\le2$, value at most $13$; $x_2=2$ gives $x_1\le3$, value at most $12$; $x_2=1$ gives $x_1\le4$, value at most $11$; $x_2=0$ gives $x_1\le4$, value at most $8$. Hence $z(\ILP)=13$ and $(2,3)$ is <strong>optimal</strong>.
 
 <a id="esercizio-10-2"></a>
 
-!!! esercizio "Exercise 10.2: Rounding and diving 2"
+!!! esercizio "Exercise 10.2: Rounding and diving (P3)"
 
-    We consider a knapsack of capacity $c=15$ and a set $\mathscr{I}=\{1,2,3,4,5\}$ of $5$ items, with the following profits and weights:
+    !!! nota ""
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(i=1\)</span></th>
-    <th><span class="arithmatex">\(i=2\)</span></th>
-    <th><span class="arithmatex">\(i=3\)</span></th>
-    <th><span class="arithmatex">\(i=4\)</span></th>
-    <th><span class="arithmatex">\(i=5\)</span></th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(p_i\)</span></td>
-    <td><span class="arithmatex">\(13\)</span></td>
-    <td><span class="arithmatex">\(12\)</span></td>
-    <td><span class="arithmatex">\(14\)</span></td>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(w_i\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(7\)</span></td>
-    </tr>
-    </table></div>
+        Consider the following ILP problem in canonical maximization form with $n=2$ integer variables and $m=2$ constraints:
+
+        $$
+        \begin{array}{rrrrrrr}
+        {\max} & {2}\, {x_1} & {+} & {4}\, {x_2} \\[2ex]
+        & {-} {x_1} & {+} & {x_2} & {\le} & {2} \\[2ex]
+        & {8}\, {x_1} & {+} & {2}\, {x_2} & {\le} & {19} \\[2ex]
+        & {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
+        \end{array}
+        $$
 
     **Questions**
 
-    1. Compute the optimal solution $x^*$ of the LP relaxation and its value $z_{LP}(I)$ (the items are sorted by non-increasing efficiency).
+    1. Compute the optimal solution $\tilde{\vet x}$ of the LP relaxation and its value $z(\LP)$.
 
-    2. Round $x^*$ to the nearest integer point: is it feasible? Round it down instead, and give the profit.
+    2. Round $\tilde{\vet x}$ to the nearest integer point: is it feasible? Round it down instead, and give the value.
 
-    3. Apply fractional diving, step by step, and give the profit of the solution it returns.
+    3. Apply fractional diving (ties: smallest index). Does it return a solution?
 
-    4. Repeat the dive starting with the opposite decision at the first step, and continue with the rule of fractional diving. Then use the LP bounds of the branches to prove that the best of the two solutions is optimal.
+    4. Repeat the dive taking the opposite decision at the first step, and continue with the rule of fractional diving. Then prove that the solution is optimal by examining the possible values of $x_1$.
 
 ??? soluzione "Solution"
 
-    1. The efficiencies are $6.5$, $2.4$, $1.4$, $1$, $\frac57\approx0.71$. The LP takes items $1,2$ (weight $7$) and the fraction $\frac{8}{10}=\frac45$ of item $3$:
+    1. Both constraints are tight at the optimal vertex: $x_2=2+x_1$ and $8x_1+2x_2=19$ give $10x_1=15$:
 
         $$
-        x^*=\Big(1,1,\frac45,0,0\Big),\qquad z_{LP}(I)=13+12+14\cdot\frac45=\frac{181}{5}=36.2 .
+        \tilde{\vet x}=\Big(\frac32,\frac72\Big),\qquad z(\LP)=3+14=17 .
         $$
 
-    2. $\rnd{\frac45}=1$ gives $(1,1,1,0,0)$, of weight $17>15$: <strong>infeasible</strong>. Rounding down gives $(1,1,0,0,0)$, feasible (Observation on rounding down), of profit $25$.
+    2. $\big(\rnd{\frac32},\rnd{\frac72}\big)=(2,4)$ satisfies the first constraint ($2\le2$) but violates the second: $16+8=24>19$. <strong>Rounding fails.</strong> Rounding down gives $(1,3)$: $2\le2$ and $14\le19$, feasible, of value $14$.
 
-    3. <strong>Step 1.</strong> Fix $x_3:=\rnd{\frac45}=1$. Item $3$ uses $10$; the LP takes item $1$ (residual $3$) and the fraction $\frac35$ of item $2$: $x^*=\big(1,\frac35,1,0,0\big)$, of value $14+13+\frac{36}{5}=\frac{171}{5}=34.2$.
+    3. <strong>Step 1.</strong> Both variables are at distance $\frac12$: fix $x_1:=\rnd{\frac32}=2$.
 
-        <strong>Step 2.</strong> Fix $x_2:=\rnd{\frac35}=1$. Items $2,3$ fill the knapsack ($5+10=15$): the LP solution is $(0,1,1,0,0)$, integer, of value $26$. The dive returns $S=\{2,3\}$, of profit $26$.
+        <strong>Step 2.</strong> With $x_1=2$ the constraints become $x_2\le4$ and $2x_2\le3$, so $\tilde{\vet x}=\big(2,\frac32\big)$, of value $10$. Fix $x_2:=\rnd{\frac32}=2$.
 
-    4. <strong>Step 1'.</strong> Fix $x_3:=0$. The LP takes items $1,2,4$ (weight $13$) and the fraction $\frac27$ of item $5$: value $13+12+6+\frac{10}{7}=\frac{227}{7}\approx32.43$.
+        <strong>Step 3.</strong> With $x_1=2$ and $x_2=2$ the second constraint is $16+4=20>19$: the LP is infeasible, <strong>the dive fails</strong>.
 
-        <strong>Step 2'.</strong> Fix $x_5:=\rnd{\frac27}=0$: the LP solution $(1,1,0,1,0)$ is integer, of profit $31$.
+    4. <strong>Step 1.</strong> Fix $x_1:=1$ instead of $2$. The constraints become $x_2\le3$ and $2x_2\le11$, so $\tilde{\vet x}=(1,3)$, of value $14$, which is integer: the dive returns $(1,3)$. The first decision of the first dive, $\rnd{\frac32}=2$, was the wrong one.
 
-        The four leaves of the tree are:
-
-        <div class="tabella" markdown="0"><table>
-        <tr>
-        <th>branch</th>
-        <th>LP value</th>
-        <th></th>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(x_3=1\)</span>, <span class="arithmatex">\(x_2=1\)</span></td>
-        <td><span class="arithmatex">\(26\)</span></td>
-        <td>integer</td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(x_3=1\)</span>, <span class="arithmatex">\(x_2=0\)</span></td>
-        <td><span class="arithmatex">\(30\)</span></td>
-        <td>items <span class="arithmatex">\(3,1\)</span> and half of item <span class="arithmatex">\(4\)</span>; <span class="arithmatex">\(30<31\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(x_3=0\)</span>, <span class="arithmatex">\(x_5=0\)</span></td>
-        <td><span class="arithmatex">\(31\)</span></td>
-        <td>integer</td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(x_3=0\)</span>, <span class="arithmatex">\(x_5=1\)</span></td>
-        <td><span class="arithmatex">\(31\)</span></td>
-        <td>not better than <span class="arithmatex">\(31\)</span></td>
-        </tr>
-        </table></div>
-
-        No branch can contain a solution of profit larger than $31$, so $\{1,2,4\}$ is <strong>optimal</strong>: $z(I)=31$. The first dive ($26$) failed because its first decision, the most natural one for the LP ($x_3=\frac45\to1$), was wrong.
+        Optimality: the second constraint gives $x_1\le2$. For $x_1=0$ it is $x_2\le2$, value at most $8$; for $x_1=1$ it is $x_2\le3$, value at most $14$; for $x_1=2$ it is $x_2\le1$, value at most $8$. Hence $z(\ILP)=14$ and $(1,3)$ is <strong>optimal</strong>.
 
 ## Feasibility pump
 
@@ -319,253 +244,152 @@ title: "Exercises · MIP heuristics"
 
 <a id="esercizio-10-6"></a>
 
-!!! esercizio "Exercise 10.6: RINS and local branching 1"
+!!! esercizio "Exercise 10.6: RINS, local branching and proximity search (P23)"
 
-    We consider a knapsack of capacity $c=22$ and a set $\mathscr{I}=\{1,2,\dots,6\}$ of $6$ items, sorted by non-increasing efficiency, with the following profits and weights:
+    !!! nota ""
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(i=1\)</span></th>
-    <th><span class="arithmatex">\(i=2\)</span></th>
-    <th><span class="arithmatex">\(i=3\)</span></th>
-    <th><span class="arithmatex">\(i=4\)</span></th>
-    <th><span class="arithmatex">\(i=5\)</span></th>
-    <th><span class="arithmatex">\(i=6\)</span></th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(p_i\)</span></td>
-    <td><span class="arithmatex">\(18\)</span></td>
-    <td><span class="arithmatex">\(21\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(19\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(7\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(w_i\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(12\)</span></td>
-    <td><span class="arithmatex">\(7\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    </tr>
-    </table></div>
+        Consider the following ILP problem in canonical maximization form with $n=2$ integer variables and $m=3$ constraints:
 
-    The incumbent is the solution of the greedy by <em>profit</em> $GR_p$.
+        $$
+        \begin{array}{rrrrrrr}
+        {\max} & {x_1} & {+} & {4}\, {x_2} \\[2ex]
+        & {3}\, {x_1} & {+} & {8}\, {x_2} & {\le} & {24} \\[2ex]
+        & {-} {x_1} &  &  & {\le} & {-1} \\[2ex]
+        &  &  & {-} & {x_2} & {\le} & {-1} \\[2ex]
+        & {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
+        \end{array}
+        $$
+
+        The incumbent solution is $\bar{\vet x}=(1,2)$.
 
     **Questions**
 
-    1. Compute the incumbent $\tilde x$ and its profit, and the optimal solution $x^*$ of the LP relaxation.
+    1. Compute the value of the incumbent, the optimal solution $\tilde{\vet x}$ of the LP relaxation and the upper bound $\lfloor z(\LP)\rfloor$.
 
-    2. Apply RINS: list the variables fixed by RINS, write the sub-MIP with the cutoff constraint $\sum_i p_ix_i\ge f(\tilde x)+1$, and solve it by enumeration.
+    2. Apply RINS with $\theta=1$: list the variables that are fixed, write the sub-MIP with the cutoff constraint and solve it.
 
-    3. Show that local branching with radius $k=2$ around $\tilde x$ finds no better solution.
+    3. Apply local branching with $k=1$, $k_{\max}=3$, $k_{step}=1$ and $\theta=1$. Write the local branching constraints explicitly.
 
-    4. Apply proximity search with $\theta=1$ from $\tilde x$ (the optimal solution of this instance has profit $43$, as can be checked by enumerating the $2^6$ subsets). Compare the three methods.
+    4. Apply proximity search with $\theta=1$. Compare the three methods, and say which of them proves the optimality of the solution found.
 
 ??? soluzione "Solution"
 
-    1. By non-increasing profit the order is $2$ ($21$), $4$ ($19$), $1$ ($18$), $5$, $6$, $3$. Item $2$ is taken ($rc=12$), item $4$ is taken ($rc=0$), nothing else fits: $\tilde x=(0,1,0,1,0,0)$, profit $40$. The LP takes items $1,2,3$ (weight $20$) and the fraction $\frac2{12}=\frac16$ of item $4$:
+    1. The incumbent is feasible ($3+16=19\le24$), of value $1+8=9$. The LP optimum is $x_1=1$ (its lower bound) and $x_2=\frac{21}{8}$:
 
         $$
-        x^*=\Big(1,1,1,\frac16,0,0\Big),\qquad z_{LP}(I)=43+\frac{19}{6}=\frac{277}{6}\approx46.17 .
+        \tilde{\vet x}=\Big(1,\frac{21}{8}\Big),\qquad z(\LP)=1+\frac{21}{2}=\frac{23}{2},\qquad \lfloor z(\LP)\rfloor=11 .
         $$
 
-    2. $x^*$ and $\tilde x$ agree on $x_2=1$, $x_5=0$, $x_6=0$, which are fixed; $x_1,x_3,x_4$ are free. The sub-MIP is
+    2. $\tilde x_1=1=\bar x_1$, while $\tilde x_2=\frac{21}8\neq2=\bar x_2$: RINS fixes $x_1:=1$. The sub-MIP is
 
-        \begin{align*}
-        && \max ~~ 21+18\,x_1+4\,x_3+19\,x_4 & & \\[0.5ex]
-        && \text{subject to} \quad 8\,x_1+2\,x_3+12\,x_4 &\le 12 & \\[0.5ex]
-        && 21+18\,x_1+4\,x_3+19\,x_4 &\ge 41 & \\[0.5ex]
-        && x_1 &\in\{0,1\} & \\[0.5ex]
-        && x_3 &\in\{0,1\} & \\[0.5ex]
-        && x_4 &\in\{0,1\} &
-        \end{align*}
+        $$
+        \max~ 1+4\,x_2 \quad\text{s.t.}\quad 3+8\,x_2\le 24,\quad 1+4\,x_2\ge 10,\quad x_2\in\Z_{\ge1} .
+        $$
 
-        If $x_4=1$ the capacity forces $x_1=x_3=0$ and the profit is $40<41$. If $x_4=0$, the best choice is $x_1=x_3=1$ (weight $10\le12$), of profit $43$. RINS returns $\{1,2,3\}$, of profit $43$: the <strong>optimum</strong>.
+        The first constraint gives $x_2\le2$, the cutoff $x_2\ge3$: the sub-MIP is infeasible and RINS returns the incumbent, of value $9$.
 
-    3. The incumbent fills the knapsack ($10+12=22$), so adding an item is infeasible, and removing items decreases the profit. The solutions at distance $2$ that keep the weight feasible are the swaps (one item out, one in):
+    3. With $\bar{\vet x}^1=(1,2)$ the constraint $\Delta(\vet x,\bar{\vet x}^1)\le1$ reads $|x_1-1|+|x_2-2|\le1$, with the auxiliary variables $d_1\ge x_1-1$, $d_1\ge1-x_1$, $d_2\ge x_2-2$, $d_2\ge2-x_2$, $d_1+d_2\le1$; the cutoff is $x_1+4x_2\ge10$.
 
-        <div class="tabella" markdown="0"><table>
-        <tr>
-        <th>out  in</th>
-        <th><span class="arithmatex">\(1\)</span></th>
-        <th><span class="arithmatex">\(3\)</span></th>
-        <th><span class="arithmatex">\(5\)</span></th>
-        <th><span class="arithmatex">\(6\)</span></th>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(37\)</span></td>
-        <td><span class="arithmatex">\(23\)</span></td>
-        <td><span class="arithmatex">\(29\)</span></td>
-        <td><span class="arithmatex">\(26\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(4\)</span></td>
-        <td><span class="arithmatex">\(39\)</span></td>
-        <td><span class="arithmatex">\(25\)</span></td>
-        <td><span class="arithmatex">\(31\)</span></td>
-        <td><span class="arithmatex">\(28\)</span></td>
-        </tr>
-        </table></div>
+        <strong>$k=1$.</strong> The neighbours at distance $1$ are $(2,2)$, $(0,2)$, $(1,3)$, $(1,1)$. Only $(2,2)$ is feasible and has value $10$: $\bar{\vet x}^2=(2,2)$. Add $\Delta(\vet x,\bar{\vet x}^1)\ge2$.
 
-        all with profit smaller than $41$: the sub-MIP with $\Delta(x,\tilde x)\le 2$ and the cutoff is infeasible. The optimum $(1,1,1,0,0,0)$ differs from $\tilde x$ in $x_1$, $x_3$, $x_4$: it is at distance $3$.
+        <strong>$k=1,2,3$, around $\bar{\vet x}^2$.</strong> The cutoff is $x_1+4x_2\ge11$. For $x_2=2$ the first constraint gives $x_1\le\frac83$, value at most $10$; for $x_2\ge3$ it is violated; for $x_2=1$ the cutoff needs $x_1\ge7$, which violates it. No solution: the method stops with $(2,2)$, of value $10$.
 
-    4. <strong>Iteration 1.</strong> No solution of profit at least $41$ is at distance $\le2$ (question 3). At distance $3$ there are two: $(1,0,1,1,0,0)$, of weight $22$ and profit $41$, and $(1,1,1,0,0,0)$, of profit $43$. The proximity sub-MIP may return either.
+    4. <strong>Iteration 1.</strong> Cutoff $x_1+4x_2\ge10$: the closest solution is $(2,2)$, at distance $1$, of value $10$.
 
-        - If it returns $(1,1,1,0,0,0)$, the next sub-MIP asks for profit at least $44$ and is infeasible: the method stops, and $43$ is proved optimal.
+        <strong>Iteration 2.</strong> Cutoff $x_1+4x_2\ge11$: infeasible, as shown in question 3. By Proposition (?), $10$ is <strong>optimal</strong>.
 
-        - If it returns $(1,0,1,1,0,0)$, the next sub-MIP asks for profit at least $42$: the closest solution is $(1,1,1,0,0,0)$, at distance $2$ (item $4$ out, item $2$ in); then profit $44$ is infeasible.
-
-        RINS (hard fixing) succeeds because the variables on which $x^*$ and $\tilde x$ agree keep their optimal values; local branching with $k=2$ fails because the optimum is three changes away; proximity search finds it, since the size of the move is decided by the sub-MIP.
+        Comparison: RINS fails, because the variable $x_1$ on which the LP and the incumbent agree is the one that must change; local branching finds the optimum with $k=1$ but, stopping at $k_{\max}$, does not prove it; proximity search finds it and proves it. The bound $\lfloor z(\LP)\rfloor=11$ alone does not prove it.
 
 <a id="esercizio-10-7"></a>
 
-!!! esercizio "Exercise 10.7: RINS and local branching 2"
+!!! esercizio "Exercise 10.7: RINS, local branching and proximity search (P4)"
 
-    We consider a knapsack of capacity $c=13$ and a set $\mathscr{I}=\{1,2,\dots,6\}$ of $6$ items, sorted by non-increasing efficiency, with the following profits and weights:
+    !!! nota ""
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(i=1\)</span></th>
-    <th><span class="arithmatex">\(i=2\)</span></th>
-    <th><span class="arithmatex">\(i=3\)</span></th>
-    <th><span class="arithmatex">\(i=4\)</span></th>
-    <th><span class="arithmatex">\(i=5\)</span></th>
-    <th><span class="arithmatex">\(i=6\)</span></th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(p_i\)</span></td>
-    <td><span class="arithmatex">\(16\)</span></td>
-    <td><span class="arithmatex">\(13\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(16\)</span></td>
-    <td><span class="arithmatex">\(10\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(w_i\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    <td><span class="arithmatex">\(4\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(6\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    </tr>
-    </table></div>
+        Consider the following ILP problem in canonical maximization form with $n=2$ integer variables and $m=2$ constraints:
 
-    The incumbent is the solution of the greedy algorithm $GR$ (non-increasing efficiency).
+        $$
+        \begin{array}{rrrrrrr}
+        {\max} & {5}\, {x_1} & {+} & {3}\, {x_2} \\[2ex]
+        & {2}\, {x_1} & {+} & {x_2} & {\le} & {14} \\[2ex]
+        & {x_1} & {+} & {8}\, {x_2} & {\le} & {32} \\[2ex]
+        & {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
+        \end{array}
+        $$
+
+        The incumbent solution is $\bar{\vet x}=(5,3)$.
 
     **Questions**
 
-    1. Compute the incumbent $\tilde x$ and the optimal solution $x^*$ of the LP relaxation.
+    1. Compute the value of the incumbent, the optimal solution $\tilde{\vet x}$ of the LP relaxation and the upper bound $\lfloor z(\LP)\rfloor$.
 
-    2. Apply RINS from $\tilde x$: which variables are fixed, and what does the sub-MIP return?
+    2. Apply RINS with $\theta=1$: which variables are fixed, and what does the sub-MIP return?
 
-    3. Apply local branching from $\tilde x$ with $k=1$ and then, after adding the reverse constraint, with $k=2$. Write the local branching constraints explicitly.
+    3. Apply local branching with $k=1$ and then, after adding the reverse constraint, with $k=2$.
 
-    4. Prove that the solution found in question 3 is optimal, using the LP relaxation.
+    4. Apply proximity search with $\theta=1$. Which methods prove the optimality of the solution found?
 
 ??? soluzione "Solution"
 
-    1. $GR$ takes items $1,2,3$ (weight $8$, $rc=5$); items $4,5,6$ do not fit: $\tilde x=(1,1,1,0,0,0)$, profit $37$. The LP takes items $1,2,3$ and the fraction $\frac59$ of item $4$:
+    1. The incumbent is feasible ($13\le14$, $29\le32$), of value $34$. Both constraints are tight at the LP optimum: $x_2=14-2x_1$ and $x_1+8x_2=32$ give $15x_1=80$:
 
         $$
-        x^*=\Big(1,1,1,\frac59,0,0\Big),\qquad z_{LP}(I)=37+\frac{80}{9}=\frac{413}{9}\approx45.89 .
+        \tilde{\vet x}=\Big(\frac{16}{3},\frac{10}{3}\Big),\qquad z(\LP)=\frac{80}{3}+10=\frac{110}{3},\qquad \lfloor z(\LP)\rfloor=36 .
         $$
 
-    2. They agree on $x_1=x_2=x_3=1$ and $x_5=x_6=0$: only $x_4$ is free. The sub-MIP asks $8+9x_4\le13$ and $37+16x_4\ge38$: the first forces $x_4=0$, the second $x_4=1$. It is infeasible: <strong>RINS fails</strong> and returns $\tilde x$.
+    2. $\frac{16}3\neq5$ and $\frac{10}3\neq3$: no variable is fixed, the sub-MIP is the whole problem with the cutoff $5x_1+3x_2\ge35$. Its solution is $(6,2)$ ($12+2=14$, $6+16=22$), of value $36$. Since $36=\lfloor z(\LP)\rfloor$, the solution is <strong>optimal</strong>.
 
-    3. <strong>$k=1$.</strong> The constraint is
+    3. $\bar{\vet x}^1=(5,3)$. <strong>$k=1$.</strong> The neighbours at distance $1$ are $(4,3)$, $(6,3)$, $(5,2)$, $(5,4)$: $(6,3)$ violates the first constraint ($15>14$), $(5,4)$ the second ($37>32$), and $(4,3)$, $(5,2)$ have values $29$ and $31<35$. No solution; add $\Delta(\vet x,\bar{\vet x}^1)\ge2$ and set $k=2$.
 
-        $$
-        (1-x_1)+(1-x_2)+(1-x_3)+x_4+x_5+x_6\le 1 .
-        $$
+        <strong>$k=2$.</strong> The solution $(6,2)$, at distance $2$, has value $36\ge35$: $\bar{\vet x}^2=(6,2)$. No solution of value at least $37$ exists, since $37>\lfloor z(\LP)\rfloor$: the method continues to $k_{\max}$ and stops with $36$.
 
-        The neighbours are the flips: adding item $4$, $5$ or $6$ gives weight $17$, $14$, $16>13$; removing an item decreases the profit. No solution of profit at least $38$: add the reverse constraint $(1-x_1)+(1-x_2)+(1-x_3)+x_4+x_5+x_6\ge 2$ and set $k=2$.
+    4. <strong>Iteration 1.</strong> Cutoff $5x_1+3x_2\ge35$: no solution at distance $1$ (question 3), and $(6,2)$ is at distance $2$: it is returned, of value $36$.
 
-        <strong>$k=2$.</strong> Now $2\le\Delta(x,\tilde x)\le 2$. Two removals lose profit, two additions exceed the capacity; the swaps (one of $1,2,3$ out, one of $4,5,6$ in) that fit are
+        <strong>Iteration 2.</strong> Cutoff $\ge37$: infeasible. By Proposition (?), $36$ is <strong>optimal</strong>.
 
-        <div class="tabella" markdown="0"><table>
-        <tr>
-        <th>out  in</th>
-        <th><span class="arithmatex">\(4\)</span></th>
-        <th><span class="arithmatex">\(5\)</span></th>
-        <th><span class="arithmatex">\(6\)</span></th>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td>— (weight <span class="arithmatex">\(15\)</span>)</td>
-        <td><span class="arithmatex">\(31\)</span></td>
-        <td>— (weight <span class="arithmatex">\(14\)</span>)</td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td>— (weight <span class="arithmatex">\(15\)</span>)</td>
-        <td><span class="arithmatex">\(34\)</span></td>
-        <td>— (weight <span class="arithmatex">\(14\)</span>)</td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(3\)</span></td>
-        <td><span class="arithmatex">\(45\)</span></td>
-        <td><span class="arithmatex">\(39\)</span></td>
-        <td><span class="arithmatex">\(38\)</span></td>
-        </tr>
-        </table></div>
-
-        The best is to swap item $3$ with item $4$: $(1,1,0,1,0,0)$, of weight $13$ and profit $45$.
-
-    4. The LP relaxation gives $z(I)\le\frac{413}{9}\approx45.89$, and since the profits are integer, $z(I)\le45$. The solution of local branching attains this bound: it is <strong>optimal</strong>. RINS fixed $x_3=1$, the variable that had to change; local branching (soft fixing) lets the solver choose which variables change.
+        RINS and proximity search find the optimum in one step; the bound $\lfloor z(\LP)\rfloor=36$ also proves it, here without any further work. Local branching finds it with $k=2$ and does not need to prove it: the neighbourhood of radius $1$ is not enough.
 
 <a id="esercizio-10-8"></a>
 
-!!! esercizio "Exercise 10.8: RINS and local branching 3"
+!!! esercizio "Exercise 10.8: Proximity search (P3)"
 
-    We consider an instance of $P\,||\,C_{\max}$ with $m=2$ machines and $6$ jobs with processing times
+    !!! nota ""
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th></th>
-    <th><span class="arithmatex">\(j=1\)</span></th>
-    <th><span class="arithmatex">\(j=2\)</span></th>
-    <th><span class="arithmatex">\(j=3\)</span></th>
-    <th><span class="arithmatex">\(j=4\)</span></th>
-    <th><span class="arithmatex">\(j=5\)</span></th>
-    <th><span class="arithmatex">\(j=6\)</span></th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(t_j\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(3\)</span></td>
-    <td><span class="arithmatex">\(9\)</span></td>
-    <td><span class="arithmatex">\(5\)</span></td>
-    <td><span class="arithmatex">\(8\)</span></td>
-    <td><span class="arithmatex">\(2\)</span></td>
-    </tr>
-    </table></div>
+        Consider the following ILP problem in canonical maximization form with $n=2$ integer variables and $m=2$ constraints:
 
-    and the MIP model with variables $x_{jh}$ and $C_{\max}$. The incumbent is the solution of list scheduling ($LIST$) in the order $1,2,\dots,6$, each job to the least loaded machine (machine $1$ in case of ties).
+        $$
+        \begin{array}{rrrrrrr}
+        {\max} & {2}\, {x_1} & {+} & {4}\, {x_2} \\[2ex]
+        & {-} {x_1} & {+} & {x_2} & {\le} & {2} \\[2ex]
+        & {8}\, {x_1} & {+} & {2}\, {x_2} & {\le} & {19} \\[2ex]
+        & {x_1,} &  & {x_2} & {\in} & {\Z_{\ge 0}}
+        \end{array}
+        $$
+
+        The incumbent solution is $\bar{\vet x}=(0,0)$. Among the solutions of the proximity sub-MIP at the same distance, choose the one of larger value.
 
     **Questions**
 
-    1. Compute the incumbent and its makespan, and the lower bound $\max\{\max_j t_j,\lceil\sum_j t_j/m\rceil\}$.
+    1. Compute the value of the incumbent and the upper bound $\lfloor z(\LP)\rfloor$ (the LP optimum is $\big(\frac32,\frac72\big)$).
 
-    2. Apply the first iteration of proximity search with $\theta=1$: find the solution with $C_{\max}\le f(\tilde x)-1$ at minimum distance $\Delta(x,\tilde x)$ from the incumbent. (Recall that $\Delta=2r$, where $r$ is the number of jobs that change machine.)
+    2. Apply the first iteration of proximity search with $\theta=1$.
 
-    3. Apply the second iteration.
+    3. Apply the following iterations until the sub-MIP is infeasible.
 
-    4. Apply the third iteration, and conclude.
+    4. Conclude: is the last solution optimal? How many sub-MIPs were solved?
 
 ??? soluzione "Solution"
 
-    1. Job $1\to M_1$ ($9,0$), job $2\to M_2$ ($9,3$), job $3\to M_2$ ($9,12$), job $4\to M_1$ ($14,12$), job $5\to M_2$ ($14,20$), job $6\to M_1$ ($16,20$). The incumbent is $J_1=\{1,4,6\}$, $J_2=\{2,3,5\}$, with loads $16$ and $20$: makespan $20$. The lower bound is $\max\{9,\lceil 36/2\rceil\}=18$.
+    1. The incumbent has value $0$. The LP value is $z(\LP)=3+14=17$, so $\lfloor z(\LP)\rfloor=17$.
 
-    2. The cutoff is $C_{\max}\le19$. With $r=1$ (distance $2$) a single job moves; moving a job to $M_2$ makes its load larger than $20$, so the job moves from $M_2$ to $M_1$, and needs $20-t_j\le19$ and $16+t_j\le19$, i.e., $1\le t_j\le3$: only job $2$. The new incumbent is $J_1=\{1,2,4,6\}$, $J_2=\{3,5\}$, with loads $19$, $17$: makespan $19$, at distance $2$.
+    2. <strong>Iteration 1.</strong> Cutoff $2x_1+4x_2\ge1$. Two feasible points are at distance $1$ from $(0,0)$: $(1,0)$, of value $2$, and $(0,1)$, of value $4$. Choose $(0,1)$.
 
-    3. The cutoff is $C_{\max}\le18$: since the total is $36$, both loads must be exactly $18$, i.e., $M_1$ must lose exactly $1$. A single move would need a job with $t_j=1$: none (distance $2$ is impossible). With two jobs ($r=2$, distance $4$): two jobs leaving $M_1$ would need $t_i+t_j=1$, impossible; a swap of $i\in J_1$ with $j\in J_2$ needs $t_i-t_j=1$, and the only pair is job $1$ ($9$) with job $5$ ($8$). The new incumbent is $J_1=\{2,4,5,6\}$, $J_2=\{1,3\}$, with loads $18$, $18$: makespan $18$, at distance $4$.
+    3. <strong>Iteration 2.</strong> Cutoff $2x_1+4x_2\ge5$, around $(0,1)$. At distance $1$: $(0,2)$, of value $8$, and $(1,1)$, of value $6$. Choose $(0,2)$.
 
-    4. The cutoff is $C_{\max}\le17$, but $C_{\max}\ge 36/2=18$ for every assignment: the proximity sub-MIP is infeasible, and the method stops. By the proposition on proximity search, makespan $18$ is <strong>optimal</strong>; it also attains the lower bound of question 1.
+        <strong>Iteration 3.</strong> Cutoff $\ge9$, around $(0,2)$. At distance $1$: $(0,3)$ violates $-x_1+x_2\le2$; $(1,2)$ has value $10$ and is feasible ($1\le2$, $12\le19$). Return $(1,2)$.
+
+        <strong>Iteration 4.</strong> Cutoff $\ge11$, around $(1,2)$. At distance $1$: $(2,2)$ violates the second constraint ($20>19$); $(1,3)$ has value $14$ and is feasible ($2\le2$, $14\le19$). Return $(1,3)$.
+
+        <strong>Iteration 5.</strong> Cutoff $\ge15$, around $(1,3)$. The second constraint gives $x_1\le2$, and for $x_1=0,1,2$ the values are at most $8$, $14$, $8$: infeasible.
+
+    4. The last solution $(1,3)$, of value $14$, is <strong>optimal</strong> by Proposition (?): $5$ sub-MIPs were solved, four of them with a solution. The bound $17$ alone leaves a gap of $\frac{17-14}{14}\approx21.4\%$. Each step moves by one unit because the cutoff is small: a larger $\theta$ would ask for larger moves and fewer iterations.

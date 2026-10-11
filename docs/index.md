@@ -63,7 +63,7 @@ lecture notes: on the website and in the PDF you find everything in the same pla
 
     What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds, the gap and the LP relaxation.
 
-    1\. Integer linear programming · 2\. LP relaxation and dual bounds
+    1\. Integer linear programming · 2\. Primal and dual bounds
 
     [:octicons-arrow-right-24: The chapters](models-and-bounds/index.md)
 

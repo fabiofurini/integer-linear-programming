@@ -10,7 +10,7 @@
 
     ---
 
-    Why a cutting plane algorithm? · Gomory fractional cuts · A cutting-plane algorithm based on Gomory fractional cuts · The car example · …
+    Gomory fractional cuts · A cutting-plane algorithm based on Gomory fractional cuts · The car example · Typical mistakes · …
 
     [:octicons-arrow-right-24: Read the chapter](gomory.md) · [Exercises](../exercises/gomory.md)
 
@@ -18,7 +18,7 @@
 
     ---
 
-    Why a branch-and-bound algorithm? · The idea in words and in a picture · Definitions and notation · The algorithm · …
+    The idea in words and in a picture · Definitions and notation · The algorithm · A short recap of the dual simplex algorithm · …
 
     [:octicons-arrow-right-24: Read the chapter](bb.md) · [Exercises](../exercises/bb.md)
 
@@ -26,7 +26,7 @@
 
     ---
 
-    Why branch-and-cut algorithms? · Global and local valid inequalities · Cut-and-branch and branch-and-cut · Worked example: cut-and-branch on a knapsack instance · …
+    Branch-and-cut algorithms · Global and local valid inequalities · Cut-and-branch and branch-and-cut · Worked example: cut-and-branch with Gomory cuts · …
 
     [:octicons-arrow-right-24: Read the chapter](branch-and-cut.md)
 

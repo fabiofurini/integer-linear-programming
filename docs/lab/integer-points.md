@@ -5,7 +5,7 @@ hide:
 title: "Integer points and the LP relaxation"
 ---
 
-[← Lab](index.md) · Chapter: [LP relaxation and dual bounds](../models-and-bounds/lp-relaxation.md)
+[← Lab](index.md) · Chapter: [Primal and dual bounds](../models-and-bounds/lp-relaxation.md)
 
 # Integer points and the LP relaxation
 

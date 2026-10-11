@@ -10,7 +10,7 @@
 
     ---
 
-    MIP-based heuristics · The problems and their MIP models · Rounding · Diving · …
+    MIP-based heuristics · The examples of the chapter · Rounding · Diving · …
 
     [:octicons-arrow-right-24: Read the chapter](mip-heuristics.md) · [Exercises](../exercises/mip-heuristics.md)
 

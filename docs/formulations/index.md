@@ -10,7 +10,7 @@
 
     ---
 
-    Why ideal formulations? · The convex hull · Formulations and ideal formulations · Comparing formulations · …
+    The convex hull · Formulations and ideal formulations · Comparing formulations · Existence of ideal formulations · …
 
     [:octicons-arrow-right-24: Read the chapter](ideal-formulations.md)
 
@@ -18,7 +18,7 @@
 
     ---
 
-    Why valid inequalities? · Valid inequalities · Deriving valid inequalities by rounding · Improving a valid inequality · …
+    Valid inequalities · Deriving valid inequalities by rounding · Improving a valid inequality · Families of valid inequalities and cuts · …
 
     [:octicons-arrow-right-24: Read the chapter](valid-inequalities.md)
 
@@ -26,7 +26,7 @@
 
     ---
 
-    Knapsack constraints and their LP relaxation · Covers and cover inequalities · Geometric interpretation · Separation of cover inequalities · …
+    A constraint with positive coefficients and its LP relaxation · Covers and cover inequalities · Geometric interpretation · Separation of cover inequalities · …
 
     [:octicons-arrow-right-24: Read the chapter](cover.md) · [Exercises](../exercises/cover.md)
 

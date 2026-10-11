@@ -12,7 +12,7 @@ title: "Valid inequalities"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapter «LP relaxation and dual bounds»: the LP relaxation, the rounded bound $\lfloor z(\LP) \rfloor$, and bounds from non-negative multipliers of the constraints.
+    - From this module, the chapter «Primal and dual bounds»: the LP relaxation, the rounded bound $\lfloor z(\LP) \rfloor$, and bounds from non-negative multipliers of the constraints.
 
     - From this module, the chapter «Ideal formulations»: formulations, the convex hull, and the comparison of formulations through their polyhedra.
 
@@ -34,13 +34,7 @@ title: "Valid inequalities"
 
     In the car example the ideal formulation gives the upper bound $14$, equal to the lower bound, so it certifies that $(4,1)$ is optimal. But we found its four inequalities by looking at the convex hull, which is not possible in general. We now learn to <strong>derive</strong> such inequalities from the constraints.
 
-## 4.1 Why valid inequalities?
-
-- We cannot compute the ideal formulation of a large ILP problem, but we can add to the model a few inequalities that tighten the LP relaxation. Each one removes some fractional points and keeps all the integer ones.
-
-- In the car example the upper bound is $15$ and the lower bound is $14$. Is there an inequality, satisfied by all the integer points, that pushes the upper bound down to $14$?
-
-## 4.2 Valid inequalities
+## 4.1 Valid inequalities
 
 <a id="box-1-def-valid"></a>
 
@@ -48,27 +42,39 @@ title: "Valid inequalities"
 
     An inequality $\sum_{j=1}^n \alpha_j \, x_j \le \beta$ is a <strong>valid inequality</strong> for an ILP problem with feasible region $F$ if it is satisfied by all the points of $F$.
 
-- A valid inequality is satisfied by all the integer feasible solutions, but it can be violated by some fractional points of the LP relaxation. We say that it <strong>cuts off</strong> these points.
+<a id="box-2-def-tight"></a>
+
+!!! definizione "Definition 4.2: cut-off point and tight valid inequality"
+
+    Let $\sum_{j=1}^n \alpha_j \, x_j \le \beta$ be a valid inequality for an ILP problem with feasible region $F$.
+
+    - The inequality <strong>cuts off</strong> a point $\vet x^* \in \R^n$ if $\sum_{j=1}^n \alpha_j \, x^*_j > \beta$.
+
+    - The inequality is <strong>tight</strong> if at least one point of $F$ satisfies it with equality.
+
+- A valid inequality cuts off no point of $F$, but it can cut off fractional points of the LP relaxation. The right-hand side of a tight inequality cannot be decreased without losing a feasible solution.
 
 - Adding a valid inequality to the formulation does not change $F$, and it shrinks the polyhedron $P$. The new formulation is stronger, so its LP relaxation gives an upper bound that is not worse.
 
 - A valid inequality is satisfied by a point of $F$ if and only if it is satisfied by the convex hull, so it is valid for $\mathrm{conv}(F)$. The inequalities of the ideal formulation are valid inequalities.
 
-- A valid inequality is <strong>tight</strong> if at least one point of $F$ satisfies it with equality: its right-hand side cannot be decreased without losing a feasible solution.
-
 !!! chiave ""
 
     A valid inequality removes fractional points and never an integer feasible solution. Adding valid inequalities makes the formulation stronger and the upper bound better.
 
-- The inequalities $x_1 \le 4$ and $x_2 \le 3$ of the previous chapters are valid inequalities of the car example. They did not cut off the optimal solution of the LP relaxation, so they did not improve the bound.
+<a id="box-3-ex-vi-car"></a>
 
-## 4.3 Deriving valid inequalities by rounding
+!!! esempio "Example 4.1: valid inequalities of the car example"
 
-- We know how to combine the constraints with non-negative multipliers. In an ILP problem we can round the result, because the variables are integer.
+    The inequalities $x_1 \le 4$ and $x_2 \le 3$ of the previous chapters are valid inequalities of the car example. They do not cut off the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation, so they do not improve the upper bound $15$.
 
-<a id="box-2-prop-rounding"></a>
+## 4.2 Deriving valid inequalities by rounding
 
-!!! teorema "Proposition 4.2: valid inequalities by rounding"
+- The constraints are combined with non-negative multipliers, as for the dual bounds; since the variables are integer, the right-hand side of the combination can be rounded down.
+
+<a id="box-4-prop-rounding"></a>
+
+!!! teorema "Proposition 4.3: valid inequalities by rounding"
 
     Let $\pi_1, \pi_2, \dots, \pi_m \ge 0$ be multipliers such that $\sum_{i=1}^m \pi_i \, a_{ij} \ge \alpha_j$, with $\alpha_j \in \Z$, for all $j \in \{1,2,\dots,n\}$. Then the inequality
 
@@ -85,9 +91,9 @@ title: "Valid inequalities"
 
 - The proposition needs all the variables to be integer and non-negative. With a continuous variable the left-hand side is not an integer, and the right-hand side cannot be rounded.
 
-<a id="box-3-ex-half"></a>
+<a id="box-5-ex-half"></a>
 
-!!! esempio "Example 4.1: rounding with multiplier $\frac{1}{2}$"
+!!! esempio "Example 4.2: rounding with multiplier $\frac{1}{2}$"
 
     In the car example, multiply the first constraint by $\frac{1}{2}$: we get $5\,x_1 + 2\,x_2 \le \frac{45}{2}$. Since the left-hand side is integer, we obtain the valid inequality
 
@@ -136,7 +142,7 @@ title: "Valid inequalities"
 
     A valid inequality that cuts off the optimal LP solution does not always improve the upper bound. The choice of the multipliers matters: we look for inequalities that touch the integer points.
 
-## 4.4 Improving a valid inequality
+## 4.3 Improving a valid inequality
 
 - Given the coefficients $\alpha_j$, the strongest valid inequality has the smallest possible right-hand side, which is the maximum of $\sum_j \alpha_j \, x_j$ over $F$. We find it by lowering the right-hand side $\beta$ of $\eqref{rounding}$ until a feasible integer point reaches it.
 
@@ -160,9 +166,9 @@ title: "Valid inequalities"
 
 - In Step 0 the multipliers can be chosen freely: the better they are, the fewer repetitions of Step 1 are needed. In Step 1, for two variables, we substitute one variable using the equation and bound the other one with the constraints: if the bounds contradict each other, no point exists.
 
-<a id="box-4-ex-x1x2"></a>
+<a id="box-6-ex-x1x2"></a>
 
-!!! esempio "Example 4.2: the inequality $x_1 + x_2 \le 5$"
+!!! esempio "Example 4.3: the inequality $x_1 + x_2 \le 5$"
 
     We look for a valid inequality with $\alpha = (1,1)$.
 
@@ -180,9 +186,9 @@ title: "Valid inequalities"
 
     <em>The valid inequality $x_1 + x_2 \le 5$ (green) cuts off the gray triangle, which contains no integer point, and the optimal solution of the previous LP relaxation. The new optimal solution is $(\frac{25}{6},\frac{5}{6})$ (blue), with $z = \frac{85}{6}$ (dashed line).</em>
 
-<a id="box-5-ex-x12x2"></a>
+<a id="box-7-ex-x12x2"></a>
 
-!!! esempio "Example 4.3: the inequality $x_1 + 2\,x_2 \le 7$"
+!!! esempio "Example 4.4: the inequality $x_1 + 2\,x_2 \le 7$"
 
     We look for a valid inequality with $\alpha = (1,2)$.
 
@@ -206,15 +212,15 @@ title: "Valid inequalities"
 
 - The two inequalities, together with $x_1 \le 4$ and $x_2 \le 3$, are exactly the four inequalities of the ideal formulation of the previous chapter. For the car example we have reached the convex hull with valid inequalities derived from the constraints.
 
-## 4.5 What comes next
+## 4.4 Families of valid inequalities and cuts
 
-- By hand and with two variables we chose the directions $\alpha$ looking at the picture. For real problems we need two ingredients: valid inequalities for the structures that appear in the models, and a systematic way to find inequalities that cut off the current LP optimum.
+- With two variables the directions $\alpha$ are chosen on the picture. In general, valid inequalities come from two sources.
 
-- The first ingredient gives the families of inequalities for specific structures, such as the <strong>cover inequalities</strong> of the knapsack constraints (next chapter).
+- Families of inequalities for specific structures of the constraints, such as the <strong>cover inequalities</strong> of a constraint with positive coefficients of a binary problem (next chapter).
 
-- The second ingredient is the rounding of this chapter, applied systematically to the rows of the optimal dictionary of the LP relaxation: the <strong>Gomory fractional cuts</strong> of the cutting plane algorithm, and then the <strong>branch-and-cut</strong> algorithm.
+- The rounding of this chapter, applied systematically to the rows of the optimal dictionary of the LP relaxation: the <strong>Gomory fractional cuts</strong> of the cutting plane algorithm, and then the <strong>branch-and-cut</strong> algorithm.
 
-## 4.6 Typical mistakes
+## 4.5 Typical mistakes
 
 !!! attenzione "Warning"
 
@@ -228,7 +234,7 @@ title: "Valid inequalities"
 
     - <strong>Stopping at a coarse right-hand side.</strong> The inequality $x_1 + x_2 \le 6$ is valid, but it does not cut off the LP optimum of the car example (its sum is $6$); the tight inequality $x_1 + x_2 \le 5$ does.
 
-## 4.7 In summary
+## 4.6 In summary
 
 !!! chiave "In summary"
 
@@ -252,16 +258,10 @@ title: "Valid inequalities"
     <th>From</th>
     </tr>
     <tr>
-    <td>Integer linear programming</td>
-    <td><span class="arithmatex">\(12\)</span>, <span class="arithmatex">\(14\)</span></td>
-    <td>–</td>
-    <td>heuristic solutions <span class="arithmatex">\((4, 0)\)</span> and <span class="arithmatex">\((4, 1)\)</span></td>
-    </tr>
-    <tr>
-    <td>LP relaxation and dual bounds</td>
+    <td>Primal and dual bounds</td>
     <td><span class="arithmatex">\(14\)</span></td>
     <td><span class="arithmatex">\(15\)</span></td>
-    <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
+    <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     <tr>
     <td>Ideal formulations</td>
