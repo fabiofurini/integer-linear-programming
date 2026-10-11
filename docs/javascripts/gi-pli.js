@@ -24,20 +24,17 @@
   const { Q, Qv, Qtex, Qadd, Qmul, coppiaQ, coppia, lin, tinta } = M;
 
   // ================================================================ problemi
-  // max c'x, A x <= b, x >= 0 intero. I primi due vincoli si muovono con i cursori
-  // b_1, b_2 nell'app dei punti interi. Numeri verificati con python (motore_oc e bb.py di MIP):
-  //   auto: z(LP) = 31/2 in (7/2; 5/2), z(ILP) = 14 in (4; 1)
-  //   e1: z(LP) = 23/5 in (9/5; 14/5), z(ILP) = 4
-  //   e2: z(LP) = 165/4 in (9/4; 15/4), z(ILP) = 40 in (0; 5)
-  //   e4: z(LP) = 63/2 in (9/4; 9/2), z(ILP) = 30 in (3; 3)
-  const ESEMPI = {
-    auto: { c: [3, 2], V: [{ a: [10, 4], b: 45 }, { a: [4, 14], b: 49 }] },
-    e1: { c: [1, 1], V: [{ a: [2, 3], b: 12 }, { a: [4, 1], b: 10 }] },
-    e2: { c: [5, 8], V: [{ a: [1, 1], b: 6 }, { a: [5, 9], b: 45 }] },
-    e4: { c: [6, 4], V: [{ a: [2, 1], b: 9 }, { a: [4, 4], b: 27 }] },
-  };
-  const VOCI = () => Object.fromEntries(Object.keys(ESEMPI).map((k, i) => [k,
-    { etichetta: i === 0 ? T("Automobili", "Car example") : T("Altro ", "Other ") + i }]));
+  // max c'x, A x <= b, x >= 0 intero: il catalogo comune del laboratorio (gi-pli-dati.js, generato da
+  // python/genera_dati_lab.py), con gli stessi nomi in tutte le app: «Automobili», «Problema A», … .
+  // Le app dei punti interi usano tutto il catalogo (i due vincoli si muovono con i cursori b_1, b_2);
+  // il B&B e i tagli solo i problemi precalcolati (D0.problemi). Numeri verificati con python
+  // (motore_oc, enumerazione e Gurobi): auto z(LP) = 31/2 in (7/2; 5/2), z(ILP) = 14 in (4; 1);
+  // A 214/5 in (24/5; 2), 40 in (2; 4); B 195/4 in (345/64; 5/8), 43 in (2; 3); C 165/4 in (9/4; 15/4),
+  // 40 in (0; 5); D 23/5 in (9/5; 14/5), 4; E 63/2 in (9/4; 9/2), 30 in (3; 3).
+  const CATALOGO = window.GI_PLI.catalogo;
+  const ESEMPI = Object.fromEntries(Object.entries(CATALOGO).map(([k, p]) => [k, { c: p.c, V: p.A.map((a, i) => ({ a, b: p.b[i] })) }]));
+  /** i pulsanti «Problema» con i nomi del catalogo (chiavi: tutte, o solo quelle date) */
+  const VOCI = (chiavi = Object.keys(CATALOGO)) => Object.fromEntries(chiavi.map((k) => [k, { etichetta: T(CATALOGO[k].it, CATALOGO[k].en) }]));
   // intervallo dei cursori b_i: dal 60 % al 130 % circa del valore di partenza
   const rangeB = (b) => [Math.max(1, Math.round(b * 0.6)), Math.round(b * 1.3)];
 
@@ -359,7 +356,7 @@
   const zLP = "z(\\LP)", zILP = "z(\\ILP)";
   /** vista della board con la stessa unità sui due assi (la board si ridimensiona: M.adatta) */
   const vistaAuto = [-0.5, 3.95, 5.2, -0.5];
-  // ---- i problemi del B&B e dei tagli (gi-pli-dati.js: auto, p1, p2, p3), scelti con i pulsanti «Problema»
+  // ---- i problemi del B&B e dei tagli (gi-pli-dati.js: auto, A, B, C del catalogo), scelti con i pulsanti «Problema»
   const cacheP = {};
   const probDi = (k) => {
     if (cacheP[k]) return cacheP[k];
@@ -372,8 +369,7 @@
     return (cacheP[k] = { R, V, V0, X, Y, INTERI, HULL: M.involucro(INTERI), ob, vinc,
       vista: [-0.5, Y + 0.45, X + 0.7, -0.5] });
   };
-  const VOCI_P = () => Object.fromEntries(Object.keys(D0.problemi).map((k, i) => [k,
-    { etichetta: i === 0 ? T("Automobili", "Car example") : T("Altro ", "Other ") + i }]));
+  const VOCI_P = () => VOCI(Object.keys(D0.problemi));
   /** al cambio di problema (il motore ricrea la board e richiama monta): k torna a 0 */
   const nuovoProblema = (st) => {
     const k = st.chiave();
@@ -407,6 +403,40 @@
   /** il riquadro richiudibile «Dizionario» (aperto su schermi larghi), che scorre da solo */
   const dizBox = (parti) => `<details class="pli-diz" style="margin:.4em 0"${dizAperto ? " open" : ""}><summary style="cursor:pointer;font-weight:700">${T("Dizionario", "Dictionary")}</summary>` +
     `<div style="overflow:auto;max-height:38vh;font-size:.92em">${parti.map(([tit, [arr, ins]]) => `<div style="margin:.35em 0 .1em">${tit}</div><div style="white-space:nowrap">\\(\\displaystyle ${arr}\\)</div><div style="white-space:nowrap">\\(${ins}\\)</div>`).join("")}</div></details>`;
+  /** Su schermi larghi il dizionario sta in un riquadro richiudibile sopra l'angolo destro del disegno
+   *  (la ricetta gli lascia libera quella striscia, vedi `riserva`); sul telefono resta nelle letture.
+   *  Restituisce la larghezza in pixel da lasciare libera a destra (0 se non c'è il riquadro). */
+  const schermoLargo = () => window.innerWidth >= 860;
+  let dizFAperto = true;
+  const dizFlottante = (st, board, parti) => {
+    const be = board.containerObj, sx = be.parentElement;
+    let box = sx.querySelector(".pli-diz-f");
+    if (!schermoLargo() || !parti) { if (box) box.remove(); return 0; }
+    if (!box) {
+      sx.style.position = "relative";
+      box = GI.h("div", { class: "pli-diz-f", style: "position:absolute;z-index:3;right:8px;overflow:auto;font-size:.82em;box-sizing:border-box;" +
+        "background:var(--md-default-bg-color);border:1px solid var(--gi-line);border-radius:8px;padding:.2em .6em .4em;box-shadow:0 2px 8px rgba(0,0,0,.12)" });
+      box.addEventListener("click", (e) => { if (e.target.closest(".pli-diz-testa")) { dizFAperto = !dizFAperto; box._html = null; st.aggiorna(); } });
+      if (window.ResizeObserver) new ResizeObserver(() => { if (document.body.contains(box) && Math.abs((box._w || 0) - box.offsetWidth) > 2) st.aggiorna(); }).observe(box);
+      sx.append(box);
+    }
+    box.style.top = be.offsetTop + 8 + "px";
+    box.style.maxHeight = Math.max(120, be.clientHeight - 16) + "px";
+    box.style.maxWidth = Math.round(Math.min(620, be.clientWidth * 0.55)) + "px";
+    const testa = `<button class="pli-diz-testa" style="all:unset;cursor:pointer;font-weight:700;display:block;padding:.15em 0">${dizFAperto ? "▾" : "▸"} ${T("Dizionario", "Dictionary")}</button>`;
+    const html = testa + (dizFAperto ? `<div style="display:flex;flex-wrap:wrap;gap:.3em 1.4em">` +
+      parti.map(([tit, [arr, ins]]) => `<div><div style="margin:.2em 0 .1em;max-width:17em">${tit}</div><div style="white-space:nowrap">\\(\\displaystyle ${arr}\\)</div><div style="white-space:nowrap">\\(${ins}\\)</div></div>`).join("") + "</div>" : "");
+    if (box._html !== html) { box._html = html; box.innerHTML = GI.mj(html); GI.typeset(box); }
+    box._w = box.offsetWidth;
+    return dizFAperto ? box._w + 16 : 0;
+  };
+  /** come M.adatta, ma il disegno sta nella parte sinistra della board, lasciando `riserva` pixel a destra */
+  const adattaRiserva = (board, x0, y1, x1, y0, riserva) => {
+    const W = board.canvasWidth || 400, H = board.canvasHeight || 300, Wl = Math.max(W * 0.45, W - riserva);
+    const u = Math.min(Wl / (x1 - x0), H / (y1 - y0)), cy = (y0 + y1) / 2;
+    const sin = x0 - (Wl / u - (x1 - x0)) / 2;
+    board.setBoundingBox([sin, cy + H / u / 2, sin + W / u, cy - H / u / 2], false);
+  };
   /** un menu a tendina nel pannello dei controlli (le regole di un algoritmo) */
   const menu = (st, etichetta, chiave, voci, dopo) => {
     const D = st.dati;
@@ -605,6 +635,15 @@
     return out;
   };
 
+  /** il dizionario ottimo del nodo del passo E (o dell'incumbent alla fine) */
+  const partiBB = (t, E) => {
+    const n = E.nodo ? t.nodi[E.nodo] : null;
+    const nd = n && n.diz ? n : E.tipo === "fine" && E.inc ? t.nodi[E.inc] : null;
+    if (!nd) return null;
+    return [[T(`Dizionario ottimo di \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (con gli scarti dei vincoli di branching)" : ""),
+      `Optimal dictionary of \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (with the slacks of the branching constraints)" : "")), dizTex(nd.diz)]];
+  };
+
   window.GI_RICETTE["pli-bb"] = {
     titolo: T("Branch-and-bound passo per passo", "Branch-and-bound step by step"),
     sottotitolo: T("esempio delle automobili e altri problemi", "the car example and other problems"),
@@ -643,11 +682,12 @@
       const el = board.containerObj;
       if (window.innerWidth < 860 && el.clientHeight < 560) { el.style.height = Math.round(Math.min(680, Math.max(560, window.innerHeight * 0.75))) + "px"; }
       const [W, H] = misura(board);
+      const Rs = dizFlottante(st, board, partiBB(t, E)), Wd = W - Rs;
       board.setBoundingBox([0, H, W, 0], false);
-      M.ridisegna(board, st, [st.dati.trChiave, k, W, H, M.scuro()].join("|"), (crea) => {
-        const largo = W >= 1.15 * H, pad = 12;
-        const zp = largo ? [0, 0, W * 0.45, H] : [0, H * 0.5, W, H];
-        const za = largo ? [W * 0.45, 0, W, H] : [0, 0, W, H * 0.5];
+      M.ridisegna(board, st, [st.dati.trChiave, k, W, H, Rs, M.scuro()].join("|"), (crea) => {
+        const largo = Wd >= 1.15 * H, pad = 12;
+        const zp = largo ? [0, 0, Wd * 0.45, H] : [0, H * 0.5, Wd, H];
+        const za = largo ? [Wd * 0.45, 0, Wd, H] : [0, 0, Wd, H * 0.5];
         // ---- la regione, in scala
         const Pb = probDi(st.chiave()), X = Pb.X, Y = Pb.Y, x0 = -0.7, x1 = X + 0.5, y0 = -0.7, y1 = Y + 0.5;
         const s = Math.min((zp[2] - zp[0] - 2 * pad) / (x1 - x0), (zp[3] - zp[1] - 2 * pad) / (y1 - y0));
@@ -797,10 +837,9 @@
       }
       righe.push(`\\(\\LB = ${lb} \\le ${zILP} \\le \\UB = ${ubv}\\)` + (E.inc ? T(` · incumbent \\(\\bar{\\vet{x}} = ${pq(t.nodi[E.inc].x)}\\)`, ` · incumbent \\(\\bar{\\vet{x}} = ${pq(t.nodi[E.inc].x)}\\)`) : ""));
       righe.push(T("Lista: ", "List: ") + (E.lista.length ? E.lista.slice().sort((a, b) => a - b).map((i) => `\\(${i}\\)`).join(", ") : "—"));
-      const nd = n && n.diz ? n : E.tipo === "fine" && E.inc ? t.nodi[E.inc] : null;
-      if (nd) righe.push(dizBox([[T(`Dizionario ottimo di \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (con gli scarti dei vincoli di branching)" : ""),
-        `Optimal dictionary of \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (with the slacks of the branching constraints)" : "")), dizTex(nd.diz)]]));
-      else if (n && E.stati[n.id] === "inamm") righe.push(`<small>${T("Il duale non trova un pivot: nessun dizionario ammissibile.", "The dual simplex finds no pivot: no feasible dictionary.")}</small>`);
+      const parti = partiBB(t, E);
+      if (parti && !schermoLargo()) righe.push(dizBox(parti));
+      else if (!parti && n && E.stati[n.id] === "inamm") righe.push(`<small>${T("Il duale non trova un pivot: nessun dizionario ammissibile.", "The dual simplex finds no pivot: no feasible dictionary.")}</small>`);
       return righe.join("<br>");
     },
     domanda: T("Confronta le regole: quanti nodi servono con LIFO, FIFO e best bound? Con quale regola si trova prima l'ottimo? Cambia il primo figlio: l'albero si allunga o si accorcia? Quando scatta la regola del salto? Cambia problema: con quale l'albero è più grande?",
@@ -898,9 +937,9 @@
     aggiorna(board, st) {
       const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st);
       misura(board);
-      const Pb = probDi(st.chiave());
-      M.adatta(board, ...Pb.vista);
-      M.ridisegna(board, st, [st.chiave(), chiaveG(st.dati), k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
+      const Pb = probDi(st.chiave()), Rs = dizFlottante(st, board, partiG(st, G, k, C));
+      adattaRiserva(board, ...Pb.vista, Rs);
+      M.ridisegna(board, st, [st.chiave(), chiaveG(st.dati), k, Rs, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
         const x0 = -0.9, x1 = Pb.X + 0.5, y0 = -0.9, y1 = Pb.Y + 0.5;
         const tagli = G.iterazioni.slice(0, k).flatMap((it, i) => tagliDi(it).map((c) => Object.assign({ giro: i }, c)));
         const V = Pb.V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
@@ -968,25 +1007,26 @@
       if (intero && k > 0) righe.push(tutti(st)
         ? T(`Fine dopo \\(${k}\\) giri e \\(${nt}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) rounds and \\(${nt}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`)
         : T(`Fine dopo \\(${k}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
-      // i dizionari: LP_k con le righe del taglio (viola), poi LP_{k+1} dopo il duale con le righe nuove (blu)
-      const righeTaglio = (it) => Object.fromEntries(tagliDi(it).concat(it.doppi || []).map((c) => [c.riga, C.viola]));
-      const LPk = (i) => `\\(\\LP_{${i + 1}}\\)`;
-      if (k === 0) righe.push(dizBox([[T(`Dizionario ottimo di ${LPk(0)}, il rilassamento` + (G.iterazioni.length ? `; in ${tinta(C.viola, "viola")} la riga del primo taglio` : ""),
-        `Optimal dictionary of ${LPk(0)}, the relaxation` + (G.iterazioni.length ? `; in ${tinta(C.viola, "violet")} the row of the first cut` : "")),
-        dizTex(G.diz[0], G.iterazioni.length ? righeTaglio(G.iterazioni[0]) : {})]]));
-      else {
-        const it = G.iterazioni[k - 1], nuove = Object.fromEntries(tagliDi(it).map((c) => [c.s, C.blu]));
-        righe.push(dizBox([
-          [T(`Dizionario ottimo di ${LPk(k - 1)}: in ${tinta(C.viola, "viola")} ${tutti(st) ? "le righe dei tagli" : "la riga del taglio"}`,
-            `Optimal dictionary of ${LPk(k - 1)}: in ${tinta(C.viola, "violet")} the ${tutti(st) ? "rows of the cuts" : "row of the cut"}`), dizTex(G.diz[k - 1], righeTaglio(it))],
-          [T(`Dopo il simplesso duale, dizionario ottimo di ${LPk(k)}: in ${tinta(C.blu, "blu")} ${tutti(st) ? "gli scarti nuovi" : "lo scarto nuovo"}`,
-            `After the dual simplex, optimal dictionary of ${LPk(k)}: in ${tinta(C.blu, "blue")} the new ${tutti(st) ? "slacks" : "slack"}`), dizTex(G.diz[k], nuove)],
-        ]));
-      }
+      if (!schermoLargo()) righe.push(dizBox(partiG(st, G, k, C)));
       righe.push(`<small>${regolaRigaTxt(st)} ${regolaInsTxt(st)}</small>`);
       return righe.join("<br>");
     },
     domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le regole per la riga, anche con tutti i tagli violati insieme: quale combinazione arriva prima all'ottimo intero? Cambia problema: le regole si ordinano allo stesso modo? Controlla che nessun punto verde sia mai tolto.",
       "Compare the number of cuts with the weak and the primitive insertion, and with the row rules, also with all the violated cuts at once: which combination reaches the integer optimum first? Change the problem: do the rules rank the same way? Check that no green point is ever removed."),
   };
+  // i dizionari: LP_k con le righe del taglio (viola), poi LP_{k+1} dopo il duale con le righe nuove (blu)
+  function partiG(st, G, k, C) {
+    const righeTaglio = (it) => Object.fromEntries(tagliDi(it).concat(it.doppi || []).map((c) => [c.riga, C.viola]));
+    const LPk = (i) => `\\(\\LP_{${i + 1}}\\)`;
+    if (k === 0) return [[T(`Dizionario ottimo di ${LPk(0)}, il rilassamento` + (G.iterazioni.length ? `; in ${tinta(C.viola, "viola")} la riga del primo taglio` : ""),
+      `Optimal dictionary of ${LPk(0)}, the relaxation` + (G.iterazioni.length ? `; in ${tinta(C.viola, "violet")} the row of the first cut` : "")),
+      dizTex(G.diz[0], G.iterazioni.length ? righeTaglio(G.iterazioni[0]) : {})]];
+    const it = G.iterazioni[k - 1], nuove = Object.fromEntries(tagliDi(it).map((c) => [c.s, C.blu]));
+    return [
+      [T(`Dizionario ottimo di ${LPk(k - 1)}: in ${tinta(C.viola, "viola")} ${tutti(st) ? "le righe dei tagli" : "la riga del taglio"}`,
+        `Optimal dictionary of ${LPk(k - 1)}: in ${tinta(C.viola, "violet")} the ${tutti(st) ? "rows of the cuts" : "row of the cut"}`), dizTex(G.diz[k - 1], righeTaglio(it))],
+      [T(`Dopo il simplesso duale, dizionario ottimo di ${LPk(k)}: in ${tinta(C.blu, "blu")} ${tutti(st) ? "gli scarti nuovi" : "lo scarto nuovo"}`,
+        `After the dual simplex, optimal dictionary of ${LPk(k)}: in ${tinta(C.blu, "blue")} the new ${tutti(st) ? "slacks" : "slack"}`), dizTex(G.diz[k], nuove)],
+    ];
+  }
 })();
