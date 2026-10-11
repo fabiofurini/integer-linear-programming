@@ -6,7 +6,7 @@ title: "LP-based branch-and-bound"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 7** · [:material-pencil: Exercises](../exercises/bb.md)
+**Part 3 · Exact methods · Chapter 7** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises](../exercises/bb.md)
 
 </div>
 

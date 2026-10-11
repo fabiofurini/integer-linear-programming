@@ -1,7 +1,26 @@
 # Exercises
 
-Exercises with **worked solutions**, chapter by chapter, as in the PDF exercise books. Try each exercise on your own first: the solution opens with a click.
+Exercises with **worked solutions**, chapter by chapter. Try each exercise on your own first: the solution opens with a click.
 
-- [7. LP-based branch-and-bound](bb.md) · 4 exercises in this preview (2 branch-and-bound, 2 strong branching)
+<div class="grid cards" markdown>
 
-*The other chapters are in preparation.*
+-   **Strengthening the formulation**
+
+    ---
+
+    - [5. Cover inequalities](cover.md) · 15 exercises
+
+-   **Exact methods**
+
+    ---
+
+    - [6. Cutting planes](gomory.md) · 8 exercises
+    - [7. Branch-and-bound](bb.md) · 22 exercises
+
+-   **MIP heuristics**
+
+    ---
+
+    - [10. MIP heuristics](mip-heuristics.md) · 8 exercises
+
+</div>

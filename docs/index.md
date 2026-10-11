@@ -10,7 +10,7 @@ hide:
 ![Under construction: the website and the course material are still being written](img/under-construction.svg){ width="560" }
 
 **Website under construction.** The material is still being written: slides, interactive graphs and
-notebooks will follow later. This is a local preview.
+notebooks will follow later.
 
 # Integer Linear Programming
 
@@ -61,7 +61,7 @@ lecture notes: on the website and in the PDF you find everything in the same pla
 
     ---
 
-    What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds and the gap; the LP relaxation; ideal formulations, valid inequalities and cover inequalities. Worked examples and exercises with complete solutions.
+    What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds, the gap and the LP relaxation.
 
     1\. Integer linear programming · 2\. LP relaxation and dual bounds
 
@@ -71,7 +71,7 @@ lecture notes: on the website and in the PDF you find everything in the same pla
 
     ---
 
-    What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds and the gap; the LP relaxation; ideal formulations, valid inequalities and cover inequalities. Worked examples and exercises with complete solutions.
+    Ideal formulations, valid inequalities and cover inequalities: how to strengthen a formulation.
 
     3\. Ideal formulations · 4\. Valid inequalities · 5\. Cover inequalities
 
