@@ -12,7 +12,7 @@
 
     The convex hull · Formulations and ideal formulations · Comparing formulations · Existence of ideal formulations · …
 
-    [:octicons-arrow-right-24: Read the chapter](ideal-formulations.md)
+    [:octicons-arrow-right-24: Read the chapter](ideal-formulations.md) · [Exercises](../exercises/ideal-formulations.md)
 
 -   **4. Valid inequalities**
 
@@ -20,7 +20,7 @@
 
     Valid inequalities · Deriving valid inequalities by rounding · Improving a valid inequality · Families of valid inequalities and cuts · …
 
-    [:octicons-arrow-right-24: Read the chapter](valid-inequalities.md)
+    [:octicons-arrow-right-24: Read the chapter](valid-inequalities.md) · [Exercises](../exercises/valid-inequalities.md)
 
 -   **5. Cover inequalities**
 

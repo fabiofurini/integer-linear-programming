@@ -296,7 +296,7 @@ title: "Exercises · MIP heuristics"
 
     4. <strong>Iteration 1.</strong> Cutoff $x_1+4x_2\ge10$: the closest solution is $(2,2)$, at distance $1$, of value $10$.
 
-        <strong>Iteration 2.</strong> Cutoff $x_1+4x_2\ge11$: infeasible, as shown in question 3. By Proposition (?), $10$ is <strong>optimal</strong>.
+        <strong>Iteration 2.</strong> Cutoff $x_1+4x_2\ge11$: infeasible, as shown in question 3. By the proposition on proximity search (Chapter 10), $10$ is <strong>optimal</strong>.
 
         Comparison: RINS fails, because the variable $x_1$ on which the LP and the incumbent agree is the one that must change; local branching finds the optimum with $k=1$ but, stopping at $k_{\max}$, does not prove it; proximity search finds it and proves it. The bound $\lfloor z(\LP)\rfloor=11$ alone does not prove it.
 
@@ -345,7 +345,7 @@ title: "Exercises · MIP heuristics"
 
     4. <strong>Iteration 1.</strong> Cutoff $5x_1+3x_2\ge35$: no solution at distance $1$ (question 3), and $(6,2)$ is at distance $2$: it is returned, of value $36$.
 
-        <strong>Iteration 2.</strong> Cutoff $\ge37$: infeasible. By Proposition (?), $36$ is <strong>optimal</strong>.
+        <strong>Iteration 2.</strong> Cutoff $\ge37$: infeasible. By the proposition on proximity search (Chapter 10), $36$ is <strong>optimal</strong>.
 
         RINS and proximity search find the optimum in one step; the bound $\lfloor z(\LP)\rfloor=36$ also proves it, here without any further work. Local branching finds it with $k=2$ and does not need to prove it: the neighbourhood of radius $1$ is not enough.
 
@@ -392,4 +392,4 @@ title: "Exercises · MIP heuristics"
 
         <strong>Iteration 5.</strong> Cutoff $\ge15$, around $(1,3)$. The second constraint gives $x_1\le2$, and for $x_1=0,1,2$ the values are at most $8$, $14$, $8$: infeasible.
 
-    4. The last solution $(1,3)$, of value $14$, is <strong>optimal</strong> by Proposition (?): $5$ sub-MIPs were solved, four of them with a solution. The bound $17$ alone leaves a gap of $\frac{17-14}{14}\approx21.4\%$. Each step moves by one unit because the cutoff is small: a larger $\theta$ would ask for larger moves and fewer iterations.
+    4. The last solution $(1,3)$, of value $14$, is <strong>optimal</strong> by the proposition on proximity search (Chapter 10): $5$ sub-MIPs were solved, four of them with a solution. The bound $17$ alone leaves a gap of $\frac{17-14}{14}\approx21.4\%$. Each step moves by one unit because the cutoff is small: a larger $\theta$ would ask for larger moves and fewer iterations.

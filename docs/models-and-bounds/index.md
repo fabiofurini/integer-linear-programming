@@ -12,7 +12,7 @@
 
     Canonical maximization form · Possible outcomes · Complete enumeration · Typical mistakes · …
 
-    [:octicons-arrow-right-24: Read the chapter](ilp.md)
+    [:octicons-arrow-right-24: Read the chapter](ilp.md) · [Exercises](../exercises/ilp.md)
 
 -   **2. Primal and dual bounds**
 
@@ -20,6 +20,6 @@
 
     Primal and dual bounds · Primal bounds: heuristic solutions · The LP relaxation · Rounding the solution of the LP relaxation · …
 
-    [:octicons-arrow-right-24: Read the chapter](lp-relaxation.md)
+    [:octicons-arrow-right-24: Read the chapter](lp-relaxation.md) · [Exercises](../exercises/lp-relaxation.md)
 
 </div>

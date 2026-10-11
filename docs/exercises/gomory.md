@@ -136,9 +136,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{64}{3}} & {-} & {3}\, {x_1} & {-} & {\dfrac{4}{3}}\, {x_3}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{1}{2} & \frac{1}{6}
@@ -416,9 +418,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{52}{3}} & {-} & {\dfrac{1}{3}}\, {x_3} & {-} & {6}\, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{1}{3} & -2\\[2ex]
@@ -800,9 +804,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z= 16} & {-} & {\dfrac{4}{17}} \, {x_3} & {-} & {\dfrac{11}{17}} \, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             -\dfrac{1}{34} & \dfrac{5}{17} \\[2ex]
@@ -1088,9 +1094,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{44}{3}} & {-} & {\dfrac{1}{3}}\, {x_4} & {-} & {\dfrac{8}{3}}\, {x_5}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \dfrac{1}{3} & -\dfrac{1}{3}\\[2ex]
@@ -1483,9 +1491,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {17} & {-} & {\dfrac{14}{5}} \, {x_3} & {-} & {\dfrac{3}{5}} \, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             -\dfrac{1}{5} & \dfrac{1}{10} \\[2ex]
@@ -1732,9 +1742,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{61}{4}} & {-} & {\dfrac{1}{4}}\, {x_4} & {-} & {\dfrac{7}{2}} \, {x_5}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \dfrac{1}{8} & -\dfrac{1}{4} \\[2ex]
@@ -2140,9 +2152,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{110}{3}} & {-} & {\dfrac{37}{15}} \, {x_3} & {-} & {\dfrac{1}{15}} \, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \dfrac{8}{15} & -\dfrac{1}{15} \\[2ex]
@@ -2542,9 +2556,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{15}{2}} & {-} & {\dfrac{1}{2}}\, {x_2} & {-} & {\dfrac{3}{2}}\, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{1}{2} & \frac{1}{2} \\[2ex]
@@ -2933,9 +2949,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{14}{3}} & {-} & {\dfrac{1}{3}}\, {x_3} & {-} & {\dfrac{4}{3}}\, {x_4}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             -\frac{1}{3} & \frac{2}{3} \\[2ex]
@@ -3353,9 +3371,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {32} & {-} & {2}\, {x_4} & {-} & {x_5}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{1}{4} & \frac{1}{4} \\[2ex]
@@ -3666,9 +3686,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{156}{5}} & {-} & {\dfrac{9}{5}}\, {x_4} & {-} & {\dfrac{8}{5}}\, {x_6}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{1}{5} & \frac{2}{5} \\[2ex]
@@ -3826,27 +3848,31 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the  basic primal non-feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar x_1=\dfrac{24}{5},~~
                 \bar x_2=\dfrac{18}{5},~~
                 \bar x_3=6,~~
                 \bar x_5=\dfrac{4}{5},~~
-                \bar x_7=-\dfrac{4}{5},~~~~~~
+                \bar x_7=-\dfrac{4}{5},\\[1ex]
                 \bar x_4=0,~~
                 \bar x_6=0~~
                 \text{  of value   }\dfrac{156}{5}
+                \end{gathered}
                 $$
 
             - the basic dual feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar \pi_1=0,~~
                 \bar \pi_2=0,~~
                 \bar \pi_3=0,~~
                 \bar \pi_5=0,~~
-                \bar \pi_7=0,~~~~~~
+                \bar \pi_7=0,\\[1ex]
                 \bar \pi_4=\dfrac{9}{5},~~
                 \bar \pi_6=\dfrac{8}{5}~~
                 \text{  of value   }\dfrac{156}{5}
+                \end{gathered}
                 $$
 
             If we increase the value of $\pi_7$, we can get a better dual solution. We have:
@@ -3931,29 +3957,31 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the basic primal optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde x_1 = 4,~~
                 \tilde x_2 = 4,~~
                 \tilde x_3 = 4,~~
                 \tilde x_5 = 4,~~
                 \tilde x_6 = 2,~~
                 \tilde x_4 = 0,~~
-                \tilde x_7 = 0
-                \qquad
+                \tilde x_7 = 0\\[1ex]
                 \text{of value  }  28
+                \end{gathered}
                 $$
 
             - the basic dual optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde \pi_1 = 0,~~
                 \tilde \pi_2 = 0,~~
                 \tilde \pi_3 = 0,~~
                 \tilde \pi_5 = 0,~~
                 \tilde \pi_6 = 0,~~
                 \tilde \pi_4 = 1,~~
-                \tilde \pi_7 = 4
-                \qquad
+                \tilde \pi_7 = 4\\[1ex]
                 \text{of value  }  28
+                \end{gathered}
                 $$
 
             !!! chiave ""
@@ -4132,9 +4160,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{21}{2}} & {-} & {\dfrac{3}{22}}\, {x_4} & {-} & {\dfrac{5}{11}}\, {x_5}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             \frac{5}{22} & \frac{1}{11} \\[2ex]
@@ -4445,9 +4475,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{51}{5}} & {-} & {\dfrac{2}{5}}\, {x_5} & {-} & {\dfrac{3}{5}}\, {x_6}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             0 & 1 \\[2ex]
@@ -4607,27 +4639,31 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the  basic primal non-feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar x_1=3,~~
                 \bar x_2=\dfrac{18}{5},~~
                 \bar x_3=\dfrac{23}{5},~~
                 \bar x_4=\dfrac{11}{5},~~
-                \bar x_7=-\dfrac{3}{5},~~~~~~
+                \bar x_7=-\dfrac{3}{5},\\[1ex]
                 \bar x_5=0,~~
                 \bar x_6=0~~
                 \text{  of value   }\dfrac{51}{5}
+                \end{gathered}
                 $$
 
             - the basic dual feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar \pi_1=0,~~
                 \bar \pi_2=0,~~
                 \bar \pi_3=0,~~
                 \bar \pi_4=0,~~
-                \bar \pi_7=0,~~~~~~
+                \bar \pi_7=0,\\[1ex]
                 \bar \pi_5=\dfrac{2}{5},~~
                 \bar \pi_6=\dfrac{3}{5}~~
                 \text{  of value   }\dfrac{51}{5}
+                \end{gathered}
                 $$
 
             If we increase the value of $\pi_7$, we can get a better dual solution. We have:
@@ -4712,29 +4748,31 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the basic primal optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde x_1 = \dfrac{9}{4},~~
                 \tilde x_2 = \dfrac{15}{4},~~
                 \tilde x_3 = 4,~~
                 \tilde x_4 = \dfrac{11}{2},~~
                 \tilde x_6 = \dfrac{3}{4},~~
                 \tilde x_5 = 0,~~
-                \tilde x_7 = 0
-                \qquad
+                \tilde x_7 = 0\\[1ex]
                 \text{of value  }  \dfrac{39}{4}
+                \end{gathered}
                 $$
 
             - the basic dual optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde \pi_1 = 0,~~
                 \tilde \pi_2 = 0,~~
                 \tilde \pi_3 = 0,~~
                 \tilde \pi_4 = 0,~~
                 \tilde \pi_6 = 0,~~
                 \tilde \pi_5 = \dfrac{1}{4},~~
-                \tilde \pi_7 = \dfrac{3}{4}
-                \qquad
+                \tilde \pi_7 = \dfrac{3}{4}\\[1ex]
                 \text{of value  }  \dfrac{39}{4}
+                \end{gathered}
                 $$
 
             The optimal solution ${ \tilde{ \boldsymbol x}}(\,LP_3\,)$ is <strong>fractional</strong> and the $LP_3$ problem is <strong>feasible</strong>.
@@ -4790,9 +4828,11 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             {z} & {=} & {\dfrac{39}{4}} & {-} & {\dfrac{1}{4}}\, {x_5} & {-} & {\dfrac{3}{4}}\, {x_7}
             \end{array}
             \end{cases}
-            \qquad
-            \text{where}
-            \qquad
+            \end{equation*}
+
+            where
+
+            \begin{equation*}
             { \bar{\boldsymbol A}}=
             \begin{pmatrix}
             -\frac{1}{4} & \frac{5}{4} \\[2ex]
@@ -4996,29 +5036,33 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the  basic primal non-feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar x_1=\dfrac{9}{4},~~
                 \bar x_2=\dfrac{15}{4},~~
                 \bar x_3=4,~~
                 \bar x_4=\dfrac{11}{2},~~
                 \bar x_6=\dfrac{3}{4},~~
-                \bar x_8=-\dfrac{3}{4},~~~~~~
+                \bar x_8=-\dfrac{3}{4},\\[1ex]
                 \bar x_5=0,~~
                 \bar x_7=0~~
                 \text{  of value   }\dfrac{39}{4}
+                \end{gathered}
                 $$
 
             - the basic dual feasible  solution is:
 
                 $$
+                \begin{gathered}
                 \bar \pi_1=0,~~
                 \bar \pi_2=0,~~
                 \bar \pi_3=0,~~
                 \bar \pi_4=0,~~
                 \bar \pi_6=0,~~
-                \bar \pi_8=0,~~~~~~
+                \bar \pi_8=0,\\[1ex]
                 \bar \pi_5=\dfrac{1}{4},~~
                 \bar \pi_7=\dfrac{3}{4}~~
                 \text{  of value   }\dfrac{39}{4}
+                \end{gathered}
                 $$
 
             If we increase the value of $\pi_8$, we can get a better dual solution. We have:
@@ -5108,6 +5152,7 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
             - the basic primal optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde x_1 = 3,~~
                 \tilde x_2 = 3,~~
                 \tilde x_3 = 4,~~
@@ -5115,14 +5160,15 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
                 \tilde x_5 = 3,~~
                 \tilde x_6 = 0,~~
                 \tilde x_7 = 0,~~
-                \tilde x_8 = 0
-                \qquad
+                \tilde x_8 = 0\\[1ex]
                 \text{of value  }  9
+                \end{gathered}
                 $$
 
             - the basic dual optimal  solution is:
 
                 $$
+                \begin{gathered}
                 \tilde \pi_1 = 0,~~
                 \tilde \pi_2 = 0,~~
                 \tilde \pi_3 = 0,~~
@@ -5130,9 +5176,9 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
                 \tilde \pi_5 = 0,~~
                 \tilde \pi_6 = 0,~~
                 \tilde \pi_7 = 0,~~
-                \tilde \pi_8 = 1
-                \qquad
+                \tilde \pi_8 = 1\\[1ex]
                 \text{of value  }  9
+                \end{gathered}
                 $$
 
             !!! chiave ""

@@ -662,15 +662,15 @@
 <path fill="none" stroke-width="0.3985" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00003125 -198.639406 L -80.410188 -237.459719 " transform="matrix(1, 0, 0, -1, 199.668, 16.552)"/>
 <path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 117.460938 254.878906 L 121.027344 254.925781 L 119.257812 254.011719 L 119.640625 252.054688 "/>
 <g fill="rgb(0%, 0%, 100%)" fill-opacity="1">
-<use xlink:href="#glyph-1-0" x="126.11" y="237.817"/>
+<use xlink:href="#glyph-1-0" x="126.11" y="229.533"/>
 </g>
 <g fill="rgb(0%, 0%, 100%)" fill-opacity="1">
-<use xlink:href="#glyph-2-0" x="132.147" y="239.611"/>
+<use xlink:href="#glyph-2-0" x="132.147" y="231.326"/>
 </g>
 <g fill="rgb(0%, 0%, 100%)" fill-opacity="1">
-<use xlink:href="#glyph-3-1" x="139.066" y="237.817"/>
+<use xlink:href="#glyph-3-1" x="139.066" y="229.533"/>
 </g>
 <g fill="rgb(0%, 0%, 100%)" fill-opacity="1">
-<use xlink:href="#glyph-0-7" x="149.030822" y="237.817"/>
+<use xlink:href="#glyph-0-7" x="149.030822" y="229.533"/>
 </g>
 </svg>

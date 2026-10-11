@@ -6,7 +6,7 @@ title: "Primal and dual bounds"
 
 <div class="info-capitolo" markdown>
 
-**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf)
+**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/lp-relaxation.md)
 
 </div>
 
@@ -229,7 +229,7 @@ title: "Primal and dual bounds"
 
     ![Figure 1](../img/02-lp-relaxation/fig01.svg){ .fig .ovale loading=lazy  }
 
-    <em>The LP relaxation of the car example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The dotted line is the objective line of the optimal ILP solution.</em>
+    <em>The LP relaxation of the car example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The gray dashed line is the objective line of the optimal ILP solution.</em>
 
     - The optimal value is $14$ or $15$. With $\UB = 15$ and $\LB = 14$ the optimality gap $\eqref{gap}$ is $\frac{1}{14} \approx 7.1\%$: the solution $(4,1)$ is not yet certified optimal.
 

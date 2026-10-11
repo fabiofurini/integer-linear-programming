@@ -12,6 +12,6 @@
 
     From the branch-and-cut algorithm to a MIP solver · The components of a MIP solver · How to read the log of Gurobi · Typical mistakes · …
 
-    [:octicons-arrow-right-24: Read the chapter](mip-solvers.md)
+    [:octicons-arrow-right-24: Read the chapter](mip-solvers.md) · [Exercises](../exercises/mip-solvers.md)
 
 </div>

@@ -42,6 +42,12 @@ The cutting plane algorithm with Gomory fractional cuts, LP-based branch-and-bou
 
 [:material-file-pdf-box: Exercises 2 (PDF)](pdf/exercises-2-exact-methods.pdf){ .md-button }
 
+## Exercises 3 · MIP solvers
+
+What a MIP solver does (presolve, cuts, primal heuristics, tree strategies, tolerances) and how to read its log, with real examples.
+
+[:material-file-pdf-box: Exercises 3 (PDF)](pdf/exercises-3-mip-solvers.pdf){ .md-button }
+
 ## Exercises 4 · MIP heuristics
 
 Rounding, diving, feasibility pump, RINS, local branching, relax-and-fix and fix-and-optimize. Examples and exercises with complete solutions.

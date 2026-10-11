@@ -6,7 +6,7 @@ title: "Integer linear programming"
 
 <div class="info-capitolo" markdown>
 
-**Part 1 · Models and bounds · Chapter 1** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf)
+**Part 1 · Models and bounds · Chapter 1** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/ilp.md)
 
 </div>
 

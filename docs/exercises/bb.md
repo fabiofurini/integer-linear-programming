@@ -1161,25 +1161,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=2,~~
                     \bar x_2=\dfrac{43}{10},~~
                     \bar x_4=\dfrac{17}{10},~~
-                    \bar x_6=-\dfrac{3}{10},~~~~~~
+                    \bar x_6=-\dfrac{3}{10},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{149}{10}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{3}{10},~~
                     \bar \pi_5=\dfrac{11}{5}~~
                     \mathrm{~~of~value~~~} \dfrac{149}{10}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -1256,25 +1260,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=2,~~
                     \tilde x_2=4,~~
                     \tilde x_3=3,~~
-                    \tilde x_4=2,~~~~~~
+                    \tilde x_4=2,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 14
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=1,~~
                     \tilde \pi_6=3~~
                     \mathrm{~~of~value~~~} 14
+                    \end{gathered}
                     $$
 
                 ![Figure 11](../img/ex-07-bb/fig11.svg){ .fig .ovale loading=lazy  }
@@ -1796,25 +1804,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{13}{8},~~
                     \bar x_2=3,~~
                     \bar x_3=\dfrac{5}{8},~~
-                    \bar x_6=-\dfrac{5}{8},~~~~~~
+                    \bar x_6=-\dfrac{5}{8},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{61}{4}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{1}{4},~~
                     \bar \pi_5=\dfrac{7}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{61}{4}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -1891,25 +1903,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=1,~~
                     \tilde x_2=3,~~
                     \tilde x_3=0,~~
-                    \tilde x_4=5,~~~~~~
+                    \tilde x_4=5,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 14
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=4,~~
                     \tilde \pi_6=2~~
                     \mathrm{~~of~value~~~} 14
+                    \end{gathered}
                     $$
 
                 ![Figure 17](../img/ex-07-bb/fig17.svg){ .fig .ovale loading=lazy  }
@@ -1988,25 +2004,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{13}{8},~~
                     \bar x_2=3,~~
                     \bar x_3=\dfrac{5}{8},~~
-                    \bar x_6=-\dfrac{3}{8},~~~~~~
+                    \bar x_6=-\dfrac{3}{8},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{61}{4}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{1}{4},~~
                     \bar \pi_5=\dfrac{7}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{61}{4}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -2089,25 +2109,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=2,~~
                     \tilde x_2=\dfrac{3}{2},~~
                     \tilde x_3=\dfrac{5}{2},~~
-                    \tilde x_5=\dfrac{3}{2},~~~~~~
+                    \tilde x_5=\dfrac{3}{2},\\
                     \tilde x_4=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 10
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_4=2,~~
                     \tilde \pi_6=14~~
                     \mathrm{~~of~value~~~} 10
+                    \end{gathered}
                     $$
 
                 ![Figure 18](../img/ex-07-bb/fig18.svg){ .fig .ovale loading=lazy  }
@@ -2718,25 +2742,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{11}{2},~~
                     \bar x_2=3,~~
                     \bar x_4=\dfrac{5}{2},~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{73}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{5}{2},~~
                     \bar \pi_5=\dfrac{1}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{73}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -2813,25 +2841,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=5,~~
                     \tilde x_2=3,~~
                     \tilde x_3=1,~~
-                    \tilde x_4=3,~~~~~~
+                    \tilde x_4=3,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 34
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=3,~~
                     \tilde \pi_6=5~~
                     \mathrm{~~of~value~~~} 34
+                    \end{gathered}
                     $$
 
                 ![Figure 25](../img/ex-07-bb/fig25.svg){ .fig .ovale loading=lazy  }
@@ -2910,25 +2942,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{11}{2},~~
                     \bar x_2=3,~~
                     \bar x_4=\dfrac{5}{2},~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{73}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{5}{2},~~
                     \bar \pi_5=\dfrac{1}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{73}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -3011,25 +3047,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=6,~~
                     \tilde x_2=2,~~
                     \tilde x_4=10,~~
-                    \tilde x_5=1,~~~~~~
+                    \tilde x_5=1,\\
                     \tilde x_3=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 36
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_4=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_3=3,~~
                     \tilde \pi_6=1~~
                     \mathrm{~~of~value~~~} 36
+                    \end{gathered}
                     $$
 
                 ![Figure 26](../img/ex-07-bb/fig26.svg){ .fig .ovale loading=lazy  }
@@ -3640,25 +3680,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=4,~~
                     \bar x_2=\dfrac{4}{3},~~
                     \bar x_3=25,~~
-                    \bar x_6=-\dfrac{1}{3},~~~~~~
+                    \bar x_6=-\dfrac{1}{3},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=1,~~
                     \bar \pi_5=6~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -3741,25 +3785,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{33}{8},~~
                     \tilde x_2=1,~~
                     \tilde x_3=\dfrac{125}{4},~~
-                    \tilde x_5=\dfrac{1}{8},~~~~~~
+                    \tilde x_5=\dfrac{1}{8},\\
                     \tilde x_4=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{45}{4}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_4=\dfrac{1}{4},~~
                     \tilde \pi_6=\dfrac{9}{4}~~
                     \mathrm{~~of~value~~~} \dfrac{45}{4}
+                    \end{gathered}
                     $$
 
                 ![Figure 33](../img/ex-07-bb/fig33.svg){ .fig .ovale loading=lazy  }
@@ -3836,25 +3884,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=4,~~
                     \bar x_2=\dfrac{4}{3},~~
                     \bar x_3=25,~~
-                    \bar x_6=-\dfrac{2}{3},~~~~~~
+                    \bar x_6=-\dfrac{2}{3},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=1,~~
                     \bar \pi_5=6~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -4191,25 +4243,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=3,~~
                     \bar x_2=\dfrac{59}{21},~~
                     \bar x_4=\dfrac{25}{7},~~
-                    \bar x_6=-\dfrac{17}{21},~~~~~~
+                    \bar x_6=-\dfrac{17}{21},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{101}{7}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{1}{7},~~
                     \bar \pi_5=\dfrac{8}{7}~~
                     \mathrm{~~of~value~~~} \dfrac{101}{7}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -4286,25 +4342,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=3,~~
                     \tilde x_2=2,~~
                     \tilde x_3=17,~~
-                    \tilde x_4=6,~~~~~~
+                    \tilde x_4=6,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=2,~~
                     \tilde \pi_6=3~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 ![Figure 37](../img/ex-07-bb/fig37.svg){ .fig .ovale loading=lazy  }
@@ -4383,25 +4443,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=3,~~
                     \bar x_2=\dfrac{59}{21},~~
                     \bar x_4=\dfrac{25}{7},~~
-                    \bar x_6=-\dfrac{4}{21},~~~~~~
+                    \bar x_6=-\dfrac{4}{21},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{101}{7}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{1}{7},~~
                     \bar \pi_5=\dfrac{8}{7}~~
                     \mathrm{~~of~value~~~} \dfrac{101}{7}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -4484,25 +4548,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{7}{3},~~
                     \tilde x_2=3,~~
                     \tilde x_4=\dfrac{25}{3},~~
-                    \tilde x_5=\dfrac{2}{3},~~~~~~
+                    \tilde x_5=\dfrac{2}{3},\\
                     \tilde x_3=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{41}{3}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_4=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_3=\dfrac{1}{3},~~
                     \tilde \pi_6=4~~
                     \mathrm{~~of~value~~~} \dfrac{41}{3}
+                    \end{gathered}
                     $$
 
                 ![Figure 38](../img/ex-07-bb/fig38.svg){ .fig .ovale loading=lazy  }
@@ -4947,7 +5015,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar x_1=2,~~
                     \bar x_2=\dfrac{65}{21},~~
-                    \bar x_4=\dfrac{75}{7},~~
+                    \bar x_4=\dfrac{75}{7},\\
                     \bar x_5=1,~~
                     \bar x_6=\dfrac{2}{21},~~
                     \bar x_8=-\dfrac{2}{21},\\
@@ -4963,7 +5031,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
-                    \bar \pi_4=0,~~
+                    \bar \pi_4=0,\\
                     \bar \pi_5=0,~~
                     \bar \pi_6=0,~~
                     \bar \pi_8=0,\\
@@ -5058,7 +5126,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde x_1=2,~~
                     \tilde x_2=3,~~
-                    \tilde x_3=2,~~
+                    \tilde x_3=2,\\
                     \tilde x_4=11,~~
                     \tilde x_5=1,~~
                     \tilde x_6=0,\\
@@ -5074,7 +5142,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
-                    \tilde \pi_3=0,~~
+                    \tilde \pi_3=0,\\
                     \tilde \pi_4=0,~~
                     \tilde \pi_5=0,~~
                     \tilde \pi_6=0,\\
@@ -5714,25 +5782,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=4,~~
                     \bar x_2=\dfrac{4}{3},~~
                     \bar x_3=34,~~
-                    \bar x_6=-\dfrac{1}{3},~~~~~~
+                    \bar x_6=-\dfrac{1}{3},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{16}{3}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{1}{3},~~
                     \bar \pi_5=3~~
                     \mathrm{~~of~value~~~} \dfrac{16}{3}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -5815,25 +5887,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{49}{12},~~
                     \tilde x_2=1,~~
                     \tilde x_3=\dfrac{116}{3},~~
-                    \tilde x_5=\dfrac{1}{12},~~~~~~
+                    \tilde x_5=\dfrac{1}{12},\\
                     \tilde x_4=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{61}{12}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_4=\dfrac{1}{12},~~
                     \tilde \pi_6=\dfrac{3}{4}~~
                     \mathrm{~~of~value~~~} \dfrac{61}{12}
+                    \end{gathered}
                     $$
 
                 ![Figure 49](../img/ex-07-bb/fig49.svg){ .fig .ovale loading=lazy  }
@@ -5910,25 +5986,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=4,~~
                     \bar x_2=\dfrac{4}{3},~~
                     \bar x_3=34,~~
-                    \bar x_6=-\dfrac{2}{3},~~~~~~
+                    \bar x_6=-\dfrac{2}{3},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{16}{3}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{1}{3},~~
                     \bar \pi_5=3~~
                     \mathrm{~~of~value~~~} \dfrac{16}{3}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -6265,25 +6345,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=3,~~
                     \bar x_2=\dfrac{58}{15},~~
                     \bar x_4=\dfrac{22}{5},~~
-                    \bar x_6=-\dfrac{13}{15},~~~~~~
+                    \bar x_6=-\dfrac{13}{15},\\
                     \bar x_3=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{103}{15}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{1}{15},~~
                     \bar \pi_5=\dfrac{11}{15}~~
                     \mathrm{~~of~value~~~} \dfrac{103}{15}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -6360,25 +6444,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=3,~~
                     \tilde x_2=3,~~
                     \tilde x_3=13,~~
-                    \tilde x_4=7,~~~~~~
+                    \tilde x_4=7,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 6
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=1,~~
                     \tilde \pi_6=1~~
                     \mathrm{~~of~value~~~} 6
+                    \end{gathered}
                     $$
 
                 ![Figure 53](../img/ex-07-bb/fig53.svg){ .fig .ovale loading=lazy  }
@@ -7239,25 +7327,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=6,~~
                     \bar x_2=\dfrac{3}{4},~~
                     \bar x_3=\dfrac{25}{4},~~
-                    \bar x_6=-\dfrac{3}{4},~~~~~~
+                    \bar x_6=-\dfrac{3}{4},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{51}{4}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{1}{4},~~
                     \bar \pi_5=\dfrac{1}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{51}{4}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -7334,25 +7426,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=6,~~
                     \tilde x_2=0,~~
                     \tilde x_3=7,~~
-                    \tilde x_4=3,~~~~~~
+                    \tilde x_4=3,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=2,~~
                     \tilde \pi_6=1~~
                     \mathrm{~~of~value~~~} 12
+                    \end{gathered}
                     $$
 
                 ![Figure 63](../img/ex-07-bb/fig63.svg){ .fig .ovale loading=lazy  }
@@ -7585,25 +7681,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=5,~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=\dfrac{13}{2},~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} 32
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=2,~~
                     \bar \pi_5=1~~
                     \mathrm{~~of~value~~~} 32
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -7686,25 +7786,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{14}{3},~~
                     \tilde x_2=3,~~
                     \tilde x_3=\dfrac{23}{3},~~
-                    \tilde x_4=\dfrac{4}{3},~~~~~~
+                    \tilde x_4=\dfrac{4}{3},\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{88}{3}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=\dfrac{5}{3},~~
                     \tilde \pi_6=\dfrac{16}{3}~~
                     \mathrm{~~of~value~~~} \dfrac{88}{3}
+                    \end{gathered}
                     $$
 
                 ![Figure 67](../img/ex-07-bb/fig67.svg){ .fig .ovale loading=lazy  }
@@ -7781,25 +7885,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=5,~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=\dfrac{13}{2},~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} 32
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=2,~~
                     \bar \pi_5=1~~
                     \mathrm{~~of~value~~~} 32
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -7882,25 +7990,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=4,~~
                     \tilde x_2=4,~~
                     \tilde x_3=4,~~
-                    \tilde x_5=4,~~~~~~
+                    \tilde x_5=4,\\
                     \tilde x_4=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 28
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_4=5,~~
                     \tilde \pi_6=8~~
                     \mathrm{~~of~value~~~} 28
+                    \end{gathered}
                     $$
 
                 ![Figure 68](../img/ex-07-bb/fig68.svg){ .fig .ovale loading=lazy  }
@@ -8464,25 +8576,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{7}{2},~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=5,~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{3}{22},~~
                     \bar \pi_5=\dfrac{5}{11}~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -8565,25 +8681,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{13}{4},~~
                     \tilde x_2=3,~~
                     \tilde x_3=\dfrac{17}{4},~~
-                    \tilde x_5=\dfrac{11}{4},~~~~~~
+                    \tilde x_5=\dfrac{11}{4},\\
                     \tilde x_4=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{37}{4}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_4=\dfrac{1}{4},~~
                     \tilde \pi_6=\dfrac{5}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{37}{4}
+                    \end{gathered}
                     $$
 
                 ![Figure 74](../img/ex-07-bb/fig74.svg){ .fig .ovale loading=lazy  }
@@ -8660,25 +8780,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{7}{2},~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=5,~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{3}{22},~~
                     \bar \pi_5=\dfrac{5}{11}~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -8761,25 +8885,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=1,~~
                     \tilde x_2=4,~~
                     \tilde x_3=3,~~
-                    \tilde x_4=11,~~~~~~
+                    \tilde x_4=11,\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} 9
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=1,~~
                     \tilde \pi_6=3~~
                     \mathrm{~~of~value~~~} 9
+                    \end{gathered}
                     $$
 
                 ![Figure 75](../img/ex-07-bb/fig75.svg){ .fig .ovale loading=lazy  }
@@ -8959,25 +9087,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{7}{2},~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=5,~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{3}{22},~~
                     \bar \pi_5=\dfrac{5}{11}~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -9060,25 +9192,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=3,~~
                     \tilde x_2=\dfrac{18}{5},~~
                     \tilde x_3=\dfrac{23}{5},~~
-                    \tilde x_4=\dfrac{11}{5},~~~~~~
+                    \tilde x_4=\dfrac{11}{5},\\
                     \tilde x_5=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{51}{5}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~~~~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=\dfrac{2}{5},~~
                     \tilde \pi_6=\dfrac{3}{5}~~
                     \mathrm{~~of~value~~~} \dfrac{51}{5}
+                    \end{gathered}
                     $$
 
                 ![Figure 79](../img/ex-07-bb/fig79.svg){ .fig .ovale loading=lazy  }
@@ -9155,25 +9291,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=\dfrac{7}{2},~~
                     \bar x_2=\dfrac{7}{2},~~
                     \bar x_3=5,~~
-                    \bar x_6=-\dfrac{1}{2},~~~~~~
+                    \bar x_6=-\dfrac{1}{2},\\
                     \bar x_4=0,~~
                     \bar x_5=0~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_3=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_4=\dfrac{3}{22},~~
                     \bar \pi_5=\dfrac{5}{11}~~
                     \mathrm{~~of~value~~~} \dfrac{21}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -9853,25 +9993,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=1,~~
                     \bar x_2=\dfrac{21}{8},~~
                     \bar x_5=\dfrac{13}{8},~~
-                    \bar x_6=-\dfrac{5}{8},~~~~~~
+                    \bar x_6=-\dfrac{5}{8},\\
                     \bar x_3=0,~~
                     \bar x_4=0~~
                     \mathrm{~~of~value~~~} \dfrac{23}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_5=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{1}{2},~~
                     \bar \pi_4=\dfrac{1}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{23}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -9954,25 +10098,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde x_1=\dfrac{8}{3},~~
                     \tilde x_2=2,~~
                     \tilde x_4=\dfrac{5}{3},~~
-                    \tilde x_5=1,~~~~~~
+                    \tilde x_5=1,\\
                     \tilde x_3=0,~~
                     \tilde x_6=0~~
                     \mathrm{~~of~value~~~} \dfrac{32}{3}
+                    \end{gathered}
                     $$
 
                 - the basic dual optimal solution is:
 
                     $$
+                    \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_4=0,~~
-                    \tilde \pi_5=0,~~~~~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_3=\dfrac{1}{3},~~
                     \tilde \pi_6=\dfrac{4}{3}~~
                     \mathrm{~~of~value~~~} \dfrac{32}{3}
+                    \end{gathered}
                     $$
 
                 ![Figure 86](../img/ex-07-bb/fig86.svg){ .fig .ovale loading=lazy  }
@@ -10049,25 +10197,29 @@ title: "Exercises · LP-based branch-and-bound"
                 - the basic primal non-feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar x_1=1,~~
                     \bar x_2=\dfrac{21}{8},~~
                     \bar x_5=\dfrac{13}{8},~~
-                    \bar x_6=-\dfrac{3}{8},~~~~~~
+                    \bar x_6=-\dfrac{3}{8},\\
                     \bar x_3=0,~~
                     \bar x_4=0~~
                     \mathrm{~~of~value~~~} \dfrac{23}{2}
+                    \end{gathered}
                     $$
 
                 - the basic dual feasible solution is:
 
                     $$
+                    \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_5=0,~~
-                    \bar \pi_6=0,~~~~~~
+                    \bar \pi_6=0,\\
                     \bar \pi_3=\dfrac{1}{2},~~
                     \bar \pi_4=\dfrac{1}{2}~~
                     \mathrm{~~of~value~~~} \dfrac{23}{2}
+                    \end{gathered}
                     $$
 
                 If we increase the value of $\pi_{6}$, we can get a better dual solution. We have:
@@ -10876,7 +11028,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar x_1=\dfrac{12}{7},~~
                     \bar x_2=4,~~
-                    \bar x_4=\dfrac{5}{7},~~
+                    \bar x_4=\dfrac{5}{7},\\
                     \bar x_5=\dfrac{5}{7},~~
                     \bar x_6=2,~~
                     \bar x_8=-\dfrac{5}{7},\\
@@ -10892,7 +11044,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
-                    \bar \pi_4=0,~~
+                    \bar \pi_4=0,\\
                     \bar \pi_5=0,~~
                     \bar \pi_6=0,~~
                     \bar \pi_8=0,\\
@@ -10987,7 +11139,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde x_1=1,~~
                     \tilde x_2=4,~~
-                    \tilde x_3=5,~~
+                    \tilde x_3=5,\\
                     \tilde x_4=0,~~
                     \tilde x_5=0,~~
                     \tilde x_6=2,\\
@@ -11003,7 +11155,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
-                    \tilde \pi_3=0,~~
+                    \tilde \pi_3=0,\\
                     \tilde \pi_4=0,~~
                     \tilde \pi_5=0,~~
                     \tilde \pi_6=0,\\
@@ -11096,7 +11248,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar x_1=\dfrac{12}{7},~~
                     \bar x_2=4,~~
-                    \bar x_4=\dfrac{5}{7},~~
+                    \bar x_4=\dfrac{5}{7},\\
                     \bar x_5=\dfrac{5}{7},~~
                     \bar x_6=2,~~
                     \bar x_8=-\dfrac{2}{7},\\
@@ -11112,7 +11264,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
-                    \bar \pi_4=0,~~
+                    \bar \pi_4=0,\\
                     \bar \pi_5=0,~~
                     \bar \pi_6=0,~~
                     \bar \pi_8=0,\\
@@ -11219,7 +11371,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde x_1=2,~~
                     \tilde x_2=\dfrac{10}{3},~~
-                    \tilde x_4=\dfrac{5}{3},~~
+                    \tilde x_4=\dfrac{5}{3},\\
                     \tilde x_5=1,~~
                     \tilde x_6=\dfrac{4}{3},~~
                     \tilde x_7=\dfrac{2}{3},\\
@@ -11235,7 +11387,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \begin{gathered}
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
-                    \tilde \pi_4=0,~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=0,~~
                     \tilde \pi_6=0,~~
                     \tilde \pi_7=0,\\
@@ -11351,7 +11503,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar x_1=2,~~
                     \bar x_2=\dfrac{10}{3},~~
                     \bar x_4=\dfrac{5}{3},~~
-                    \bar x_5=1,~~
+                    \bar x_5=1,\\
                     \bar x_6=\dfrac{4}{3},~~
                     \bar x_7=\dfrac{2}{3},~~
                     \bar x_9=-\dfrac{1}{3},\\
@@ -11368,7 +11520,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_5=0,~~
+                    \bar \pi_5=0,\\
                     \bar \pi_6=0,~~
                     \bar \pi_7=0,~~
                     \bar \pi_9=0,\\
@@ -11483,7 +11635,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \tilde x_1=\dfrac{15}{7},~~
                     \tilde x_2=3,~~
                     \tilde x_4=\dfrac{15}{7},~~
-                    \tilde x_5=\dfrac{8}{7},~~
+                    \tilde x_5=\dfrac{8}{7},\\
                     \tilde x_6=1,~~
                     \tilde x_7=1,~~
                     \tilde x_8=\dfrac{1}{7},\\
@@ -11500,7 +11652,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_4=0,~~
-                    \tilde \pi_5=0,~~
+                    \tilde \pi_5=0,\\
                     \tilde \pi_6=0,~~
                     \tilde \pi_7=0,~~
                     \tilde \pi_8=0,\\
@@ -11594,7 +11746,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar x_1=2,~~
                     \bar x_2=\dfrac{10}{3},~~
                     \bar x_4=\dfrac{5}{3},~~
-                    \bar x_5=1,~~
+                    \bar x_5=1,\\
                     \bar x_6=\dfrac{4}{3},~~
                     \bar x_7=\dfrac{2}{3},~~
                     \bar x_9=-\dfrac{2}{3},\\
@@ -11611,7 +11763,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_5=0,~~
+                    \bar \pi_5=0,\\
                     \bar \pi_6=0,~~
                     \bar \pi_7=0,~~
                     \bar \pi_9=0,\\
@@ -11726,7 +11878,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar x_1=\dfrac{15}{7},~~
                     \bar x_2=3,~~
                     \bar x_4=\dfrac{15}{7},~~
-                    \bar x_5=\dfrac{8}{7},~~
+                    \bar x_5=\dfrac{8}{7},\\
                     \bar x_6=1,~~
                     \bar x_7=1,~~
                     \bar x_8=\dfrac{1}{7},~~
@@ -11744,7 +11896,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \bar \pi_1=0,~~
                     \bar \pi_2=0,~~
                     \bar \pi_4=0,~~
-                    \bar \pi_5=0,~~
+                    \bar \pi_5=0,\\
                     \bar \pi_6=0,~~
                     \bar \pi_7=0,~~
                     \bar \pi_8=0,~~
@@ -11849,7 +12001,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \tilde x_1=2,~~
                     \tilde x_2=3,~~
                     \tilde x_3=1,~~
-                    \tilde x_4=2,~~
+                    \tilde x_4=2,\\
                     \tilde x_5=1,~~
                     \tilde x_6=1,~~
                     \tilde x_7=1,~~
@@ -11867,7 +12019,7 @@ title: "Exercises · LP-based branch-and-bound"
                     \tilde \pi_1=0,~~
                     \tilde \pi_2=0,~~
                     \tilde \pi_3=0,~~
-                    \tilde \pi_4=0,~~
+                    \tilde \pi_4=0,\\
                     \tilde \pi_5=0,~~
                     \tilde \pi_6=0,~~
                     \tilde \pi_7=0,~~

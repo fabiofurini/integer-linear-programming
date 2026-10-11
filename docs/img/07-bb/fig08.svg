@@ -85,9 +85,6 @@
 <use xlink:href="#glyph-0-0" x="18.064" y="154.316"/>
 </g>
 <g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
-<use xlink:href="#glyph-0-1" x="18.064" y="121.739"/>
-</g>
-<g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
 <use xlink:href="#glyph-1-0" x="17.452" y="110.277"/>
 </g>
 <path fill="none" stroke-width="0.425" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.001125 0.0014375 L 3.305813 0.0014375 " transform="matrix(1, 0, 0, -1, 17.452, 111.353)"/>

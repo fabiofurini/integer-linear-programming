@@ -1234,7 +1234,7 @@ def obj_of(m, x):
     return e.getConstant() + sum(e.getCoeff(k) * x[e.getVar(k).index] for k in range(e.size()))
 
 def round_point(x_star, I):
-    """x~ = [x*]: round the integer components, copy the continuous ones"""
+    """x_tilde = [x*]: round the integer components, copy the continuous ones"""
     x_tilde = list(x_star)
     for j in I:
         x_tilde[j] = nearest(x_star[j])
@@ -1260,9 +1260,9 @@ def solve_mip(m):
     return m.ObjVal, [v.X for v in m.getVars()]
 
 def distance(m, x_tilde, I):
-    """the linear expression Delta(x, x~) = sum_{j in I} |x_j - x~_j| in the variables of m:
-       x_j - l_j if x~_j is at its lower bound, u_j - x_j if at its upper bound,
-       otherwise an auxiliary variable d_j >= |x_j - x~_j|"""
+    """the linear expression Delta(x, x_tilde) = sum_{j in I} |x_j - x_tilde_j| in the variables of m:
+       x_j - l_j if x_tilde_j is at its lower bound, u_j - x_j if at its upper bound,
+       otherwise an auxiliary variable d_j >= |x_j - x_tilde_j|"""
     V = m.getVars()
     expr = gp.LinExpr()
     for j in I:
@@ -1278,7 +1278,7 @@ def distance(m, x_tilde, I):
     return expr
 
 def delta(x, x_tilde, I):
-    """value of Delta(x, x~)"""
+    """value of Delta(x, x_tilde)"""
     return sum(abs(x[j] - x_tilde[j]) for j in I)
 
 def add_cutoff(m, z, theta):
@@ -1319,7 +1319,7 @@ def rounding(m, trace=None):
     I = int_index(m)
     x_star = solve_lp(m)                       # optimal solution of the LP relaxation
     note(trace, "LP", x_star)
-    x_tilde = round_point(x_star, I)           # x~_j = [x*_j] for every integer variable
+    x_tilde = round_point(x_star, I)           # x_tilde_j = [x*_j] for every integer variable
     note(trace, "rounded", x_tilde)
     return evaluate(m, x_tilde)                # (value, x) if feasible, None otherwise
 ```
@@ -1352,7 +1352,7 @@ def diving(m, rule="fractional", x_inc=None, trace=None):
 
 ```python
 def projection(m, x_tilde, I):
-    """x* = argmin { Delta(x, x~) : x in P }, P the LP relaxation of m"""
+    """x* = argmin { Delta(x, x_tilde) : x in P }, P the LP relaxation of m"""
     p = m.relax()
     p.setObjective(distance(p, x_tilde, I), GRB.MINIMIZE)
     p.optimize()
@@ -1364,17 +1364,17 @@ def feasibility_pump(m, max_iter=100, seed=1, trace=None):
     note(trace, "LP", x_star)
     if all(is_integral(x_star[j]) for j in I):
         return evaluate(m, x_star)
-    x_tilde = round_point(x_star, I)           # x~ = [x*]
+    x_tilde = round_point(x_star, I)           # x_tilde = [x*]
     note(trace, "round", x_tilde)
-    history = [x_tilde]                        # the points x~ visited so far
+    history = [x_tilde]                        # the points x_tilde visited so far
     for it in range(1, max_iter + 1):
-        x_star = projection(m, x_tilde, I)     # the point of P closest to x~
+        x_star = projection(m, x_tilde, I)     # the point of P closest to x_tilde
         dist = delta(x_star, x_tilde, I)
         note(trace, "project", x_star, dist)
-        if dist <= EPS:                        # x* = x~ is integer and feasible
+        if dist <= EPS:                        # x* = x_tilde is integer and feasible
             return evaluate(m, x_tilde)
         x_new = round_point(x_star, I)
-        if all(x_new[j] == x_tilde[j] for j in I):          # short cycle: [x*] = x~
+        if all(x_new[j] == x_tilde[j] for j in I):          # short cycle: [x*] = x_tilde
             j = max(I, key=lambda k: (round(abs(x_star[k] - x_tilde[k]), 9), -k))
             x_new[j] += 1 if x_star[j] > x_tilde[j] else -1  # flip the most uncertain component
             note(trace, "flip", x_new, j)
@@ -1423,7 +1423,7 @@ def local_branching(m, x_tilde, k, k_max, k_step, theta=1, trace=None):
     z_tilde = obj_of(m, x_tilde)
     while k <= k_max:
         s = w.copy()
-        s.addConstr(distance(s, x_tilde, I) <= k, name="local_branch")    # Delta(x, x~) <= k
+        s.addConstr(distance(s, x_tilde, I) <= k, name="local_branch")    # Delta(x, x_tilde) <= k
         add_cutoff(s, z_tilde, theta)
         res = solve_mip(s)
         w.addConstr(distance(w, x_tilde, I) >= k + 1)                     # never explore it again
@@ -1445,7 +1445,7 @@ def proximity_search(m, x_tilde, theta=1, trace=None):
         add_cutoff(p, z_tilde, theta)          # better than the incumbent by at least theta
         p.setObjective(distance(p, x_tilde, I), GRB.MINIMIZE)   # as close as possible to it
         res = solve_mip(p)
-        if res is None:                        # no solution better than z~ - theta exists
+        if res is None:                        # no solution better than z_tilde - theta exists
             note(trace, "infeasible")
             return z_tilde, x_tilde
         z_new, x_new = evaluate(m, res[1])     # value of the new solution, continuous part re-optimized

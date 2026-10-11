@@ -6,7 +6,7 @@ title: "Valid inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf)
+**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/valid-inequalities.md)
 
 </div>
 

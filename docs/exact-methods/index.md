@@ -28,6 +28,6 @@
 
     Branch-and-cut algorithms · Global and local valid inequalities · Cut-and-branch and branch-and-cut · Worked example: cut-and-branch with Gomory cuts · …
 
-    [:octicons-arrow-right-24: Read the chapter](branch-and-cut.md)
+    [:octicons-arrow-right-24: Read the chapter](branch-and-cut.md) · [Exercises](../exercises/branch-and-cut.md)
 
 </div>
