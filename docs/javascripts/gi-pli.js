@@ -273,7 +273,7 @@
           M.linea(crea, Qv(A.lp.x[0]), Qv(A.lp.x[1]), A.tondo[0], A.tondo[1], { strokeColor: C.viola, strokeWidth: 1.5, dash: 2 });
           M.pallino(crea, A.tondo[0], A.tondo[1], { face: "x", size: 6, strokeWidth: 3, strokeColor: C.viola, fillColor: C.viola });
         }
-        if (A.ip) M.pallino(crea, A.ip.x[0], A.ip.x[1], { size: 7, fillColor: C.verde, strokeColor: C.testo, strokeWidth: 2 });
+        if (A.ip) M.pallino(crea, A.ip.x[0], A.ip.x[1], { size: 5, fillColor: C.verde, strokeColor: C.testo, strokeWidth: 2 });
         if (A.lp) M.pallino(crea, Qv(A.lp.x[0]), Qv(A.lp.x[1]), { size: 6, fillColor: C.blu, strokeColor: C.blu });
       });
     },
@@ -478,7 +478,7 @@
           M.pallino(crea, Qv(A.lp.x[0]), Qv(A.lp.x[1]), { size: 6, fillColor: C.blu, strokeColor: C.blu });
           M.scritta(crea, Qv(A.lp.x[0]) + 0.1, Qv(A.lp.x[1]) + 0.22, `z = ${qt(A.lp.z)}`, { fontSize: 13, strokeColor: C.blu, anchorX: "left" });
         }
-        M.pallino(crea, 4, 1, { size: 7, fillColor: "none", strokeColor: C.testo, strokeWidth: 2, fillOpacity: 0 });
+        M.pallino(crea, 4, 1, { size: 5, fillColor: "none", strokeColor: C.testo, strokeWidth: 2, fillOpacity: 0 });
       });
     },
     formula(p, st) {
@@ -641,9 +641,9 @@
           retta(a, v[1] === "<=" ? v[2] : -v[2], { strokeColor: C.viola, strokeWidth: 2.2, dash: 2 });
         }
         // i punti interi ammissibili, l'incumbent e l'ottimo del nodo in esame
-        for (const q of AUTO_INTERI) crea("circle", [px(...q), Math.max(2.5, s * 0.07)], { fixed: true, highlight: false, strokeColor: C.verde, fillColor: C.verde, fillOpacity: 1, strokeWidth: 1 });
-        if (E.inc) { const xi = t.nodi[E.inc].x; crea("circle", [px(Qv(Qs(xi[0])), Qv(Qs(xi[1]))), Math.max(7, s * 0.2)], { fixed: true, highlight: false, strokeColor: C.verde, strokeWidth: 3, fillColor: C.verde, fillOpacity: 0.15 }); }
-        if (foc && t.nodi[foc].x) { const xf = t.nodi[foc].x; crea("circle", [px(Qv(Qs(xf[0])), Qv(Qs(xf[1]))), Math.max(4, s * 0.12)], { fixed: true, highlight: false, strokeColor: C.blu, fillColor: C.blu, fillOpacity: 1, strokeWidth: 1 }); }
+        for (const q of AUTO_INTERI) crea("circle", [px(...q), Math.min(3.5, Math.max(2.2, s * 0.04))], { fixed: true, highlight: false, strokeColor: C.verde, fillColor: C.verde, fillOpacity: 1, strokeWidth: 1 });
+        if (E.inc) { const xi = t.nodi[E.inc].x; crea("circle", [px(Qv(Qs(xi[0])), Qv(Qs(xi[1]))), Math.min(7, Math.max(5, s * 0.085))], { fixed: true, highlight: false, strokeColor: C.verde, strokeWidth: 2.2, fillColor: C.verde, fillOpacity: 0.15 }); }
+        if (foc && t.nodi[foc].x) { const xf = t.nodi[foc].x; crea("circle", [px(Qv(Qs(xf[0])), Qv(Qs(xf[1]))), Math.min(5, Math.max(3.2, s * 0.055))], { fixed: true, highlight: false, strokeColor: C.blu, fillColor: C.blu, fillOpacity: 1, strokeWidth: 1 }); }
 
         // ---- l'albero
         const L = t.foglie, Dp = Math.max(1, t.prof);
