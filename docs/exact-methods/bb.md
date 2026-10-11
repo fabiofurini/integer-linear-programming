@@ -1541,3 +1541,12 @@ $$
     </table></div>
 
     In the car example the algorithm closes the gap between $\LB = 13$ (rounded LP solution) and $\UB = 15$ (LP relaxation) by solving $6$ LP problems.
+
+<!-- laboratorio-interattivo: sezione generata da interattivi.py -->
+
+## Interactive lab { #interactive-lab }
+
+The ideas of the chapter, hands on: move the sliders and drag the points.
+Each app also opens full page in the [interactive lab](../lab/index.md): [Branch-and-bound step by step](../lab/branch-and-bound-steps.md).
+
+<div class="gi" data-grafico="pli-bb"></div>

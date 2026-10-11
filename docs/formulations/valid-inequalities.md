@@ -276,3 +276,12 @@ title: "Valid inequalities"
     <td><span class="arithmatex">\(x_1 + x_2 \le 5\)</span> gives <span class="arithmatex">\(z(\LP) = \tfrac{85}{6}\)</span></td>
     </tr>
     </table></div>
+
+<!-- laboratorio-interattivo: sezione generata da interattivi.py -->
+
+## Interactive lab { #interactive-lab }
+
+The ideas of the chapter, hands on: move the sliders and drag the points.
+Each app also opens full page in the [interactive lab](../lab/index.md): [Valid inequalities and the convex hull](../lab/convex-hull.md).
+
+<div class="gi" data-grafico="pli-involucro"></div>

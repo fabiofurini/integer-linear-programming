@@ -49,6 +49,10 @@ theme:
     - search.highlight
 
 # le pagine delle singole app non stanno nel menu: il laboratorio è una voce sola
+not_in_nav: |
+  /lab/*.md
+  !/lab/index.md
+
 plugins:
   - search:
       lang: en
@@ -94,7 +98,9 @@ extra:
       lang: en
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.css?v=d60085bd58
+  - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraph.css
+  - stylesheets/interattivi.css?v=5d53d6f224
 
 markdown_extensions:
   - admonition
@@ -114,10 +120,15 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra_javascript:
-  - javascripts/cloudflare-analytics.js
-  - javascripts/mathjax.js
+  - javascripts/cloudflare-analytics.js?v=bff73345a1
+  - javascripts/mathjax.js?v=d520028579
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
-
+  # grafici interattivi: JSXGraph, il motore, il catalogo dei problemi, poi le ricette (gi-*.js, le aggiunge genera_sito.py)
+  - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraphcore.js
+  - javascripts/interattivi.js?v=21dd4bf4df
+  - javascripts/gi-comune.js?v=40df75e3e5
+  - javascripts/gi-pli-dati.js?v=2ceb07c747
+  - javascripts/gi-pli.js?v=4a489dfe2c
 
 nav:
   - Home: index.md
@@ -147,6 +158,6 @@ nav:
       - "6. Cutting planes": exercises/gomory.md
       - "7. Branch-and-bound": exercises/bb.md
       - "10. MIP heuristics": exercises/mip-heuristics.md
-  - Lab: lab.md
+  - Lab: lab/index.md
   - Downloads: downloads.md
   - Index: indice.md

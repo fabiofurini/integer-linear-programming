@@ -1556,3 +1556,12 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     <td><span class="arithmatex">\(13\)</span> Gomory fractional cuts</td>
     </tr>
     </table></div>
+
+<!-- laboratorio-interattivo: sezione generata da interattivi.py -->
+
+## Interactive lab { #interactive-lab }
+
+The ideas of the chapter, hands on: move the sliders and drag the points.
+Each app also opens full page in the [interactive lab](../lab/index.md): [Gomory cuts on the plane](../lab/gomory-cuts.md).
+
+<div class="gi" data-grafico="pli-gomory"></div>

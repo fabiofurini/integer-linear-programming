@@ -424,3 +424,12 @@ title: "LP relaxation and dual bounds"
     <td><span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span>, with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     </table></div>
+
+<!-- laboratorio-interattivo: sezione generata da interattivi.py -->
+
+## Interactive lab { #interactive-lab }
+
+The ideas of the chapter, hands on: move the sliders and drag the points.
+Each app also opens full page in the [interactive lab](../lab/index.md): [Integer points and the LP relaxation](../lab/integer-points.md).
+
+<div class="gi" data-grafico="pli-punti-interi"></div>
