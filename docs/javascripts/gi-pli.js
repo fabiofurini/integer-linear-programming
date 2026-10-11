@@ -359,6 +359,54 @@
   const zLP = "z(\\LP)", zILP = "z(\\ILP)";
   /** vista della board con la stessa unità sui due assi (la board si ridimensiona: M.adatta) */
   const vistaAuto = [-0.5, 3.95, 5.2, -0.5];
+  // ---- i problemi del B&B e dei tagli (gi-pli-dati.js: auto, p1, p2, p3), scelti con i pulsanti «Problema»
+  const cacheP = {};
+  const probDi = (k) => {
+    if (cacheP[k]) return cacheP[k];
+    const R = D0.problemi[k] || D0.problemi.auto;
+    const V = R.A.map((a, i) => ({ a, b: R.b[i] })), V0 = V.concat(M.nonneg());
+    const Pg = M.poligono(V0, 1e3);
+    const X = Math.ceil(Math.max(...Pg.map((q) => q[0])) - 1e-9), Y = Math.ceil(Math.max(...Pg.map((q) => q[1])) - 1e-9);
+    const INTERI = M.puntiInteri(V0, 0, X + 1, 0, Y + 1);
+    const ob = lin(R.c), vinc = V.map((v) => `${lin(v.a)} \\le ${v.b}`);
+    return (cacheP[k] = { R, V, V0, X, Y, INTERI, HULL: M.involucro(INTERI), ob, vinc,
+      vista: [-0.5, Y + 0.45, X + 0.7, -0.5] });
+  };
+  const VOCI_P = () => Object.fromEntries(Object.keys(D0.problemi).map((k, i) => [k,
+    { etichetta: i === 0 ? T("Automobili", "Car example") : T("Altro ", "Other ") + i }]));
+  /** al cambio di problema (il motore ricrea la board e richiama monta): k torna a 0 */
+  const nuovoProblema = (st) => {
+    const k = st.chiave();
+    if (st.dati.pb !== undefined && st.dati.pb !== k) {
+      M.ferma(st);
+      const i = M.inputDi(st, "k");
+      if (i) i.value = 0;
+    }
+    st.dati.pb = k;
+  };
+  // ---- il dizionario nella notazione delle note: x_i = b̄_i - sum ā_ij x_j, z = z̄ + sum c̄_j x_j
+  let dizAperto = window.innerWidth >= 860;
+  document.addEventListener("toggle", (e) => { if (e.target.classList && e.target.classList.contains("pli-diz")) dizAperto = e.target.open; }, true);
+  const xv = (j) => (String(j).length === 1 ? `x_${j}` : `x_{${j}}`);
+  const termine = (q, j) => {
+    if (q.n === 0) return "";
+    const a = { n: Math.abs(q.n), d: q.d }, c = a.n === 1 && a.d === 1 ? "" : Qtex(a) + "\\,";
+    return (q.n < 0 ? "- " : "+ ") + c + xv(j);
+  };
+  /** [TeX del dizionario compatto d, TeX di B e N]; col: {indice o "z": colore} per evidenziare righe */
+  const dizTex = (d, col = {}) => {
+    const riga = (testa, b, coeff, c) => {
+      const celle = [testa, "=", tq(b)].concat(coeff.map((q, i) => termine(q, d.N[i])));
+      return celle.map((x) => (c && x ? `\\color{${c}}{${x}}` : x)).join(" & ");
+    };
+    const righe = d.B.map((i, r) => riga(xv(i), d.r[r][0], d.r[r].slice(1).map((q) => { const v = num(q); return { n: -v.n, d: v.d }; }), col[i]));
+    righe.push(riga("z", d.z[0], d.z.slice(1).map(num), col.z));
+    return [`\\left\\{\\begin{array}{rcr${"l".repeat(d.N.length)}}${righe.join(" \\\\[3pt] ")}\\end{array}\\right.`,
+      `\\pazocal{B} = \\{${d.B.join(", ")}\\},\\ \\pazocal{N} = \\{${d.N.join(", ")}\\}`];
+  };
+  /** il riquadro richiudibile «Dizionario» (aperto su schermi larghi), che scorre da solo */
+  const dizBox = (parti) => `<details class="pli-diz" style="margin:.4em 0"${dizAperto ? " open" : ""}><summary style="cursor:pointer;font-weight:700">${T("Dizionario", "Dictionary")}</summary>` +
+    `<div style="overflow:auto;max-height:38vh;font-size:.92em">${parti.map(([tit, [arr, ins]]) => `<div style="margin:.35em 0 .1em">${tit}</div><div style="white-space:nowrap">\\(\\displaystyle ${arr}\\)</div><div style="white-space:nowrap">\\(${ins}\\)</div>`).join("")}</div></details>`;
   /** un menu a tendina nel pannello dei controlli (le regole di un algoritmo) */
   const menu = (st, etichetta, chiave, voci, dopo) => {
     const D = st.dati;
@@ -513,13 +561,14 @@
   // ================================================================
   // 3. Branch-and-bound passo per passo
   // ================================================================
-  const chiaveBB = (D) => `${D.var || "min"}|${D.nodo || "lifo"}|${D.figli || "giu"}`;
+  const regoleBB = (D) => `${D.var || "min"}|${D.nodo || "lifo"}|${D.figli || "giu"}`;
+  const chiaveBB = (D) => `${D.pb || "auto"}|${regoleBB(D)}`;
   /** L'albero della configurazione scelta: i dati del motore più la posizione dei nodi (foglie in fila,
    *  ramo ≤ a sinistra, ramo ≥ a destra, padre al centro dei figli; i figli saltati sono «fantasmi»). */
   const alberoDi = (st) => {
     const D = st.dati, chiave = chiaveBB(D);
     if (D.tr && D.trChiave === chiave) return D.tr;
-    const R = D0.bb[chiave], nodi = {};
+    const R = D0.problemi[D.pb || "auto"].bb[regoleBB(D)], nodi = {};
     R.nodi.forEach((n) => { nodi[n.id] = Object.assign({ prof: 0 }, n); });
     R.nodi.forEach((n) => { if (n.padre !== null) nodi[n.id].prof = nodi[n.padre].prof + 1; });
     const fant = R.passi[R.passi.length - 1].fantasmi;           // [[padre, ramo]]
@@ -558,7 +607,9 @@
 
   window.GI_RICETTE["pli-bb"] = {
     titolo: T("Branch-and-bound passo per passo", "Branch-and-bound step by step"),
-    sottotitolo: T("esempio delle automobili", "the car example"),
+    sottotitolo: T("esempio delle automobili e altri problemi", "the car example and other problems"),
+    funzioni: VOCI_P(),
+    etichettaFunzioni: T("Problema", "Problem"),
     parametri: [{ k: "k", nome: "k", min: 0, max: 24, step: 1, val: 0, colore: "a", cifre: 0,
       descr: T("passo: ◀ ▶ un passo alla volta, «Esegui» per vederli tutti", "step: ◀ ▶ one step at a time, «Run» to watch all of them") }],
     assi: false,
@@ -576,6 +627,7 @@
       ];
     },
     monta(board, st) {
+      nuovoProblema(st);
       regole(st, [
         [T("Variabile", "Variable"), "var", [["min", T("indice minimo", "lowest index")], ["max", T("indice massimo", "highest index")],
           ["mininf", T("minima infeasibility", "min infeasibility")], ["maxinf", T("massima infeasibility", "max infeasibility")]]],
@@ -597,7 +649,7 @@
         const zp = largo ? [0, 0, W * 0.45, H] : [0, H * 0.5, W, H];
         const za = largo ? [W * 0.45, 0, W, H] : [0, 0, W, H * 0.5];
         // ---- la regione, in scala
-        const X = 5, Y = 4, x0 = -0.7, x1 = X + 0.5, y0 = -0.7, y1 = Y + 0.5;
+        const Pb = probDi(st.chiave()), X = Pb.X, Y = Pb.Y, x0 = -0.7, x1 = X + 0.5, y0 = -0.7, y1 = Y + 0.5;
         const s = Math.min((zp[2] - zp[0] - 2 * pad) / (x1 - x0), (zp[3] - zp[1] - 2 * pad) / (y1 - y0));
         const ox = (zp[0] + zp[2]) / 2 - (s * (x0 + x1)) / 2, oy = (zp[1] + zp[3]) / 2 - (s * (y0 + y1)) / 2;
         const px = (x, y) => [ox + s * x, oy + s * y];
@@ -615,8 +667,8 @@
         M.scritta(crea, ...px(x1 - 0.15, 0.35), "x₁", { fontSize: fs + 1, strokeColor: C.muted, anchorX: "right" });
         M.scritta(crea, ...px(0.3, y1 - 0.2), "x₂", { fontSize: fs + 1, strokeColor: C.muted, anchorX: "left" });
         // il poliedro di partenza (grigio) con le sue rette
-        for (const v of AUTO.V) retta(v.a, v.b, { strokeColor: C.grigio, strokeWidth: 1.2, dash: 2 });
-        regione(AUTO_V0, { strokeColor: C.grigio, strokeWidth: 1.5, fillColor: "none", fillOpacity: 0 });
+        for (const v of Pb.V) retta(v.a, v.b, { strokeColor: C.grigio, strokeWidth: 1.2, dash: 2 });
+        regione(Pb.V0, { strokeColor: C.grigio, strokeWidth: 1.5, fillColor: "none", fillOpacity: 0 });
         // le regioni dei nodi: in lista (giallo), interi (verde), potati (grigio); il nodo in esame in rosso
         const foc = E.nodo;
         const colSt = { lista: C.e, intero: C.verde, bound: C.grigio, tolto: C.grigio };
@@ -624,16 +676,16 @@
         for (const id of idsSt) {
           const stt = E.stati[id];
           if (stt === "ramificato" || stt === "inamm") continue;
-          const V = AUTO_V0.concat(vincoliRegione(t, id));
+          const V = Pb.V0.concat(vincoliRegione(t, id));
           if (stt === "corrente") regione(V, { strokeColor: C.rosso, strokeWidth: 2.4, fillColor: C.rosso, fillOpacity: 0.25 });
           else regione(V, { strokeColor: id === foc ? C.rosso : colSt[stt], strokeWidth: id === foc ? 3 : 1.6, fillColor: colSt[stt], fillOpacity: id === foc ? 0.34 : 0.24 });
         }
-        if (E.tipo === "radice") regione(AUTO_V0, { strokeColor: C.rosso, strokeWidth: 3, fillColor: C.rosso, fillOpacity: 0.12 });
+        if (E.tipo === "radice") regione(Pb.V0, { strokeColor: C.rosso, strokeWidth: 3, fillColor: C.rosso, fillOpacity: 0.12 });
         // al passo di estrazione: le due rette di ramo e la striscia senza punti interi
         if (E.tipo === "estratto") {
           const n = t.nodi[foc], j = E.var, fl = floorQ(n.x[j - 1]);
           const a = [0, 0], a2 = [0, 0]; a[j - 1] = 1; a2[j - 1] = -1;
-          const strisc = M.poligono(AUTO_V0.concat(vincoliRegione(t, foc), [{ a: a2, b: -fl }, { a, b: fl + 1 }]), 1e3);
+          const strisc = M.poligono(Pb.V0.concat(vincoliRegione(t, foc), [{ a: a2, b: -fl }, { a, b: fl + 1 }]), 1e3);
           if (strisc.length) curva(strisc.concat([strisc[0]]), { strokeColor: C.viola, strokeWidth: 0, fillColor: C.viola, fillOpacity: 0.22 });
           retta(a, fl, { strokeColor: C.viola, strokeWidth: 2.2, dash: 2 });
           retta(a, fl + 1, { strokeColor: C.viola, strokeWidth: 2.2, dash: 2 });
@@ -643,13 +695,13 @@
           retta(a, v[1] === "<=" ? v[2] : -v[2], { strokeColor: C.viola, strokeWidth: 2.2, dash: 2 });
         }
         // i punti interi ammissibili, l'incumbent e l'ottimo del nodo in esame
-        for (const q of AUTO_INTERI) crea("circle", [px(...q), Math.min(3.5, Math.max(2.2, s * 0.04))], { fixed: true, highlight: false, strokeColor: C.verde, fillColor: C.verde, fillOpacity: 1, strokeWidth: 1 });
+        for (const q of Pb.INTERI) crea("circle", [px(...q), Math.min(3.5, Math.max(2.2, s * 0.04))], { fixed: true, highlight: false, strokeColor: C.verde, fillColor: C.verde, fillOpacity: 1, strokeWidth: 1 });
         if (E.inc) { const xi = t.nodi[E.inc].x; crea("circle", [px(Qv(Qs(xi[0])), Qv(Qs(xi[1]))), Math.min(7, Math.max(5, s * 0.085))], { fixed: true, highlight: false, strokeColor: C.verde, strokeWidth: 2.2, fillColor: C.verde, fillOpacity: 0.15 }); }
         if (foc && t.nodi[foc].x) { const xf = t.nodi[foc].x; crea("circle", [px(Qv(Qs(xf[0])), Qv(Qs(xf[1]))), Math.min(5, Math.max(3.2, s * 0.055))], { fixed: true, highlight: false, strokeColor: C.blu, fillColor: C.blu, fillOpacity: 1, strokeWidth: 1 }); }
 
         // ---- l'albero
         const L = t.foglie, Dp = Math.max(1, t.prof);
-        const tw = za[2] - za[0] - 2 * pad, th = za[3] - za[1] - 2 * pad - 14;
+        const tw = za[2] - za[0] - 2 * pad - 58, th = za[3] - za[1] - 2 * pad - 14;
         const dx = tw / L, dy = th / (Dp + 0.45);
         const r = Math.max(10, Math.min(19, dx * 0.32, dy * 0.3));
         const fsT = Math.max(11, Math.min(15, r * 0.95)), stretto = dx < 100;
@@ -694,7 +746,8 @@
       });
     },
     formula(p, st) {
-      return problemaTex("3x_1 + 2x_2", ["10x_1 + 4x_2 \\le 45", "4x_1 + 14x_2 \\le 49"]);
+      const Pb = probDi(st.chiave());
+      return problemaTex(Pb.ob, Pb.vinc);
     },
     letture(p, st) {
       const t = alberoDi(st), k = M.passoK(st, t.R.passi.length - 1), E = t.R.passi[k], C = M.COL(st);
@@ -744,10 +797,14 @@
       }
       righe.push(`\\(\\LB = ${lb} \\le ${zILP} \\le \\UB = ${ubv}\\)` + (E.inc ? T(` · incumbent \\(\\bar{\\vet{x}} = ${pq(t.nodi[E.inc].x)}\\)`, ` · incumbent \\(\\bar{\\vet{x}} = ${pq(t.nodi[E.inc].x)}\\)`) : ""));
       righe.push(T("Lista: ", "List: ") + (E.lista.length ? E.lista.slice().sort((a, b) => a - b).map((i) => `\\(${i}\\)`).join(", ") : "—"));
+      const nd = n && n.diz ? n : E.tipo === "fine" && E.inc ? t.nodi[E.inc] : null;
+      if (nd) righe.push(dizBox([[T(`Dizionario ottimo di \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (con gli scarti dei vincoli di branching)" : ""),
+        `Optimal dictionary of \\(\\LP_{${nd.id}}\\)` + (nd.padre !== null ? " (with the slacks of the branching constraints)" : "")), dizTex(nd.diz)]]));
+      else if (n && E.stati[n.id] === "inamm") righe.push(`<small>${T("Il duale non trova un pivot: nessun dizionario ammissibile.", "The dual simplex finds no pivot: no feasible dictionary.")}</small>`);
       return righe.join("<br>");
     },
-    domanda: T("Confronta le regole: quanti nodi servono con LIFO, FIFO e best bound? Con quale regola si trova prima l'ottimo? Cambia il primo figlio: l'albero si allunga o si accorcia? Quando scatta la regola del salto?",
-      "Compare the rules: how many nodes do LIFO, FIFO and best bound need? With which rule is the optimum found first? Change the first child: does the tree grow or shrink? When does the skip rule apply?"),
+    domanda: T("Confronta le regole: quanti nodi servono con LIFO, FIFO e best bound? Con quale regola si trova prima l'ottimo? Cambia il primo figlio: l'albero si allunga o si accorcia? Quando scatta la regola del salto? Cambia problema: con quale l'albero è più grande?",
+      "Compare the rules: how many nodes do LIFO, FIFO and best bound need? With which rule is the optimum found first? Change the first child: does the tree grow or shrink? When does the skip rule apply? Change the problem: which one gives the largest tree?"),
   };
 
   // ================================================================
@@ -755,8 +812,8 @@
   // ================================================================
   // un'esecuzione per combinazione «riga|inserimento» (righe: rhs, min, z; inserimento: prim, debole)
   const chiaveG = (D) => `${D.riga || "rhs"}|${D.ins || "prim"}`;
-  const esecG = (st) => D0.gomory[chiaveG(st.dati)];
-  const G0 = D0.gomory["rhs|prim"];
+  const esecG = (st) => D0.problemi[st.chiave()].gomory[chiaveG(st.dati)];
+  const G0 = D0.problemi.auto.gomory["rhs|prim"];
   const debole = (st) => st.dati.ins === "debole";
   const tutti = (st) => st.dati.riga === "tutti";
   // i tagli inseriti in un'iterazione (uno solo, o tutti quelli violati del giro)
@@ -802,14 +859,16 @@
     : T("Inserimento primitivo: il taglio in \\(x_1, x_2\\) si divide per il MCD, il termine noto si arrotonda per difetto, poi si aggiunge lo scarto.",
       "Primitive insertion: the cut in \\(x_1, x_2\\) is divided by the gcd, the right-hand side is rounded down, then the slack is added."));
   // gli stati dell'esecuzione: k = 0 è il rilassamento, k = i dopo il taglio i
-  const xStato = (G, k) => (k === 0 ? { x: ["7/2", "5/2"], z: "31/2" } : { x: G.iterazioni[k - 1].xdopo, z: G.iterazioni[k - 1].zdopo });
+  const xStato = (G, k, st) => (k === 0 ? probDi(st.chiave()).R.lp : { x: G.iterazioni[k - 1].xdopo, z: G.iterazioni[k - 1].zdopo });
 
   window.GI_RICETTE["pli-gomory"] = {
     titolo: T("Tagli di Gomory sul piano", "Gomory cuts on the plane"),
-    sottotitolo: T("esempio delle automobili", "the car example"),
+    sottotitolo: T("esempio delle automobili e altri problemi", "the car example and other problems"),
+    funzioni: VOCI_P(),
+    etichettaFunzioni: T("Problema", "Problem"),
     parametri: [{ k: "k", nome: "k", min: 0, max: G0.iterazioni.length, step: 1, val: 0, colore: "a", cifre: 0,
       descr: T("iterazione: ◀ ▶ un taglio alla volta, «Esegui» per vederli tutti", "iteration: ◀ ▶ one cut at a time, «Run» to watch them all") }],
-    vista: vistaAuto,
+    vista: (k) => probDi(k).vista,
     opzioniBoard: ADATTA,
     legenda: (st) => {
       const C = M.COL(st);
@@ -824,6 +883,7 @@
       ];
     },
     monta(board, st) {
+      nuovoProblema(st);
       regole(st, [
         [T("Riga del taglio", "Row of the cut"), "riga", [["rhs", T("parte frazionaria più grande", "largest fractional part")],
           ["min", T("prima riga frazionaria", "first fractional row")], ["z", T("prima la riga dell'obiettivo", "objective row first")],
@@ -838,12 +898,13 @@
     aggiorna(board, st) {
       const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st);
       misura(board);
-      M.adatta(board, ...vistaAuto);
-      M.ridisegna(board, st, [chiaveG(st.dati), k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
-        const x0 = -0.9, x1 = 5.5, y0 = -0.9, y1 = 4.5;
+      const Pb = probDi(st.chiave());
+      M.adatta(board, ...Pb.vista);
+      M.ridisegna(board, st, [st.chiave(), chiaveG(st.dati), k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
+        const x0 = -0.9, x1 = Pb.X + 0.5, y0 = -0.9, y1 = Pb.Y + 0.5;
         const tagli = G.iterazioni.slice(0, k).flatMap((it, i) => tagliDi(it).map((c) => Object.assign({ giro: i }, c)));
-        const V = AUTO_V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
-        AUTO.V.forEach((v) => {
+        const V = Pb.V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
+        Pb.V.forEach((v) => {
           const s = segmento(v.a, v.b, x0, x1, y0, y1);
           if (s) crea("curve", [[s[0][0], s[1][0]], [s[0][1], s[1][1]]], { strokeColor: C.grigio, strokeWidth: 1.3, dash: 2, fixed: true, highlight: false });
         });
@@ -857,30 +918,33 @@
         });
         const P = M.poligono(V, 1e3);
         if (P.length) M.area(crea, P, { strokeColor: C.rosso, fillColor: C.rosso, fillOpacity: 0.18 });
-        M.area(crea, AUTO_HULL, { strokeColor: C.verde, strokeWidth: 2, dash: 2, fillColor: C.verde, fillOpacity: 0.08 });
-        for (let i = 0; i <= 5; i++) for (let j = 0; j <= 4; j++) {
-          const amm = AUTO_INTERI.some((q) => q[0] === i && q[1] === j);
+        M.area(crea, Pb.HULL, { strokeColor: C.verde, strokeWidth: 2, dash: 2, fillColor: C.verde, fillOpacity: 0.08 });
+        for (let i = 0; i <= Pb.X; i++) for (let j = 0; j <= Pb.Y; j++) {
+          const amm = Pb.INTERI.some((q) => q[0] === i && q[1] === j);
           M.pallino(crea, i, j, amm ? { size: 3.5, fillColor: C.verde, strokeColor: C.verde } : { size: 1.5, fillColor: C.grigio, strokeColor: C.grigio });
         }
-        if (k > 0) { const xp = xStato(G, k - 1).x; M.pallino(crea, Qv(Qs(xp[0])), Qv(Qs(xp[1])), { size: 6, face: "x", fillColor: C.grigio, strokeColor: C.grigio, strokeWidth: 3 }); }
-        const xc = xStato(G, k);
+        if (k > 0) { const xp = xStato(G, k - 1, st).x; M.pallino(crea, Qv(Qs(xp[0])), Qv(Qs(xp[1])), { size: 6, face: "x", fillColor: C.grigio, strokeColor: C.grigio, strokeWidth: 3 }); }
+        const xc = xStato(G, k, st);
         M.pallino(crea, Qv(Qs(xc.x[0])), Qv(Qs(xc.x[1])), { size: 6, fillColor: C.blu, strokeColor: C.blu });
         M.scritta(crea, Qv(Qs(xc.x[0])) + 0.12, Qv(Qs(xc.x[1])) + 0.24, `z = ${qtx(xc.z)}`, { fontSize: 13, strokeColor: C.blu, anchorX: "left" });
       });
     },
     formula(p, st) {
-      return problemaTex("3x_1 + 2x_2", ["10x_1 + 4x_2 \\le 45", "4x_1 + 14x_2 \\le 49"]);
+      const Pb = probDi(st.chiave());
+      return problemaTex(Pb.ob, Pb.vinc);
     },
     letture(p, st) {
       const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st), righe = [];
-      const xc = xStato(G, k), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
+      const xc = xStato(G, k, st), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
       righe.push(`<strong>${tutti(st) ? T("Giro", "Round") : T("Iterazione", "Iteration")} ${k}/${G.iterazioni.length}</strong>`);
+      const Pb = probDi(st.chiave());
+      const scarti = (e) => Pb.V.map((v, i) => `\\(x_${3 + i} = ${v.b} - ${lin(v.a).replace(/\+/g, "-")}\\)`).join(e);
       if (k === 0) {
         righe.push(debole(st)
-          ? T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio riceve subito il suo surplus \\(x_5, x_6, \\dots\\), senza arrotondare.`,
-            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut gets its surplus \\(x_5, x_6, \\dots\\) right away, without rounding.`)
-          : T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio, scritto in \\(x_1, x_2\\), si rende primitivo e poi riceve il suo scarto \\(x_5, x_6, \\dots\\).`,
-            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut, written in \\(x_1, x_2\\), is made primitive and then gets its slack \\(x_5, x_6, \\dots\\).`));
+          ? T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono ${scarti(" e ")}; ogni taglio riceve subito il suo surplus \\(x_5, x_6, \\dots\\), senza arrotondare.`,
+            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are ${scarti(" and ")}; each cut gets its surplus \\(x_5, x_6, \\dots\\) right away, without rounding.`)
+          : T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono ${scarti(" e ")}; ogni taglio, scritto in \\(x_1, x_2\\), si rende primitivo e poi riceve il suo scarto \\(x_5, x_6, \\dots\\).`,
+            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are ${scarti(" and ")}; each cut, written in \\(x_1, x_2\\), is made primitive and then gets its slack \\(x_5, x_6, \\dots\\).`));
       } else {
         const ins = debole(st) ? deboleTex : primitivoTex;
         const it = G.iterazioni[k - 1], riga = it.riga === "z"
@@ -904,10 +968,25 @@
       if (intero && k > 0) righe.push(tutti(st)
         ? T(`Fine dopo \\(${k}\\) giri e \\(${nt}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) rounds and \\(${nt}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`)
         : T(`Fine dopo \\(${k}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
+      // i dizionari: LP_k con le righe del taglio (viola), poi LP_{k+1} dopo il duale con le righe nuove (blu)
+      const righeTaglio = (it) => Object.fromEntries(tagliDi(it).concat(it.doppi || []).map((c) => [c.riga, C.viola]));
+      const LPk = (i) => `\\(\\LP_{${i + 1}}\\)`;
+      if (k === 0) righe.push(dizBox([[T(`Dizionario ottimo di ${LPk(0)}, il rilassamento` + (G.iterazioni.length ? `; in ${tinta(C.viola, "viola")} la riga del primo taglio` : ""),
+        `Optimal dictionary of ${LPk(0)}, the relaxation` + (G.iterazioni.length ? `; in ${tinta(C.viola, "violet")} the row of the first cut` : "")),
+        dizTex(G.diz[0], G.iterazioni.length ? righeTaglio(G.iterazioni[0]) : {})]]));
+      else {
+        const it = G.iterazioni[k - 1], nuove = Object.fromEntries(tagliDi(it).map((c) => [c.s, C.blu]));
+        righe.push(dizBox([
+          [T(`Dizionario ottimo di ${LPk(k - 1)}: in ${tinta(C.viola, "viola")} ${tutti(st) ? "le righe dei tagli" : "la riga del taglio"}`,
+            `Optimal dictionary of ${LPk(k - 1)}: in ${tinta(C.viola, "violet")} the ${tutti(st) ? "rows of the cuts" : "row of the cut"}`), dizTex(G.diz[k - 1], righeTaglio(it))],
+          [T(`Dopo il simplesso duale, dizionario ottimo di ${LPk(k)}: in ${tinta(C.blu, "blu")} ${tutti(st) ? "gli scarti nuovi" : "lo scarto nuovo"}`,
+            `After the dual simplex, optimal dictionary of ${LPk(k)}: in ${tinta(C.blu, "blue")} the new ${tutti(st) ? "slacks" : "slack"}`), dizTex(G.diz[k], nuove)],
+        ]));
+      }
       righe.push(`<small>${regolaRigaTxt(st)} ${regolaInsTxt(st)}</small>`);
       return righe.join("<br>");
     },
-    domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le regole per la riga, anche con tutti i tagli violati insieme: quale combinazione arriva prima a \\((4, 1)\\)? Controlla che nessun punto verde sia mai tolto.",
-      "Compare the number of cuts with the weak and the primitive insertion, and with the row rules, also with all the violated cuts at once: which combination reaches \\((4, 1)\\) first? Check that no green point is ever removed."),
+    domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le regole per la riga, anche con tutti i tagli violati insieme: quale combinazione arriva prima all'ottimo intero? Cambia problema: le regole si ordinano allo stesso modo? Controlla che nessun punto verde sia mai tolto.",
+      "Compare the number of cuts with the weak and the primitive insertion, and with the row rules, also with all the violated cuts at once: which combination reaches the integer optimum first? Change the problem: do the rules rank the same way? Check that no green point is ever removed."),
   };
 })();
