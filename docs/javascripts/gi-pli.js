@@ -5,7 +5,8 @@
  *   pli-involucro      disuguaglianze valide e involucro convesso (automobili): si aggiungono una alla volta
  *   pli-bb             branch-and-bound passo per passo (automobili): regole per la variabile, il nodo e
  *                      l'ordine dei figli; albero, partizione della regione, LB e UB
- *   pli-gomory         tagli di Gomory sul piano (automobili): un taglio per iterazione
+ *   pli-gomory         tagli di Gomory sul piano (automobili): un taglio per iterazione; regole per la
+ *                      riga del taglio e per l'inserimento (primitivo o debole)
  *
  * Il motore è interattivi.js; gli helper comuni (frazioni esatte, poliedri in R^2, «Esegui») sono in
  * gi-comune.js (window.GI_MIP, lo stesso del laboratorio di Modellazione MIP); i numeri del
@@ -751,8 +752,11 @@
   // ================================================================
   // 4. Tagli di Gomory sul piano
   // ================================================================
-  const G = D0.gomory;
-  const xr = (it) => (it.k === 0 ? ["7/2", "5/2"] : it.xdopo);
+  // un'esecuzione per combinazione «riga|inserimento» (righe: rhs, min, z; inserimento: prim, debole)
+  const chiaveG = (D) => `${D.riga || "rhs"}|${D.ins || "prim"}`;
+  const esecG = (st) => D0.gomory[chiaveG(st.dati)];
+  const G0 = D0.gomory["rhs|prim"];
+  const debole = (st) => st.dati.ins === "debole";
   const nomeVar = (j) => `x_${j}`;
   const taglioTex = (it) => {
     const f = it.f, js = Object.keys(f).map(Number).sort((a, b) => a - b);
@@ -761,6 +765,7 @@
   };
   const xTexOrig = (it) => `${lin(it.a)} \\le ${it.b}`;
   const xTexPrima = (it) => `${lin(it.a0)} \\le ${it.b0}`;
+  const xTexPrim = (it) => `${lin(it.ap)} \\le ${it.bp}`;
   const scartoTex = (it) => `x_{${4 + it.k}} = ${it.b} - ${it.a[0] && it.a[1] ? `(${lin(it.a)})` : lin(it.a)}`;
   // il taglio in x1, x2 reso primitivo (diviso per g = MCD, termine noto per difetto), poi il suo scarto
   const primitivoTex = (it) => (it.g > 1
@@ -768,13 +773,35 @@
         `that is, in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\); divided by \\(${it.g}\\) (gcd of the coefficients) and rounded down it becomes the primitive cut \\(${xTexOrig(it)}\\)`)
     : T(`cioè in \\(x_1, x_2\\) il taglio primitivo \\(${xTexOrig(it)}\\) (coefficienti senza divisori comuni)`,
         `that is, in \\(x_1, x_2\\) the primitive cut \\(${xTexOrig(it)}\\) (coefficients with no common divisor)`));
+  // inserimento debole: il surplus del taglio frazionario così com'è (nelle x: a0'x <= b0, senza arrotondare)
+  const deboleTex = (it) => {
+    const uguale = it.ap[0] * it.g === it.a0[0] && it.ap[1] * it.g === it.a0[1] && it.bp * it.g === it.b0;
+    return T(`cioè in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\), inserito così com'è (né divisione né arrotondamento)`,
+      `that is, in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\), inserted as it is (no division, no rounding)`) +
+      (uguale ? T(" e qui uguale al taglio primitivo", ", here the same as the primitive cut")
+        : T(`; il taglio primitivo \\(${xTexPrim(it)}\\) sarebbe più forte`, `; the primitive cut \\(${xTexPrim(it)}\\) would be stronger`));
+  };
+  // le spiegazioni delle regole scelte (in fondo alle letture)
+  const regolaRigaTxt = (st) => ({
+    rhs: T("Riga: termine noto frazionario più grande; a parità, la variabile di base di indice minimo (la riga di \\(z\\) per ultima).",
+      "Row: the largest fractional right-hand side; ties go to the basic variable of lowest index (the row of \\(z\\) last)."),
+    min: T("Riga: la prima riga frazionaria, cioè la variabile di base di indice minimo con \\(\\bar b_i\\) frazionario (la riga di \\(z\\) solo se non ce ne sono altre).",
+      "Row: the first fractional row, i.e. the basic variable of lowest index with fractional \\(\\bar b_i\\) (the row of \\(z\\) only if there is no other)."),
+    z: T("Riga: prima la riga della funzione obiettivo, se \\(\\bar z\\) è frazionario; altrimenti il termine noto frazionario più grande (a parità, indice minimo).",
+      "Row: the objective row first, if \\(\\bar z\\) is fractional; otherwise the largest fractional right-hand side (ties: lowest index)."),
+  })[st.dati.riga || "rhs"];
+  const regolaInsTxt = (st) => (debole(st)
+    ? T("Inserimento debole: si aggiunge il surplus del taglio frazionario prima di arrotondare; il taglio è più debole e ne servono di più.",
+      "Weak insertion: the surplus of the fractional cut is added before rounding; the cut is weaker and more cuts are needed.")
+    : T("Inserimento primitivo: il taglio in \\(x_1, x_2\\) si divide per il MCD, il termine noto si arrotonda per difetto, poi si aggiunge lo scarto.",
+      "Primitive insertion: the cut in \\(x_1, x_2\\) is divided by the gcd, the right-hand side is rounded down, then the slack is added."));
   // gli stati dell'esecuzione: k = 0 è il rilassamento, k = i dopo il taglio i
-  const xStato = (k) => (k === 0 ? { x: ["7/2", "5/2"], z: "31/2" } : { x: G.iterazioni[k - 1].xdopo, z: G.iterazioni[k - 1].zdopo });
+  const xStato = (G, k) => (k === 0 ? { x: ["7/2", "5/2"], z: "31/2" } : { x: G.iterazioni[k - 1].xdopo, z: G.iterazioni[k - 1].zdopo });
 
   window.GI_RICETTE["pli-gomory"] = {
     titolo: T("Tagli di Gomory sul piano", "Gomory cuts on the plane"),
     sottotitolo: T("esempio delle automobili", "the car example"),
-    parametri: [{ k: "k", nome: "k", min: 0, max: G.iterazioni.length, step: 1, val: 0, colore: "a", cifre: 0,
+    parametri: [{ k: "k", nome: "k", min: 0, max: G0.iterazioni.length, step: 1, val: 0, colore: "a", cifre: 0,
       descr: T("iterazione: ◀ ▶ un taglio alla volta, «Esegui» per vederli tutti", "iteration: ◀ ▶ one cut at a time, «Run» to watch them all") }],
     vista: vistaAuto,
     opzioniBoard: ADATTA,
@@ -791,15 +818,21 @@
       ];
     },
     monta(board, st) {
+      regole(st, [
+        [T("Riga del taglio", "Row of the cut"), "riga", [["rhs", T("parte frazionaria più grande", "largest fractional part")],
+          ["min", T("prima riga frazionaria", "first fractional row")], ["z", T("prima la riga dell'obiettivo", "objective row first")]]],
+        [T("Inserimento", "Insertion"), "ins", [["prim", T("primitivo (arrotonda, poi scarto)", "primitive (round, then slack)")],
+          ["debole", T("debole (scarto prima di arrotondare)", "weak (slack before rounding)")]]],
+      ]);
       M.comandi(st, []);
       lettureDopo(st, st.dati.comandi);
       seguiDimensioni(board, st);
     },
     aggiorna(board, st) {
-      const k = M.passoK(st, G.iterazioni.length), C = M.COL(st);
+      const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st);
       misura(board);
       M.adatta(board, ...vistaAuto);
-      M.ridisegna(board, st, [k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
+      M.ridisegna(board, st, [chiaveG(st.dati), k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
         const x0 = -0.9, x1 = 5.5, y0 = -0.9, y1 = 4.5;
         const tagli = G.iterazioni.slice(0, k), V = AUTO_V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
         AUTO.V.forEach((v) => {
@@ -821,41 +854,42 @@
           const amm = AUTO_INTERI.some((q) => q[0] === i && q[1] === j);
           M.pallino(crea, i, j, amm ? { size: 3.5, fillColor: C.verde, strokeColor: C.verde } : { size: 1.5, fillColor: C.grigio, strokeColor: C.grigio });
         }
-        if (k > 0) { const xp = xStato(k - 1).x; M.pallino(crea, Qv(Qs(xp[0])), Qv(Qs(xp[1])), { size: 6, face: "x", fillColor: C.grigio, strokeColor: C.grigio, strokeWidth: 3 }); }
-        const xc = xStato(k);
+        if (k > 0) { const xp = xStato(G, k - 1).x; M.pallino(crea, Qv(Qs(xp[0])), Qv(Qs(xp[1])), { size: 6, face: "x", fillColor: C.grigio, strokeColor: C.grigio, strokeWidth: 3 }); }
+        const xc = xStato(G, k);
         M.pallino(crea, Qv(Qs(xc.x[0])), Qv(Qs(xc.x[1])), { size: 6, fillColor: C.blu, strokeColor: C.blu });
         M.scritta(crea, Qv(Qs(xc.x[0])) + 0.12, Qv(Qs(xc.x[1])) + 0.24, `z = ${qtx(xc.z)}`, { fontSize: 13, strokeColor: C.blu, anchorX: "left" });
       });
     },
     formula(p, st) {
-      const k = M.passoK(st, G.iterazioni.length);
-      return problemaTex("3x_1 + 2x_2", ["10x_1 + 4x_2 \\le 45", "4x_1 + 14x_2 \\le 49"]) +
-        (k ? "" : "");
+      return problemaTex("3x_1 + 2x_2", ["10x_1 + 4x_2 \\le 45", "4x_1 + 14x_2 \\le 49"]);
     },
     letture(p, st) {
-      const k = M.passoK(st, G.iterazioni.length), C = M.COL(st), righe = [];
-      const xc = xStato(k), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
+      const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st), righe = [];
+      const xc = xStato(G, k), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
       righe.push(`<strong>${T("Iterazione", "Iteration")} ${k}/${G.iterazioni.length}</strong>`);
       if (k === 0) {
-        righe.push(T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio, scritto in \\(x_1, x_2\\), si rende primitivo e poi riceve il suo scarto \\(x_5, x_6, \\dots\\).`,
-          `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut, written in \\(x_1, x_2\\), is made primitive and then gets its slack \\(x_5, x_6, \\dots\\).`));
+        righe.push(debole(st)
+          ? T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio riceve subito il suo surplus \\(x_5, x_6, \\dots\\), senza arrotondare.`,
+            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut gets its surplus \\(x_5, x_6, \\dots\\) right away, without rounding.`)
+          : T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio, scritto in \\(x_1, x_2\\), si rende primitivo e poi riceve il suo scarto \\(x_5, x_6, \\dots\\).`,
+            `LP relaxation: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). It is not integer: we look for a cut. The slacks are \\(x_3 = 45 - 10x_1 - 4x_2\\) and \\(x_4 = 49 - 4x_1 - 14x_2\\); each cut, written in \\(x_1, x_2\\), is made primitive and then gets its slack \\(x_5, x_6, \\dots\\).`));
       } else {
+        const ins = debole(st) ? deboleTex : primitivoTex;
         const it = G.iterazioni[k - 1], riga = it.riga === "z"
           ? T("la riga della funzione obiettivo", "the objective row")
           : T(`la riga di \\(x_${it.riga}\\)`, `the row of \\(x_${it.riga}\\)`);
         righe.push(T(`Prima del taglio: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`, `Before the cut: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`));
-        righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${primitivoTex(it)}. Scarto: \\(${scartoTex(it)} \\ge 0\\).`,
-          `${tinta(C.viola, "Cut")} from ${riga} (fractional right-hand side \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${primitivoTex(it)}. Slack: \\(${scartoTex(it)} \\ge 0\\).`));
+        righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${ins(it)}. Scarto: \\(${scartoTex(it)} \\ge 0\\).`,
+          `${tinta(C.viola, "Cut")} from ${riga} (fractional right-hand side \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${ins(it)}. Slack: \\(${scartoTex(it)} \\ge 0\\).`));
         righe.push(T(`Dopo il taglio (simplesso duale): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` +
           (intero ? `: ${tinta(C.verde, "intero")}, quindi ottimo.` : "."),
           `After the cut (dual simplex): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` + (intero ? `: ${tinta(C.verde, "integer")}, hence optimal.` : ".")));
       }
-      if (intero && k > 0) righe.push(T(`Fine: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
-      righe.push(`<small>${T("Regola: riga con il termine noto frazionario più grande; a parità, la variabile di base di indice minimo (la riga di \\(z\\) per ultima).",
-        "Rule: the row with the largest fractional right-hand side; ties go to the basic variable of lowest index (the row of \\(z\\) last).")}</small>`);
+      if (intero && k > 0) righe.push(T(`Fine dopo \\(${k}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
+      righe.push(`<small>${regolaRigaTxt(st)} ${regolaInsTxt(st)}</small>`);
       return righe.join("<br>");
     },
-    domanda: T("Il valore \\(z\\) scende a ogni taglio: quale taglio fa scendere \\(z\\) più di tutti? Controlla che nessun punto verde sia mai tolto. Dove sta l'ottimo continuo rispetto all'involucro?",
-      "The value \\(z\\) falls with every cut: which cut lowers \\(z\\) the most? Check that no green point is ever removed. Where is the LP optimum with respect to the hull?"),
+    domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le tre regole per la riga: quale combinazione arriva prima a \\((4, 1)\\)? Controlla che nessun punto verde sia mai tolto.",
+      "Compare the number of cuts with the weak and the primitive insertion, and with the three row rules: which combination reaches \\((4, 1)\\) first? Check that no green point is ever removed."),
   };
 })();
