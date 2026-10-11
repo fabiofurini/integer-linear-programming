@@ -6,7 +6,8 @@
  *   pli-bb             branch-and-bound passo per passo (automobili): regole per la variabile, il nodo e
  *                      l'ordine dei figli; albero, partizione della regione, LB e UB
  *   pli-gomory         tagli di Gomory sul piano (automobili): un taglio per iterazione; regole per la
- *                      riga del taglio e per l'inserimento (primitivo o debole)
+ *                      riga del taglio (anche tutti i tagli violati, un giro per passo) e per
+ *                      l'inserimento (primitivo o debole)
  *
  * Il motore è interattivi.js; gli helper comuni (frazioni esatte, poliedri in R^2, «Esegui») sono in
  * gi-comune.js (window.GI_MIP, lo stesso del laboratorio di Modellazione MIP); i numeri del
@@ -757,6 +758,9 @@
   const esecG = (st) => D0.gomory[chiaveG(st.dati)];
   const G0 = D0.gomory["rhs|prim"];
   const debole = (st) => st.dati.ins === "debole";
+  const tutti = (st) => st.dati.riga === "tutti";
+  // i tagli inseriti in un'iterazione (uno solo, o tutti quelli violati del giro)
+  const tagliDi = (it) => it.tagli || [it];
   const nomeVar = (j) => `x_${j}`;
   const taglioTex = (it) => {
     const f = it.f, js = Object.keys(f).map(Number).sort((a, b) => a - b);
@@ -766,7 +770,7 @@
   const xTexOrig = (it) => `${lin(it.a)} \\le ${it.b}`;
   const xTexPrima = (it) => `${lin(it.a0)} \\le ${it.b0}`;
   const xTexPrim = (it) => `${lin(it.ap)} \\le ${it.bp}`;
-  const scartoTex = (it) => `x_{${4 + it.k}} = ${it.b} - ${it.a[0] && it.a[1] ? `(${lin(it.a)})` : lin(it.a)}`;
+  const scartoTex = (it) => `x_{${it.s || 4 + it.k}} = ${it.b} - ${it.a[0] && it.a[1] ? `(${lin(it.a)})` : lin(it.a)}`;
   // il taglio in x1, x2 reso primitivo (diviso per g = MCD, termine noto per difetto), poi il suo scarto
   const primitivoTex = (it) => (it.g > 1
     ? T(`cioè in \\(x_1, x_2\\): \\(${xTexPrima(it)}\\); diviso per \\(${it.g}\\) (MCD dei coefficienti) e arrotondato per difetto diventa il taglio primitivo \\(${xTexOrig(it)}\\)`,
@@ -787,6 +791,8 @@
       "Row: the largest fractional right-hand side; ties go to the basic variable of lowest index (the row of \\(z\\) last)."),
     min: T("Riga: la prima riga frazionaria, cioè la variabile di base di indice minimo con \\(\\bar b_i\\) frazionario (la riga di \\(z\\) solo se non ce ne sono altre).",
       "Row: the first fractional row, i.e. the basic variable of lowest index with fractional \\(\\bar b_i\\) (the row of \\(z\\) only if there is no other)."),
+    tutti: T("Tutti i tagli violati: a ogni passo (un giro) i tagli di tutte le righe con termine noto frazionario, riga di \\(z\\) per ultima; si tengono quelli violati da \\(\\tilde{\\vet{x}}\\), i doppioni nelle \\(x\\) una volta sola; poi il simplesso duale.",
+      "All violated cuts: at each step (a round) the cuts of all the rows with a fractional right-hand side, the row of \\(z\\) last; the cuts violated by \\(\\tilde{\\vet{x}}\\) are kept, duplicates in \\(x\\) only once; then the dual simplex."),
     z: T("Riga: prima la riga della funzione obiettivo, se \\(\\bar z\\) è frazionario; altrimenti il termine noto frazionario più grande (a parità, indice minimo).",
       "Row: the objective row first, if \\(\\bar z\\) is fractional; otherwise the largest fractional right-hand side (ties: lowest index)."),
   })[st.dati.riga || "rhs"];
@@ -820,7 +826,8 @@
     monta(board, st) {
       regole(st, [
         [T("Riga del taglio", "Row of the cut"), "riga", [["rhs", T("parte frazionaria più grande", "largest fractional part")],
-          ["min", T("prima riga frazionaria", "first fractional row")], ["z", T("prima la riga dell'obiettivo", "objective row first")]]],
+          ["min", T("prima riga frazionaria", "first fractional row")], ["z", T("prima la riga dell'obiettivo", "objective row first")],
+          ["tutti", T("tutti i tagli violati", "all violated cuts")]]],
         [T("Inserimento", "Insertion"), "ins", [["prim", T("primitivo (arrotonda, poi scarto)", "primitive (round, then slack)")],
           ["debole", T("debole (scarto prima di arrotondare)", "weak (slack before rounding)")]]],
       ]);
@@ -834,15 +841,16 @@
       M.adatta(board, ...vistaAuto);
       M.ridisegna(board, st, [chiaveG(st.dati), k, M.scuro(), board.canvasWidth, board.canvasHeight].join("|"), (crea) => {
         const x0 = -0.9, x1 = 5.5, y0 = -0.9, y1 = 4.5;
-        const tagli = G.iterazioni.slice(0, k), V = AUTO_V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
+        const tagli = G.iterazioni.slice(0, k).flatMap((it, i) => tagliDi(it).map((c) => Object.assign({ giro: i }, c)));
+        const V = AUTO_V0.concat(tagli.map((it) => ({ a: it.a, b: it.b })));
         AUTO.V.forEach((v) => {
           const s = segmento(v.a, v.b, x0, x1, y0, y1);
           if (s) crea("curve", [[s[0][0], s[1][0]], [s[0][1], s[1][1]]], { strokeColor: C.grigio, strokeWidth: 1.3, dash: 2, fixed: true, highlight: false });
         });
-        tagli.forEach((it, i) => {
+        tagli.forEach((it) => {
           const s = segmento(it.a, it.b, x0, x1, y0, y1);
           if (!s) return;
-          const ult = i === k - 1;
+          const ult = it.giro === k - 1;
           crea("curve", [[s[0][0], s[1][0]], [s[0][1], s[1][1]]], ult
             ? { strokeColor: C.viola, strokeWidth: 3, fixed: true, highlight: false }
             : { strokeColor: C.viola, strokeWidth: 1.2, strokeOpacity: 0.55, dash: 2, fixed: true, highlight: false });
@@ -866,7 +874,7 @@
     letture(p, st) {
       const G = esecG(st), k = M.passoK(st, G.iterazioni.length), C = M.COL(st), righe = [];
       const xc = xStato(G, k), intero = Qs(xc.x[0]).d === 1 && Qs(xc.x[1]).d === 1;
-      righe.push(`<strong>${T("Iterazione", "Iteration")} ${k}/${G.iterazioni.length}</strong>`);
+      righe.push(`<strong>${tutti(st) ? T("Giro", "Round") : T("Iterazione", "Iteration")} ${k}/${G.iterazioni.length}</strong>`);
       if (k === 0) {
         righe.push(debole(st)
           ? T(`Rilassamento lineare: \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\). Non è intero: si cerca un taglio. Gli scarti sono \\(x_3 = 45 - 10x_1 - 4x_2\\) e \\(x_4 = 49 - 4x_1 - 14x_2\\); ogni taglio riceve subito il suo surplus \\(x_5, x_6, \\dots\\), senza arrotondare.`,
@@ -878,18 +886,28 @@
         const it = G.iterazioni[k - 1], riga = it.riga === "z"
           ? T("la riga della funzione obiettivo", "the objective row")
           : T(`la riga di \\(x_${it.riga}\\)`, `the row of \\(x_${it.riga}\\)`);
-        righe.push(T(`Prima del taglio: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`, `Before the cut: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`));
-        righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${ins(it)}. Scarto: \\(${scartoTex(it)} \\ge 0\\).`,
+        righe.push(T(`Prima ${tutti(st) ? "dei tagli" : "del taglio"}: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`, `Before the ${tutti(st) ? "cuts" : "cut"}: \\(\\tilde{\\vet{x}} = ${pq(it.xprima)}\\), \\(z = ${tq(it.zprima)}\\).`));
+        if (tutti(st)) {
+          const nomeR = (r) => (r === "z" ? "\\(z\\)" : `\\(x_${r}\\)`), tg = tagliDi(it);
+          righe.push(T(`${tinta(C.viola, `${tg.length} tagli violati`)} inseriti insieme, ognuno col suo scarto (violazione \\(\\vet{a}^\\top \\tilde{\\vet{x}} - b\\) del taglio \\(\\vet{a}^\\top \\vet{x} \\le b\\)):`, `${tinta(C.viola, `${tg.length} violated cuts`)} inserted together, each with its slack (violation \\(\\vet{a}^\\top \\tilde{\\vet{x}} - b\\) of the cut \\(\\vet{a}^\\top \\vet{x} \\le b\\)):`));
+          for (const c of tg) righe.push(T(`· riga ${nomeR(c.riga)}: \\(${taglioTex(c)}\\) → \\(${xTexOrig(c)}\\), violazione \\(${tq(c.v)}\\), scarto \\(x_{${c.s}}\\).`,
+            `· row ${nomeR(c.riga)}: \\(${taglioTex(c)}\\) → \\(${xTexOrig(c)}\\), violation \\(${tq(c.v)}\\), slack \\(x_{${c.s}}\\).`));
+          if (it.doppi.length) righe.push(T(`Doppioni nelle \\(x\\), inseriti una volta sola (riga che dà lo stesso taglio di un'altra): ${it.doppi.map((d) => `${nomeR(d.riga)} come ${nomeR(d.uguale)}`).join(", ")}.`,
+            `Duplicates in \\(x\\), inserted only once (row giving the same cut as another): ${it.doppi.map((d) => `${nomeR(d.riga)} as ${nomeR(d.uguale)}`).join(", ")}.`));
+        } else righe.push(T(`${tinta(C.viola, "Taglio")} dalla ${riga} (termine noto frazionario \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${ins(it)}. Scarto: \\(${scartoTex(it)} \\ge 0\\).`,
           `${tinta(C.viola, "Cut")} from ${riga} (fractional right-hand side \\(f_0 = ${tq(it.f0)}\\)): \\(${taglioTex(it)}\\), ${ins(it)}. Slack: \\(${scartoTex(it)} \\ge 0\\).`));
-        righe.push(T(`Dopo il taglio (simplesso duale): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` +
+        righe.push(T(`Dopo ${tutti(st) ? "i tagli" : "il taglio"} (simplesso duale): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` +
           (intero ? `: ${tinta(C.verde, "intero")}, quindi ottimo.` : "."),
-          `After the cut (dual simplex): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` + (intero ? `: ${tinta(C.verde, "integer")}, hence optimal.` : ".")));
+          `After the ${tutti(st) ? "cuts" : "cut"} (dual simplex): \\(\\tilde{\\vet{x}} = ${pq(xc.x)}\\), \\(${zLP} = ${tq(xc.z)}\\)` + (intero ? `: ${tinta(C.verde, "integer")}, hence optimal.` : ".")));
       }
-      if (intero && k > 0) righe.push(T(`Fine dopo \\(${k}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
+      const nt = G.iterazioni.reduce((m, it) => m + tagliDi(it).length, 0);
+      if (intero && k > 0) righe.push(tutti(st)
+        ? T(`Fine dopo \\(${k}\\) giri e \\(${nt}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) rounds and \\(${nt}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`)
+        : T(`Fine dopo \\(${k}\\) tagli: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`, `Done after \\(${k}\\) cuts: \\(\\vet{x}^* = ${pq(xc.x)}\\), \\(${zILP} = ${tq(xc.z)}\\).`));
       righe.push(`<small>${regolaRigaTxt(st)} ${regolaInsTxt(st)}</small>`);
       return righe.join("<br>");
     },
-    domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le tre regole per la riga: quale combinazione arriva prima a \\((4, 1)\\)? Controlla che nessun punto verde sia mai tolto.",
-      "Compare the number of cuts with the weak and the primitive insertion, and with the three row rules: which combination reaches \\((4, 1)\\) first? Check that no green point is ever removed."),
+    domanda: T("Confronta il numero di tagli con l'inserimento debole e con quello primitivo, e con le regole per la riga, anche con tutti i tagli violati insieme: quale combinazione arriva prima a \\((4, 1)\\)? Controlla che nessun punto verde sia mai tolto.",
+      "Compare the number of cuts with the weak and the primitive insertion, and with the row rules, also with all the violated cuts at once: which combination reaches \\((4, 1)\\) first? Check that no green point is ever removed."),
   };
 })();
