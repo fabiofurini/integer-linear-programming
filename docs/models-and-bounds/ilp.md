@@ -294,80 +294,20 @@ title: "Integer linear programming"
 
 - When the feasible region is a finite set we can find an optimal solution by <strong>complete enumeration</strong>: we compute the objective function for every feasible solution and keep the best. For the car example, there are $16$ points:
 
-<div class="tabella" markdown="0"><table>
-<tr>
-<th><span class="arithmatex">\(x_1\)</span></th>
-<th><span class="arithmatex">\(x_2\)</span></th>
-<th><span class="arithmatex">\(z\)</span></th>
-<th><span class="arithmatex">\(x_1\)</span></th>
-<th><span class="arithmatex">\(x_2\)</span></th>
-<th><span class="arithmatex">\(z\)</span></th>
-</tr>
-<tr>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(11\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(\mathbf{4}\)</span></td>
-<td><span class="arithmatex">\(\mathbf{1}\)</span></td>
-<td><span class="arithmatex">\(\mathbf{14}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(6\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(4\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(9\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(7\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(4\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(12\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(10\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(13\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(5\)</span></td>
-<td><span class="arithmatex">\(0\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(6\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(2\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(8\)</span></td>
-<td><span class="arithmatex">\(1\)</span></td>
-<td><span class="arithmatex">\(3\)</span></td>
-<td><span class="arithmatex">\(9\)</span></td>
-</tr>
-</table></div>
+$$
+\begin{array}{ccc|ccc}
+\hline {x_1} & {x_2} & {z} & {x_1} & {x_2} & {z} \\
+\hline {0} & {0} & {0} & {3} & {1} & {11} \\
+{1} & {0} & {3} & {\mathbf{4}} & {\mathbf{1}} & {\mathbf{14}} \\
+{2} & {0} & {6} & {0} & {2} & {4} \\
+{3} & {0} & {9} & {1} & {2} & {7} \\
+{4} & {0} & {12} & {2} & {2} & {10} \\
+{0} & {1} & {2} & {3} & {2} & {13} \\
+{1} & {1} & {5} & {0} & {3} & {6} \\
+{2} & {1} & {8} & {1} & {3} & {9} \\
+\hline
+\end{array}
+$$
 
 - The best value is $14$, in $(4,1)$ (in bold). Here the method works, because the model is tiny.
 

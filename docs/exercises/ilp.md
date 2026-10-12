@@ -87,52 +87,15 @@ title: "Exercises · Integer linear programming"
 
         Complete enumeration of the $9$ feasible solutions confirms it (the optimum in bold):
 
-        <div class="tabella" markdown="0"><table>
-        <tr>
-        <th><span class="arithmatex">\(x_1\)</span></th>
-        <th><span class="arithmatex">\(x_2\)</span></th>
-        <th><span class="arithmatex">\(z\)</span></th>
-        <th><span class="arithmatex">\(x_1\)</span></th>
-        <th><span class="arithmatex">\(x_2\)</span></th>
-        <th><span class="arithmatex">\(z\)</span></th>
-        <th><span class="arithmatex">\(x_1\)</span></th>
-        <th><span class="arithmatex">\(x_2\)</span></th>
-        <th><span class="arithmatex">\(z\)</span></th>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(3\)</span></td>
-        <td><span class="arithmatex">\(3\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(5\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(3\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(6\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(4\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{2}\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{1}\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{7}\)</span></td>
-        </tr>
-        </table></div>
+        $$
+        \begin{array}{ccc|ccc|ccc}
+        \hline {x_1} & {x_2} & {z} & {x_1} & {x_2} & {z} & {x_1} & {x_2} & {z} \\
+        \hline {0} & {0} & {0} & {0} & {3} & {3} & {1} & {2} & {5} \\
+        {0} & {1} & {1} & {1} & {0} & {3} & {2} & {0} & {6} \\
+        {0} & {2} & {2} & {1} & {1} & {4} & {\mathbf{2}} & {\mathbf{1}} & {\mathbf{7}} \\
+        \hline
+        \end{array}
+        $$
 
         !!! chiave ""
 
@@ -274,68 +237,17 @@ title: "Exercises · Integer linear programming"
 
     3. The values of the objective function $x_1 + 2\,x_2 + 7\,x_3$ are (the optimum in bold):
 
-        <div class="tabella" markdown="0"><table>
-        <tr>
-        <th><span class="arithmatex">\(x_1\)</span></th>
-        <th><span class="arithmatex">\(x_2\)</span></th>
-        <th><span class="arithmatex">\(x_3\)</span></th>
-        <th><span class="arithmatex">\(z\)</span></th>
-        <th><span class="arithmatex">\(x_1\)</span></th>
-        <th><span class="arithmatex">\(x_2\)</span></th>
-        <th><span class="arithmatex">\(x_3\)</span></th>
-        <th><span class="arithmatex">\(z\)</span></th>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(5\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(4\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(4\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(2\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(6\)</span></td>
-        </tr>
-        <tr>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(1\)</span></td>
-        <td><span class="arithmatex">\(0\)</span></td>
-        <td><span class="arithmatex">\(3\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{0}\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{0}\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{1}\)</span></td>
-        <td><span class="arithmatex">\(\mathbf{7}\)</span></td>
-        </tr>
-        </table></div>
+        $$
+        \begin{array}{cccc|cccc}
+        \hline {x_1} & {x_2} & {x_3} & {z} & {x_1} & {x_2} & {x_3} & {z} \\
+        \hline {0} & {0} & {0} & {0} & {1} & {2} & {0} & {5} \\
+        {0} & {1} & {0} & {2} & {2} & {0} & {0} & {2} \\
+        {0} & {2} & {0} & {4} & {2} & {1} & {0} & {4} \\
+        {1} & {0} & {0} & {1} & {2} & {2} & {0} & {6} \\
+        {1} & {1} & {0} & {3} & {\mathbf{0}} & {\mathbf{0}} & {\mathbf{1}} & {\mathbf{7}} \\
+        \hline
+        \end{array}
+        $$
 
         The best point with $x_3 = 0$ is $(2,2,0)$, of value $6$: it is worse than $(0,0,1)$, of value $7$.
 

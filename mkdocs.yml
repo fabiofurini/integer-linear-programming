@@ -98,7 +98,7 @@ extra:
       lang: en
 
 extra_css:
-  - stylesheets/extra.css?v=4a9a31e7f4
+  - stylesheets/extra.css?v=9cbb61d2d2
   - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraph.css
   - stylesheets/interattivi.css?v=5d53d6f224
 

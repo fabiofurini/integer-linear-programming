@@ -195,29 +195,14 @@ title: "Cover inequalities"
 
     Consider $\mathscr{I}=\{1,2,3,4\}$, right-hand side $b=9$, and the following objective coefficients $c_j$ and constraint coefficients $a_j$.
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>6</td>
-    <td>5</td>
-    <td>8</td>
-    <td>9</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>2</td>
-    <td>3</td>
-    <td>6</td>
-    <td>7</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 6 & 5 & 8 & 9 \\
+    {a_j} & 2 & 3 & 6 & 7 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ model is:
 

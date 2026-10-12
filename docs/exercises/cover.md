@@ -18,29 +18,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=8$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>40</td>
-    <td>42</td>
-    <td>25</td>
-    <td>12</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>4</td>
-    <td>7</td>
-    <td>5</td>
-    <td>3</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 40 & 42 & 25 & 12 \\
+    {a_j} & 4 & 7 & 5 & 3 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -259,29 +244,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=15$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>24</td>
-    <td>17</td>
-    <td>12</td>
-    <td>6</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>10</td>
-    <td>8</td>
-    <td>6</td>
-    <td>5</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 24 & 17 & 12 & 6 \\
+    {a_j} & 10 & 8 & 6 & 5 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -486,29 +456,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=12$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>38</td>
-    <td>14</td>
-    <td>44</td>
-    <td>19</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>2</td>
-    <td>10</td>
-    <td>6</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 38 & 14 & 44 & 19 \\
+    {a_j} & 5 & 2 & 10 & 6 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -715,29 +670,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=11$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>34</td>
-    <td>40</td>
-    <td>31</td>
-    <td>12</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>9</td>
-    <td>9</td>
-    <td>5</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 34 & 40 & 31 & 12 \\
+    {a_j} & 5 & 9 & 9 & 5 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -963,29 +903,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=12$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>41</td>
-    <td>40</td>
-    <td>24</td>
-    <td>11</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>3</td>
-    <td>5</td>
-    <td>5</td>
-    <td>5</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 41 & 40 & 24 & 11 \\
+    {a_j} & 3 & 5 & 5 & 5 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -1178,26 +1103,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=8$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3\}$ of $n=3$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>12</td>
-    <td>4</td>
-    <td>2</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>4</td>
-    <td>3</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrr}
+    \hline {j} & 1 & 2 & 3 \\
+    \hline {c_j} & 12 & 4 & 2 \\
+    {a_j} & 5 & 4 & 3 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -1508,26 +1421,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=11$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3\}$ of $n=3$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>20</td>
-    <td>11</td>
-    <td>4</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>2</td>
-    <td>3</td>
-    <td>9</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrr}
+    \hline {j} & 1 & 2 & 3 \\
+    \hline {c_j} & 20 & 11 & 4 \\
+    {a_j} & 2 & 3 & 9 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -1838,26 +1739,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=9$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3\}$ of $n=3$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>16</td>
-    <td>19</td>
-    <td>8</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>6</td>
-    <td>7</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrr}
+    \hline {j} & 1 & 2 & 3 \\
+    \hline {c_j} & 16 & 19 & 8 \\
+    {a_j} & 5 & 6 & 7 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -2180,26 +2069,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=5$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3\}$ of $n=3$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>14</td>
-    <td>17</td>
-    <td>8</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>2</td>
-    <td>5</td>
-    <td>5</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrr}
+    \hline {j} & 1 & 2 & 3 \\
+    \hline {c_j} & 14 & 17 & 8 \\
+    {a_j} & 2 & 5 & 5 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -2522,26 +2399,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=10$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3\}$ of $n=3$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>13</td>
-    <td>10</td>
-    <td>3</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>4</td>
-    <td>6</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrr}
+    \hline {j} & 1 & 2 & 3 \\
+    \hline {c_j} & 13 & 10 & 3 \\
+    {a_j} & 5 & 4 & 6 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -2854,29 +2719,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=9$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>22</td>
-    <td>33</td>
-    <td>9</td>
-    <td>13</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>9</td>
-    <td>3</td>
-    <td>6</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 22 & 33 & 9 & 13 \\
+    {a_j} & 5 & 9 & 3 & 6 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -3080,29 +2930,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=17$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>29</td>
-    <td>29</td>
-    <td>27</td>
-    <td>21</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>10</td>
-    <td>10</td>
-    <td>8</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 29 & 29 & 27 & 21 \\
+    {a_j} & 5 & 10 & 10 & 8 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -3263,29 +3098,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=15$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>30</td>
-    <td>8</td>
-    <td>9</td>
-    <td>6</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>5</td>
-    <td>2</td>
-    <td>9</td>
-    <td>9</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 30 & 8 & 9 & 6 \\
+    {a_j} & 5 & 2 & 9 & 9 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -3446,29 +3266,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=9$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>31</td>
-    <td>13</td>
-    <td>5</td>
-    <td>9</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>8</td>
-    <td>6</td>
-    <td>3</td>
-    <td>8</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 31 & 13 & 5 & 9 \\
+    {a_j} & 8 & 6 & 3 & 8 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
@@ -3672,29 +3477,14 @@ title: "Exercises · Cover inequalities"
 
     Consider a binary problem with one constraint $\sum_{j}a_jx_j\le b$, with positive integer coefficients $a_j$ and right-hand side $b=12$, on the binary variables indexed by the set $\mathscr{I}=\{1,2,3,4\}$ of $n=4$ variables with the following objective coefficients and constraint coefficients:
 
-    <div class="tabella" markdown="0"><table>
-    <tr>
-    <th><span class="arithmatex">\(j\)</span></th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(c_j\)</span></td>
-    <td>38</td>
-    <td>16</td>
-    <td>14</td>
-    <td>4</td>
-    </tr>
-    <tr>
-    <td><span class="arithmatex">\(a_j\)</span></td>
-    <td>7</td>
-    <td>4</td>
-    <td>7</td>
-    <td>6</td>
-    </tr>
-    </table></div>
+    $$
+    \begin{array}{l|rrrr}
+    \hline {j} & 1 & 2 & 3 & 4 \\
+    \hline {c_j} & 38 & 16 & 14 & 4 \\
+    {a_j} & 7 & 4 & 7 & 6 \\
+    \hline
+    \end{array}
+    $$
 
     The associated $\LP$ is:
 
