@@ -6,7 +6,7 @@ title: "Integer linear programming"
 
 <div class="info-capitolo" markdown>
 
-**Part 1 · Models and bounds · Chapter 1** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/ilp.md)
+**Part 1 · Models and bounds · Chapter 1** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Integer linear programming](../exercises/ilp.md)
 
 </div>
 
@@ -403,3 +403,7 @@ $$
     - To avoid enumeration we need bounds on $z(\ILP)$ from both sides: feasible solutions and relaxations, the subject of the next chapter.
 
     <strong>Dashboard of the car example.</strong> No bounds yet: the next chapter gives the first lower and upper bounds.
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Integer linear programming](../exercises/ilp.md)

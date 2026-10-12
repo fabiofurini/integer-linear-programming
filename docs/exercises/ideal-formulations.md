@@ -6,7 +6,7 @@ title: "Exercises · Ideal formulations"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 3** · each solution opens with a click · [:material-book-open-variant: Chapter 3](../formulations/ideal-formulations.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
+**Exercises · Chapter 3** · each solution opens with a click · [:material-book-open-variant: Chapter 3: Ideal formulations](../formulations/ideal-formulations.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
 
 </div>
 

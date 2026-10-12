@@ -6,7 +6,7 @@ title: "MIP heuristics"
 
 <div class="info-capitolo" markdown>
 
-**Part 5 · MIP heuristics · Chapter 10** · [:material-file-pdf-box: Lecture notes, volume 4 (PDF)](../pdf/lecture-notes-4-mip-heuristics.pdf) · [:material-pencil: Exercises](../exercises/mip-heuristics.md)
+**Part 5 · MIP heuristics · Chapter 10** · [:material-file-pdf-box: Lecture notes, volume 4 (PDF)](../pdf/lecture-notes-4-mip-heuristics.pdf) · [:material-pencil: Exercises: MIP heuristics](../exercises/mip-heuristics.md)
 
 </div>
 
@@ -1593,3 +1593,7 @@ def fix_and_optimize(m, x_tilde, windows, theta=1, trace=None):
 <a id="ref-FL03"></a>**[5]** M. Fischetti, A. Lodi, Local branching, <em>Mathematical Programming</em> 98 (2003) 23–47.
 
 <a id="ref-FM14"></a>**[6]** M. Fischetti, M. Monaci, Proximity search for 0-1 mixed-integer convex programming, <em>Journal of Heuristics</em> 20 (2014) 709–731.
+
+---
+
+**Exercises on this chapter:** [:material-pencil: MIP heuristics](../exercises/mip-heuristics.md)

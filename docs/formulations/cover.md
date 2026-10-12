@@ -6,7 +6,7 @@ title: "Cover inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 5** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/cover.md)
+**Part 2 · Strengthening the formulation · Chapter 5** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Cover inequalities](../exercises/cover.md)
 
 </div>
 
@@ -1018,3 +1018,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
     <td><span class="arithmatex">\(z(\LP_{\mathrm{ext}})=15\)</span>, optimal solution <span class="arithmatex">\((1,0,0,1)\)</span></td>
     </tr>
     </table></div>
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Cover inequalities](../exercises/cover.md)

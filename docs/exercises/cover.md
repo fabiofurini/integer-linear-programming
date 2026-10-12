@@ -6,7 +6,7 @@ title: "Exercises · Cover inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 5** · each solution opens with a click · [:material-book-open-variant: Chapter 5](../formulations/cover.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
+**Exercises · Chapter 5** · each solution opens with a click · [:material-book-open-variant: Chapter 5: Cover inequalities](../formulations/cover.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
 
 </div>
 

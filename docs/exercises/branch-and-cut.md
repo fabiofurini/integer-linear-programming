@@ -6,7 +6,7 @@ title: "Exercises · Branch-and-cut"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 8** · each solution opens with a click · [:material-book-open-variant: Chapter 8](../exact-methods/branch-and-cut.md) · [:material-file-pdf-box: Exercises, volume 2 (PDF)](../pdf/exercises-2-exact-methods.pdf)
+**Exercises · Chapter 8** · each solution opens with a click · [:material-book-open-variant: Chapter 8: Branch-and-cut](../exact-methods/branch-and-cut.md) · [:material-file-pdf-box: Exercises, volume 2 (PDF)](../pdf/exercises-2-exact-methods.pdf)
 
 </div>
 

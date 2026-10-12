@@ -6,7 +6,7 @@ title: "LP-based branch-and-bound"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 7** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises](../exercises/bb.md)
+**Part 3 · Exact methods · Chapter 7** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Branch-and-bound](../exercises/bb.md) · [:material-gesture-tap: App: Branch-and-bound step by step](../lab/branch-and-bound-steps.md)
 
 </div>
 
@@ -1506,6 +1506,10 @@ title: "LP-based branch-and-bound"
     </table></div>
 
     In the car example the algorithm closes the gap between $\LB = 13$ (rounded LP solution) and $\UB = 15$ (LP relaxation) by solving $6$ LP problems.
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Branch-and-bound](../exercises/bb.md)
 
 <!-- laboratorio-interattivo: sezione generata da interattivi.py -->
 

@@ -6,7 +6,7 @@ title: "Branch-and-cut"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 8** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises](../exercises/branch-and-cut.md)
+**Part 3 · Exact methods · Chapter 8** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Branch-and-cut](../exercises/branch-and-cut.md)
 
 </div>
 
@@ -566,3 +566,7 @@ title: "Branch-and-cut"
     </table></div>
 
 How MIP solvers combine these ideas is the topic of the chapter «MIP solvers».
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Branch-and-cut](../exercises/branch-and-cut.md)

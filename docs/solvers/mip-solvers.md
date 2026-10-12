@@ -6,7 +6,7 @@ title: "MIP solvers: what they do"
 
 <div class="info-capitolo" markdown>
 
-**Part 4 · MIP solvers · Chapter 9** · [:material-file-pdf-box: Lecture notes, volume 3 (PDF)](../pdf/lecture-notes-3-mip-solvers.pdf) · [:material-pencil: Exercises](../exercises/mip-solvers.md)
+**Part 4 · MIP solvers · Chapter 9** · [:material-file-pdf-box: Lecture notes, volume 3 (PDF)](../pdf/lecture-notes-3-mip-solvers.pdf) · [:material-pencil: Exercises: MIP solvers](../exercises/mip-solvers.md)
 
 </div>
 
@@ -636,3 +636,7 @@ title: "MIP solvers: what they do"
     <td><span class="arithmatex">\(593\)</span></td>
     </tr>
     </table></div>
+
+---
+
+**Exercises on this chapter:** [:material-pencil: MIP solvers](../exercises/mip-solvers.md)

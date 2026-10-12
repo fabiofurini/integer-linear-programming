@@ -6,7 +6,7 @@ title: "Exercises · Integer linear programming"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 1** · each solution opens with a click · [:material-book-open-variant: Chapter 1](../models-and-bounds/ilp.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
+**Exercises · Chapter 1** · each solution opens with a click · [:material-book-open-variant: Chapter 1: Integer linear programming](../models-and-bounds/ilp.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
 
 </div>
 

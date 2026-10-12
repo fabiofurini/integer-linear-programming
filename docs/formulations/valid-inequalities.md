@@ -6,7 +6,7 @@ title: "Valid inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/valid-inequalities.md)
+**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Valid inequalities](../exercises/valid-inequalities.md) · [:material-gesture-tap: App: Valid inequalities and the convex hull](../lab/convex-hull.md)
 
 </div>
 
@@ -276,6 +276,10 @@ title: "Valid inequalities"
     <td><span class="arithmatex">\(x_1 + x_2 \le 5\)</span> gives <span class="arithmatex">\(z(\LP) = \tfrac{85}{6}\)</span></td>
     </tr>
     </table></div>
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Valid inequalities](../exercises/valid-inequalities.md)
 
 <!-- laboratorio-interattivo: sezione generata da interattivi.py -->
 

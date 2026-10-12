@@ -6,7 +6,7 @@ title: "Exercises · MIP solvers: what they do"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 9** · each solution opens with a click · [:material-book-open-variant: Chapter 9](../solvers/mip-solvers.md) · [:material-file-pdf-box: Exercises, volume 3 (PDF)](../pdf/exercises-3-mip-solvers.pdf)
+**Exercises · Chapter 9** · each solution opens with a click · [:material-book-open-variant: Chapter 9: MIP solvers](../solvers/mip-solvers.md) · [:material-file-pdf-box: Exercises, volume 3 (PDF)](../pdf/exercises-3-mip-solvers.pdf)
 
 </div>
 

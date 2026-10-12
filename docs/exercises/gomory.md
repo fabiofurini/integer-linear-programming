@@ -6,7 +6,7 @@ title: "Exercises · The cutting plane algorithm with Gomory fractional cuts"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 6** · each solution opens with a click · [:material-book-open-variant: Chapter 6](../exact-methods/gomory.md) · [:material-file-pdf-box: Exercises, volume 2 (PDF)](../pdf/exercises-2-exact-methods.pdf)
+**Exercises · Chapter 6** · each solution opens with a click · [:material-book-open-variant: Chapter 6: Cutting planes](../exact-methods/gomory.md) · [:material-file-pdf-box: Exercises, volume 2 (PDF)](../pdf/exercises-2-exact-methods.pdf)
 
 </div>
 

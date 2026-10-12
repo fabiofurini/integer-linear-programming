@@ -6,7 +6,7 @@ title: "Exercises · MIP heuristics"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 10** · each solution opens with a click · [:material-book-open-variant: Chapter 10](../mip-heuristics/mip-heuristics.md) · [:material-file-pdf-box: Exercises, volume 4 (PDF)](../pdf/exercises-4-mip-heuristics.pdf)
+**Exercises · Chapter 10** · each solution opens with a click · [:material-book-open-variant: Chapter 10: MIP heuristics](../mip-heuristics/mip-heuristics.md) · [:material-file-pdf-box: Exercises, volume 4 (PDF)](../pdf/exercises-4-mip-heuristics.pdf)
 
 </div>
 

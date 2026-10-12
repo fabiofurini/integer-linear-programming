@@ -6,7 +6,7 @@ title: "Ideal formulations"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 3** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/ideal-formulations.md)
+**Part 2 · Strengthening the formulation · Chapter 3** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Ideal formulations](../exercises/ideal-formulations.md)
 
 </div>
 
@@ -209,3 +209,7 @@ title: "Ideal formulations"
     <td>ideal formulation, optimal vertex <span class="arithmatex">\((4,1)\)</span></td>
     </tr>
     </table></div>
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Ideal formulations](../exercises/ideal-formulations.md)

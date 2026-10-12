@@ -6,7 +6,7 @@ title: "Exercises · Primal and dual bounds"
 
 <div class="info-capitolo" markdown>
 
-**Exercises · Chapter 2** · each solution opens with a click · [:material-book-open-variant: Chapter 2](../models-and-bounds/lp-relaxation.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
+**Exercises · Chapter 2** · each solution opens with a click · [:material-book-open-variant: Chapter 2: Primal and dual bounds](../models-and-bounds/lp-relaxation.md) · [:material-file-pdf-box: Exercises, volume 1 (PDF)](../pdf/exercises-1-models-bounds-formulations.pdf)
 
 </div>
 

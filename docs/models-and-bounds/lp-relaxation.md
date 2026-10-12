@@ -6,7 +6,7 @@ title: "Primal and dual bounds"
 
 <div class="info-capitolo" markdown>
 
-**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises](../exercises/lp-relaxation.md)
+**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Primal and dual bounds](../exercises/lp-relaxation.md) · [:material-gesture-tap: App: Integer points and the LP relaxation](../lab/integer-points.md)
 
 </div>
 
@@ -560,6 +560,10 @@ title: "Primal and dual bounds"
     <td>heuristic solution <span class="arithmatex">\((4, 1)\)</span>, and <span class="arithmatex">\(\lfloor z(\LP) \rfloor\)</span> with <span class="arithmatex">\(z(\LP) = \tfrac{31}{2}\)</span></td>
     </tr>
     </table></div>
+
+---
+
+**Exercises on this chapter:** [:material-pencil: Primal and dual bounds](../exercises/lp-relaxation.md)
 
 <!-- laboratorio-interattivo: sezione generata da interattivi.py -->
 
