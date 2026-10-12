@@ -221,4 +221,4 @@
   padding: .3em .75em; text-align: center; }
 .md-typeset .tabella table:not([class]) tr:first-child > * { border-bottom: 1px solid var(--md-default-fg-color--light); }
 .md-typeset .tabella table:not([class]) tbody tr:hover { background: none; box-shadow: none; }
-.md-typeset .tabella table:not([class]) th, .md-typeset .tabella table:not([class]) td { min-width: 0; white-space: nowrap; }
+.md-typeset .tabella table:not([class]) th, .md-typeset .tabella table:not([class]) td { min-width: 0; }
