@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="163pt" height="197pt" viewBox="0 0 163 197">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="203.75pt" height="246.25pt" viewBox="0 0 163 197">
 <defs>
 <g>
 <g id="glyph-0-0">
@@ -88,12 +88,14 @@
 <use xlink:href="#glyph-0-1" x="67.368" y="174.648"/>
 </g>
 <g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
-<use xlink:href="#glyph-1-0" x="92.076" y="173.912"/>
-<use xlink:href="#glyph-1-0" x="95.379278" y="173.912"/>
+<use xlink:href="#glyph-1-0" x="92.9" y="173.912"/>
 </g>
-<path fill="none" stroke-width="0.425" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00178125 -0.00128125 L 6.6115 -0.00128125 " transform="matrix(1, 0, 0, -1, 92.076, 174.987)"/>
 <g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
-<use xlink:href="#glyph-1-1" x="93.729" y="179.801"/>
+<use xlink:href="#glyph-1-0" x="96.209511" y="173.912"/>
+</g>
+<path fill="none" stroke-width="0.425" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.0015625 -0.00128125 L 6.611719 -0.00128125 " transform="matrix(1, 0, 0, -1, 92.9, 174.987)"/>
+<g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
+<use xlink:href="#glyph-1-1" x="94.553" y="179.801"/>
 </g>
 <g fill="rgb(0%, 0%, 0%)" fill-opacity="1">
 <use xlink:href="#glyph-0-2" x="99.646" y="174.648"/>

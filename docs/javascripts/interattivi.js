@@ -420,12 +420,14 @@
     function creaBoard() {
       if (board) JXG.JSXGraph.freeBoard(board);
       const muted = css(el, "--gi-muted"), line = css(el, "--gi-line");
-      const assi = { strokeColor: muted, ticks: { strokeColor: line, majorHeight: -1, label: { strokeColor: muted } } };
+      // etichette dei tick staccate dall'asse: non coprono i punti che stanno sugli assi (x = 0, y = 0)
+      const asse = (offset, ax, ay) => ({ strokeColor: muted, ticks: { strokeColor: line, majorHeight: -1,
+        label: { strokeColor: muted, offset, anchorX: ax, anchorY: ay } } });
       board = JXG.JSXGraph.initBoard(bid, Object.assign({
         boundingbox: vista(), axis: R.assi !== false, grid: !!R.griglia, keepAspectRatio: !!R.stessaScala,
         showCopyright: false, showNavigation: false,
         pan: { enabled: true, needShift: false, needTwoFingers: true }, zoom: { wheel: true, needShift: true },
-        defaultAxes: { x: assi, y: assi },
+        defaultAxes: { x: asse([0, -9], "middle", "top"), y: asse([-9, 0], "right", "middle") },
       }, R.opzioniBoard || {}));
       st.board = board;
       if (R.originale) board.create("functiongraph", [(x) => voce().f(x)], R.fPieno

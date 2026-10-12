@@ -161,7 +161,7 @@
   border-radius: 14px;
   padding: 10px;
   max-width: 100%;
-  min-width: min(280px, 100%);
+  min-width: min(160px, 100%);   /* le figure piccole restano alla loro scala (280px le ingrandiva fino a 3 volte) */
   box-shadow: 0 2px 12px rgba(22, 50, 74, .10);
   margin: 1em auto;
 }

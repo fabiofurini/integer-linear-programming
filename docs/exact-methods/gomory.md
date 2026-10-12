@@ -891,7 +891,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     z(~\LP_1~)  = 17
     $$
 
-    ![Figure 4](../img/06-gomory/fig04.svg){ .fig .ovale loading=lazy style="width:100%" }
+    ![Figure 4](../img/06-gomory/fig04.svg){ .fig .ovale loading=lazy style="width:56%" }
 
     The optimal solution $\tilde{\vet x}(\LP_1)$ is <strong>fractional</strong> and the $\LP_1$ problem is <strong>feasible</strong>.
 
@@ -1050,7 +1050,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         z(~\LP_2~)=\frac{61}{4}
         $$
 
-        ![Figure 6](../img/06-gomory/fig06.svg){ .fig .ovale loading=lazy style="width:100%" }
+        ![Figure 6](../img/06-gomory/fig06.svg){ .fig .ovale loading=lazy style="width:56%" }
 
         We have the upper bound on the optimal value of the ILP problem:
 
@@ -1249,7 +1249,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         z(~\LP_3~)=14
         $$
 
-        ![Figure 9](../img/06-gomory/fig09.svg){ .fig .ovale loading=lazy style="width:100%" }
+        ![Figure 9](../img/06-gomory/fig09.svg){ .fig .ovale loading=lazy style="width:56%" }
 
     The optimal solution $\tilde{\vet x}(\LP_3)$ is <strong>integer</strong>. Accordingly, an optimal solution $\tilde{\vet x}(\ILP)$ is:
 
