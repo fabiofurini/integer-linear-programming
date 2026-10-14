@@ -41,7 +41,7 @@ The numbers are exact fractions.
 
 <div class="grid cards" markdown>
 
--   :material-content-cut: **Gomory cuts on the plane**
+-   :material-content-cut: **Cutting plane with Gomory cuts**
 
     ---
 

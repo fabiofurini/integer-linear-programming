@@ -6,7 +6,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 6** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Cutting planes](../exercises/gomory.md) · [:material-gesture-tap: App: Gomory cuts on the plane](../lab/gomory-cuts.md)
+**Part 3 · Exact methods · Chapter 6** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Cutting planes](../exercises/gomory.md) · [:material-gesture-tap: App: Cutting plane with Gomory cuts](../lab/gomory-cuts.md)
 
 </div>
 
@@ -1436,6 +1436,6 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 ## Interactive lab { #interactive-lab }
 
 The ideas of the chapter, hands on: move the sliders and drag the points.
-Each app also opens full page in the [interactive lab](../lab/index.md): [Gomory cuts on the plane](../lab/gomory-cuts.md).
+Each app also opens full page in the [interactive lab](../lab/index.md): [Cutting plane with Gomory cuts](../lab/gomory-cuts.md).
 
 <div class="gi" data-grafico="pli-gomory"></div>
