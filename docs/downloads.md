@@ -4,7 +4,7 @@ title: Downloads
 
 # Downloads
 
-The lecture notes in PDF, with the same numbering of definitions, theorems, examples and exercises as the website. Text and figures are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en).
+The lecture notes, the exercise books, the slides and the catalogue of problems in PDF, with the same numbering of definitions, theorems, examples and exercises as the website. Text and figures are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en).
 
 ## Lecture notes 1 · Models, bounds and formulations
 
@@ -53,5 +53,29 @@ What a MIP solver does (presolve, cuts, primal heuristics, tree strategies, tole
 Rounding, diving, feasibility pump, RINS, local branching, relax-and-fix and fix-and-optimize. Examples and exercises with complete solutions.
 
 [:material-file-pdf-box: Exercises 4 (PDF)](pdf/exercises-4-mip-heuristics.pdf){ .md-button }
+
+## Slides
+
+The lecture slides, one PDF per chapter, with the same definitions and examples as the lecture notes.
+
+| Chapter | Title | File |
+|:---:|---|---|
+| 1 | [Integer linear programming](models-and-bounds/ilp.md) | [:material-presentation: PDF](pdf/slides-01-ilp.pdf) |
+| 2 | [Primal and dual bounds](models-and-bounds/lp-relaxation.md) | [:material-presentation: PDF](pdf/slides-02-lp-relaxation.pdf) |
+| 3 | [Ideal formulations](formulations/ideal-formulations.md) | [:material-presentation: PDF](pdf/slides-03-ideal-formulations.pdf) |
+| 4 | [Valid inequalities](formulations/valid-inequalities.md) | [:material-presentation: PDF](pdf/slides-04-valid-inequalities.pdf) |
+| 5 | [Cover inequalities](formulations/cover.md) | [:material-presentation: PDF](pdf/slides-05-cover.pdf) |
+| 6 | [The cutting plane algorithm with Gomory fractional cuts](exact-methods/gomory.md) | [:material-presentation: PDF](pdf/slides-06-gomory.pdf) |
+| 7 | [LP-based branch-and-bound](exact-methods/bb.md) (1/2) | [:material-presentation: PDF](pdf/slides-07-bb-1.pdf) |
+| 7 | [LP-based branch-and-bound](exact-methods/bb.md) (2/2) | [:material-presentation: PDF](pdf/slides-07-bb-2.pdf) |
+| 8 | [Branch-and-cut](exact-methods/branch-and-cut.md) | [:material-presentation: PDF](pdf/slides-08-branch-and-cut.pdf) |
+| 9 | [MIP solvers: what they do](solvers/mip-solvers.md) | [:material-presentation: PDF](pdf/slides-09-mip-solvers.pdf) |
+| 10 | [MIP heuristics](mip-heuristics/mip-heuristics.md) | [:material-presentation: PDF](pdf/slides-10-mip-heuristics.pdf) |
+
+## MIP problem catalogue
+
+The integer and mixed integer linear programming problems used in the examples and exercises of the whole module, cited by their code (P0, P1, …): problems with two, three and more variables, grouped by type. For each, the problem and the figure of its feasible region.
+
+[:material-file-pdf-box: MIP problem catalogue (PDF)](pdf/mip-problem-catalogue.pdf){ .md-button }
 
 

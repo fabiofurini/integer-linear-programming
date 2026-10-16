@@ -6,7 +6,7 @@ title: "Branch-and-cut"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 8** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Branch-and-cut](../exercises/branch-and-cut.md)
+**Part 3 · Exact methods · Chapter 8** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-presentation: Slides](../pdf/slides-08-branch-and-cut.pdf) · [:material-pencil: Exercises: Branch-and-cut](../exercises/branch-and-cut.md)
 
 </div>
 
@@ -112,9 +112,9 @@ title: "Branch-and-cut"
 
         1. if the $\LP_k$ problem is infeasible, then <code>STOP</code>.
 
-        2. if $\left\lfloor z(\LP_k) \right\rfloor \le \LB$, then <code>STOP</code>.
+        2. if ${\tilde{\vet x}}(\LP_k)$ is integer, then, if $z(\LP_k) > \LB$, update the <strong>lower bound</strong> and the <strong>incumbent solution</strong>, remove from the list $L$ all LP problems with $\left\lfloor z(\LP) \right\rfloor \le \LB$ and <code>STOP</code> (also when $z(\LP_k) \le \LB$).
 
-        3. if ${\tilde{\vet x}}(\LP_k)$ is integer, then update the <strong>lower bound</strong> and the <strong>incumbent solution</strong>, remove from the list $L$ all LP problems with $\left\lfloor z(\LP) \right\rfloor \le \LB$ and <code>STOP</code>.
+        3. if $\left\lfloor z(\LP_k) \right\rfloor \le \LB$, then <code>STOP</code>.
 
     - **Step 2:** <strong>Cut generation</strong>
 

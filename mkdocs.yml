@@ -98,7 +98,7 @@ extra:
       lang: en
 
 extra_css:
-  - stylesheets/extra.css?v=f70f7801ce
+  - stylesheets/extra.css?v=1aa75eceb4
   - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraph.css
   - stylesheets/interattivi.css?v=5d53d6f224
 
@@ -121,14 +121,14 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/cloudflare-analytics.js?v=bff73345a1
-  - javascripts/mathjax.js?v=bb7dec5d26
+  - javascripts/mathjax.js?v=e9c4fa78ae
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
   # grafici interattivi: JSXGraph, il motore, il catalogo dei problemi, poi le ricette (gi-*.js, le aggiunge genera_sito.py)
   - https://cdn.jsdelivr.net/npm/jsxgraph@1.10.1/distrib/jsxgraphcore.js
   - javascripts/interattivi.js?v=5452c77472
   - javascripts/gi-comune.js?v=40df75e3e5
   - javascripts/gi-pli-dati.js?v=8ebd23eab0
-  - javascripts/gi-pli.js?v=c760264fa1
+  - javascripts/gi-pli.js?v=26662f1816
 
 nav:
   - Home: index.md

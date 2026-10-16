@@ -6,7 +6,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 6** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Cutting planes](../exercises/gomory.md) · [:material-gesture-tap: App: Cutting plane with Gomory cuts](../lab/gomory-cuts.md)
+**Part 3 · Exact methods · Chapter 6** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-presentation: Slides](../pdf/slides-06-gomory.pdf) · [:material-pencil: Exercises: Cutting planes](../exercises/gomory.md) · [:material-gesture-tap: App: Cutting plane with Gomory cuts](../lab/gomory-cuts.md)
 
 </div>
 
@@ -72,7 +72,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - Gomory fractional cuts are obtained from the rows of a simplex dictionary associated with a fractional feasible basic solution of the LP relaxation in standard form of an ILP problem.
 
-    <a id="box-2-defXX"></a>
+    <a id="box-2-def-gomory-cut"></a>
 
     !!! definizione "Definition 6.2: Gomory fractional cut"
 
@@ -301,7 +301,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
     \label{GFC_OBJ} \tag{6.2}
     \end{equation*}
 
-<a id="box-5-texexpbox1"></a>
+<a id="box-5-texexpboxgomory2"></a>
 
 !!! esempio "Example 6.3: Gomory fractional cuts"
 

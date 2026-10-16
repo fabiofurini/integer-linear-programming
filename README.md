@@ -10,8 +10,7 @@
 
 Lecture notes on integer linear programming: models and bounds, strengthening the formulation, exact
 methods (cutting planes, branch-and-bound, branch-and-cut), MIP solvers and MIP heuristics, with worked
-examples and exercises with solutions. **The site is under construction**: the first chapter online is
-«Branch and bound»; the other chapters, slides, interactive graphs and notebooks will follow.
+examples and exercises with solutions, slides for every chapter and an interactive lab.
 
 **📖 Website: [fabiofurini.github.io/integer-linear-programming](https://fabiofurini.github.io/integer-linear-programming/)**
 

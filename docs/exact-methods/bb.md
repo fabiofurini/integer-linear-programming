@@ -6,7 +6,7 @@ title: "LP-based branch-and-bound"
 
 <div class="info-capitolo" markdown>
 
-**Part 3 · Exact methods · Chapter 7** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-pencil: Exercises: Branch-and-bound](../exercises/bb.md) · [:material-gesture-tap: App: Branch-and-bound step by step](../lab/branch-and-bound-steps.md)
+**Part 3 · Exact methods · Chapter 7** · [:material-file-pdf-box: Lecture notes, volume 2 (PDF)](../pdf/lecture-notes-2-exact-methods.pdf) · [:material-presentation: Slides 1/2](../pdf/slides-07-bb-1.pdf) · [:material-presentation: Slides 2/2](../pdf/slides-07-bb-2.pdf) · [:material-pencil: Exercises: Branch-and-bound](../exercises/bb.md) · [:material-gesture-tap: App: Branch-and-bound step by step](../lab/branch-and-bound-steps.md)
 
 </div>
 
@@ -22,7 +22,7 @@ title: "LP-based branch-and-bound"
 
     At the end of this chapter you will be able to:
 
-    - explain how branching operations divide a ILP problem into smaller LP problems, and why no feasible solution is lost;
+    - explain how branching operations divide an ILP problem into smaller LP problems, and why no feasible solution is lost;
 
     - apply the three pruning criteria, and decide when the bound of a node can be rounded down;
 
@@ -109,7 +109,7 @@ title: "LP-based branch-and-bound"
 
 - The most common branching operation is the <strong>binary branching</strong>: it acts on a single <strong>branching variable</strong> and produces two child branching nodes, one with an additional <strong>upper bound</strong> and one with an additional <strong>lower bound</strong> on the branching variable.
 
-- More precisely, let $\tilde{\vet x}(\LP_k)$ be an optimal solution of the $\LP_k$ problem, and let $x_j$, with $j \in \{1, 2, \dots, p\}$, be an <u>integer variable</u> that takes a fractional value $\tilde x_j$. The binary branching on $x_j$ generates two child LP problems:
+- More precisely, let $\tilde{\vet x}(\LP_k)$ be an optimal solution of the $\LP_k$ problem, and let $x_j$, with $j \in \{1, 2, \dots, p\}$, be an <u>integer variable</u> that takes a fractional value $\tilde x_j$ (the integer variables are $x_1, \dots, x_p$; in an ILP problem $p = n$). The binary branching on $x_j$ generates two child LP problems:
 
     1. the $\LP_k$ problem with the additional <strong>down-branching constraint</strong>
 
@@ -257,9 +257,7 @@ title: "LP-based branch-and-bound"
 
         1. if the $\LP_k$ problem is infeasible, then <code>STOP</code>.
 
-        2. if $\left\lfloor z(\LP_k) \right\rfloor \le \LB$, then <code>STOP</code>.
-
-        3. if ${\tilde{\vet x}}(\LP_k)$ is integer, then update the <strong>lower bound</strong> and the <strong>incumbent solution</strong>:
+        2. if ${\tilde{\vet x}}(\LP_k)$ is integer, then, if $z(\LP_k) > \LB$, update the <strong>lower bound</strong> and the <strong>incumbent solution</strong>:
 
             $$
             \LB \leftarrow z(\LP_k)
@@ -267,7 +265,9 @@ title: "LP-based branch-and-bound"
             {\bar{\vet x}}(\ILP) \leftarrow {\tilde{\vet x}}(\LP_k)
             $$
 
-            Remove from the list $L$ all LP problems with $\left\lfloor z(\LP) \right\rfloor \le \LB$ and <code>STOP</code>.
+            Remove from the list $L$ all LP problems with $\left\lfloor z(\LP) \right\rfloor \le \LB$ and <code>STOP</code> (also when $z(\LP_k) \le \LB$).
+
+        3. if $\left\lfloor z(\LP_k) \right\rfloor \le \LB$, then <code>STOP</code>.
 
     - **Step 2:** <strong>Insertion into the list</strong>
 
@@ -1379,7 +1379,7 @@ title: "LP-based branch-and-bound"
 
     We execute the B&amp;B algorithm of <span style="color:#1971c2">[Example 7.5](#box-9-ex-bb-runA)</span> (smallest index, LIFO), starting from a heuristic solution of the car example.
 
-    - The one-variable heuristic of Chapter 1 fixes $x_1$ as large as possible and $x_2 = 0$: it gives $\bar{\vet x} = (4, 0)$ of value $12$. Starting execution A with $\LB = 12$, the algorithm solves $6$ LP problems, as many as without the heuristic: this lower bound is too weak to prune any node earlier.
+    - The one-variable heuristic of the chapter «Primal and dual bounds» fixes $x_1$ as large as possible and $x_2 = 0$: it gives $\bar{\vet x} = (4, 0)$ of value $12$. Starting execution A with $\LB = 12$, the algorithm solves $6$ LP problems, as many as without the heuristic: this lower bound is too weak to prune any node earlier.
 
     - The heuristic that fixes first $x_1$ and then $x_2$ as large as possible gives $\bar{\vet x} = (4, 1)$ of value $14$. Starting with $\LB = 14$, the root is not pruned, since $\lfloor z(\LP_1) \rfloor = 15 > 14$, but both children are pruned by bound and the algorithm stops after $3$ LP problems:
 

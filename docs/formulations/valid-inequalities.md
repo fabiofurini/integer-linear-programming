@@ -6,7 +6,7 @@ title: "Valid inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Valid inequalities](../exercises/valid-inequalities.md) · [:material-gesture-tap: App: Valid inequalities and the convex hull](../lab/convex-hull.md)
+**Part 2 · Strengthening the formulation · Chapter 4** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-presentation: Slides](../pdf/slides-04-valid-inequalities.pdf) · [:material-pencil: Exercises: Valid inequalities](../exercises/valid-inequalities.md) · [:material-gesture-tap: App: Valid inequalities and the convex hull](../lab/convex-hull.md)
 
 </div>
 

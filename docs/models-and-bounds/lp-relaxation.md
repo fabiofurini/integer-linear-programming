@@ -6,7 +6,7 @@ title: "Primal and dual bounds"
 
 <div class="info-capitolo" markdown>
 
-**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Primal and dual bounds](../exercises/lp-relaxation.md) · [:material-gesture-tap: App: Integer points and the LP relaxation](../lab/integer-points.md)
+**Part 1 · Models and bounds · Chapter 2** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-presentation: Slides](../pdf/slides-02-lp-relaxation.pdf) · [:material-pencil: Exercises: Primal and dual bounds](../exercises/lp-relaxation.md) · [:material-gesture-tap: App: Integer points and the LP relaxation](../lab/integer-points.md)
 
 </div>
 

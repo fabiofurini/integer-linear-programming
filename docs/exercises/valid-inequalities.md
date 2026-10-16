@@ -397,4 +397,4 @@ title: "Exercises · Valid inequalities"
 
         !!! chiave ""
 
-            The valid inequality $x_1 + x_3 \le 2$ lowers the upper bound from $\lfloor \dfrac{21}{2} \rfloor = 10$ to $10$ and gives the optimal solution $(2,2,0)$, $z(\ILP) = 10$.
+            The valid inequality $x_1 + x_3 \le 2$ lowers the bound of the LP relaxation from $\dfrac{21}{2}$ to $10$ and makes its optimal solution integer: $(2,2,0)$, $z(\ILP) = 10$.

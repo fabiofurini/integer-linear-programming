@@ -6,13 +6,13 @@ title: "MIP solvers: what they do"
 
 <div class="info-capitolo" markdown>
 
-**Part 4 · MIP solvers · Chapter 9** · [:material-file-pdf-box: Lecture notes, volume 3 (PDF)](../pdf/lecture-notes-3-mip-solvers.pdf) · [:material-pencil: Exercises: MIP solvers](../exercises/mip-solvers.md)
+**Part 4 · MIP solvers · Chapter 9** · [:material-file-pdf-box: Lecture notes, volume 3 (PDF)](../pdf/lecture-notes-3-mip-solvers.pdf) · [:material-presentation: Slides](../pdf/slides-09-mip-solvers.pdf) · [:material-pencil: Exercises: MIP solvers](../exercises/mip-solvers.md)
 
 </div>
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «LP-based branch-and-bound algorithms» and «Branch-and-cut algorithms»: the branching, bounding and pruning operations, the cuts, and the incumbent solution.
+    - From this module, the chapters «LP-based branch-and-bound» and «Branch-and-cut algorithms»: the branching, bounding and pruning operations, the cuts, and the incumbent solution.
 
     - From this module, the chapter «Primal and dual bounds»: the lower and upper bounds and the optimality gap.
 
@@ -216,8 +216,14 @@ title: "MIP solvers: what they do"
 - We start from the problem $P41$ of the catalogue of MIP problems: three non-negative integer variables and four constraints,
 
     $$
-    \max~ 2x_1 + x_2 + 3x_3 \quad \text{s.t.} \quad x_1 + x_2 + x_3 \le 4,~~ x_2 \le 2,~~ x_3 \le 3,~~
-    3x_1 + x_3 \le 6 .
+    \begin{array}{rrcrcrcl}
+    \max & 2x_1 & + & x_2 & + & 3x_3 & & \\[1ex]
+    \text{subject to} & x_1 & + & x_2 & + & x_3 & \le & 4 \\
+    & & & x_2 & & & \le & 2 \\
+    & & & & & x_3 & \le & 3 \\
+    & 3x_1 & & & + & x_3 & \le & 6 \\[1ex]
+    & x_1, & & x_2, & & x_3 & \in & \Z_{\ge 0}
+    \end{array}
     $$
 
 ??? codice "Gurobi log: problem $P41$, default parameters"
@@ -268,7 +274,7 @@ title: "MIP solvers: what they do"
 
 - **10–13** Size of the model: $4$ rows, $3$ columns, $7$ non-zeros, <code>(Max)</code>; the variable types ($3$ integer, none binary).
 
-- **14–18** <strong>Coefficient statistics</strong>: the smallest and the largest absolute values of the coefficients. Ranges spanning many orders of magnitude signal numerical difficulties; here all values are between $1$ and $6$.
+- **14–18** <strong>Coefficient statistics</strong>: the smallest and the largest absolute values of the coefficients. Ranges spanning many orders of magnitude signal numerical difficulties; here the coefficients are between $1$ and $6$, and the variables have no explicit bounds (<code>Bounds range</code> $[0,0]$).
 
 - **20** A heuristic finds a solution of value $6$ before the presolve, so $\LB = 6$.
 
@@ -283,7 +289,7 @@ title: "MIP solvers: what they do"
 - From now on we use a <strong>generic MIP with $30$ integer variables</strong> that we call $G_1$. It is a pure ILP problem in the form
 
     $$
-    \max~ \vet c\T\vet x \quad \text{s.t.} \quad A\,\vet x \le \vet b,
+    \max~ \vet c\T\vet x \quad \text{subject to} \quad A\,\vet x \le \vet b,
     $$
 
     with $x_j \in \{0,1,2,3\}$ for $j = 1,\dots,30$ and $10$ constraints. All the data are integer and pseudo-random (Python <code>random.Random(1)</code>): $a_{ij}$ uniform in $\{1,\dots,20\}$, $c_j$ uniform in $\{5,\dots,25\}$, and $b_i = \sum_j a_{ij}$.
@@ -401,9 +407,9 @@ title: "MIP solvers: what they do"
 
 - **31–35** Lines starting with <code>H</code>: primal heuristics find better incumbent solutions, from $563$ to $588$, while the best bound stays at $599.17487$.
 
-- **36–78** The <strong>cut loop</strong>: each line with $0$ explored nodes is a new round of cuts, and the best bound decreases from $599.17487$ to $596.73942$. More incumbent solutions are found, up to $593$ (line $45$).
+- **36–77** The <strong>cut loop</strong>: each line with $0$ explored nodes is a new round of cuts, and the best bound decreases from $599.17487$ to $596.73942$. More incumbent solutions are found, up to $593$ (line $45$).
 
-- **79** The root is branched: $2$ nodes wait in the list, the gap is $0.62\%$.
+- **78** The root is branched: $2$ nodes wait in the list, the gap is $0.62\%$.
 
 - **81–84** Cuts added: $1$ Gomory, $1$ lift-and-project, $5$ MIR, $3$ StrongCG.
 

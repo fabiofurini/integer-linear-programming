@@ -6,7 +6,7 @@ title: "MIP heuristics"
 
 <div class="info-capitolo" markdown>
 
-**Part 5 · MIP heuristics · Chapter 10** · [:material-file-pdf-box: Lecture notes, volume 4 (PDF)](../pdf/lecture-notes-4-mip-heuristics.pdf) · [:material-pencil: Exercises: MIP heuristics](../exercises/mip-heuristics.md)
+**Part 5 · MIP heuristics · Chapter 10** · [:material-file-pdf-box: Lecture notes, volume 4 (PDF)](../pdf/lecture-notes-4-mip-heuristics.pdf) · [:material-presentation: Slides](../pdf/slides-10-mip-heuristics.pdf) · [:material-pencil: Exercises: MIP heuristics](../exercises/mip-heuristics.md)
 
 </div>
 
@@ -125,7 +125,12 @@ title: "MIP heuristics"
 - The <strong>car example</strong> reads
 
     $$
-    \max~ 3\,x_1+2\,x_2 \quad\text{s.t.}\quad 10\,x_1+4\,x_2\le 45,\quad 4\,x_1+14\,x_2\le 49,\quad x_1,x_2\in\Z_{\ge 0}
+    \begin{array}{rrcrcl}
+    \max & 3\,x_1 & + & 2\,x_2 & & \\[1ex]
+    \text{subject to} & 10\,x_1 & + & 4\,x_2 & \le & 45 \\
+    & 4\,x_1 & + & 14\,x_2 & \le & 49 \\[1ex]
+    & x_1, & & x_2 & \in & \Z_{\ge 0}
+    \end{array}
     $$
 
 <div class="tabella" markdown="0"><table>
@@ -375,7 +380,7 @@ title: "MIP heuristics"
 
     <strong>$P42$.</strong> The LP solution is $\big(\frac52,\frac32,0\big)$; $x_1$ and $x_2$ are at distance $\frac12$, and the tie is broken by the index: $x_1:=\rnd{\frac52}=3$. The second constraint gives $2\cdot3+3x_3\le5$, which is violated for every $x_3\ge0$: the LP is infeasible, <strong>the dive fails at the first step</strong>.
 
-    <strong>$P72$.</strong> The fractional parts of the LP solution are $\frac{39}{59},\frac{91}{59},\frac{166}{59},\frac{37}{59}$ (for $x_1,x_3,x_4,x_5$), and the least fractional is $x_4$, at distance $\frac{11}{59}$ from $3$: $x_4:=3$. The new LP has value $\frac{728}{85}$ and solution $\big(\frac{56}{85},0,\frac{138}{85},3,\frac{52}{85}\big)$; the least fractional variable is $x_1$, rounded to $1$. Fixing $x_1:=1$ and $x_4:=3$ makes the LP <strong>infeasible</strong>.
+    <strong>$P72$.</strong> The fractional components of the LP solution are $\frac{39}{59},\frac{91}{59},\frac{166}{59},\frac{37}{59}$ (for $x_1,x_3,x_4,x_5$), and the least fractional is $x_4$, at distance $\frac{11}{59}$ from $3$: $x_4:=3$. The new LP has value $\frac{728}{85}$ and solution $\big(\frac{56}{85},0,\frac{138}{85},3,\frac{52}{85}\big)$; the least fractional variable is $x_1$, rounded to $1$. Fixing $x_1:=1$ and $x_4:=3$ makes the LP <strong>infeasible</strong>.
 
 - In both cases the first fixings follow the LP, which does not see that the constraints, together, leave no room. A dive that fails gives no solution at all: this is the reason for the feasibility pump of the next section.
 
@@ -591,7 +596,7 @@ title: "MIP heuristics"
 
 - When $f$ takes integer values on all the feasible solutions, as for all the examples of this chapter, $\theta=1$ excludes exactly the solutions that are not better than $\bar{\vet x}$. If the sub-MIP with the cutoff is infeasible, the neighbourhood contains no better solution: the solver has <em>proved</em> that $\bar{\vet x}$ is a local optimum for that neighbourhood.
 
-- The methods differ in <em>which</em> constraints define the neighbourhood: RINS fixes variables (<strong>hard fixing</strong>), local branching and proximity search bound the number of variables that change (<strong>soft fixing</strong>).
+- The methods differ in <em>which</em> constraints define the neighbourhood: RINS fixes variables (<strong>hard fixing</strong>), local branching bounds the number of variables that change and proximity search minimizes it (<strong>soft fixing</strong>).
 
 ### 10.6.1 RINS { #sez-sec-rins }
 
@@ -634,7 +639,13 @@ title: "MIP heuristics"
     <strong>$P7$.</strong> The incumbent is $\bar{\vet x}=(2,0)$, of value $6$ (rounding down), and the LP solution is $\tilde{\vet x}=\big(\frac52,0\big)$. They agree on $x_2=0$, which is fixed. The sub-MIP
 
     $$
-    \max~ 3\,x_1 \quad\text{subject to}\quad x_1\le 12,\quad 2\,x_1\le 5,\quad 3\,x_1\ge 7,\quad x_1\in\Z_{\ge 0}
+    \begin{array}{rrcl}
+    \max & 3\,x_1 & & \\[1ex]
+    \text{subject to} & x_1 & \le & 12 \\
+    & 2\,x_1 & \le & 5 \\
+    & 3\,x_1 & \ge & 7 \\[1ex]
+    & x_1 & \in & \Z_{\ge 0}
+    \end{array}
     $$
 
     is infeasible: the second constraint gives $x_1\le2$, the cutoff $x_1\ge3$. RINS returns the incumbent. The optimal solution $(2,1)$ has $x_2=1$, but $x_2$ is fixed to $0$ because the LP and the incumbent agree on it.
@@ -782,7 +793,7 @@ title: "MIP heuristics"
 
 !!! teorema "Proposition 10.12"
 
-    If $f$ takes integer values on all the feasible solutions of the MIP and the proximity sub-MIP around $\bar{\vet x}$ with $\theta=1$ is infeasible, then $f(\bar{\vet x})=z(I)$.
+    If $f$ takes integer values on all the feasible solutions of the MIP and the proximity sub-MIP around $\bar{\vet x}$ with $\theta=1$ is infeasible, then $\bar{\vet x}$ is an optimal solution of the MIP.
 
 ??? dimostrazione "Proof"
 

@@ -6,7 +6,7 @@ title: "Cover inequalities"
 
 <div class="info-capitolo" markdown>
 
-**Part 2 · Strengthening the formulation · Chapter 5** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-pencil: Exercises: Cover inequalities](../exercises/cover.md)
+**Part 2 · Strengthening the formulation · Chapter 5** · [:material-file-pdf-box: Lecture notes, volume 1 (PDF)](../pdf/lecture-notes-1-models-bounds-formulations.pdf) · [:material-presentation: Slides](../pdf/slides-05-cover.pdf) · [:material-pencil: Exercises: Cover inequalities](../exercises/cover.md)
 
 </div>
 
@@ -14,7 +14,7 @@ title: "Cover inequalities"
 
 !!! nota "Prerequisites"
 
-    - From this module, [Chapter 1 «Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [Chapter 2 «LP relaxation»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
+    - From this module, [Chapter 1 «Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [Chapter 2 «Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
 
     - From this module, [Chapter 3 «Ideal formulations»](https://fabiofurini.github.io/integer-linear-programming/formulations/ideal-formulations/) and [Chapter 4 «Valid inequalities»](https://fabiofurini.github.io/integer-linear-programming/formulations/valid-inequalities/): the convex hull of the integer solutions, valid inequalities, and cuts that remove fractional points.
 
@@ -984,7 +984,7 @@ The following greedy procedure constructs feasible values $\bar{y}_j$ for the co
 
     - The minimal covers are enough: their inequalities imply all the others, but they can be exponentially many, so they are separated only when violated.
 
-    - Separating a cover inequality means finding a cover of minimum cost $\sum_{j\in C}(1-\tilde{x}_j)$: a violated inequality exists if and only if the minimum cost is less than $1$; this is a 0–1 problem with one $\le$ constraint, defined in the chapter.
+    - Separating a cover inequality means finding a cover of minimum cost $\sum_{j\in C}(1-\tilde{x}_j)$: a violated inequality exists if and only if the minimum cost is less than $1$; this is a 0–1 problem with one $\ge$ constraint, defined in the chapter.
 
     - An extended cover inequality dominates the cover inequality of the same cover.
 
