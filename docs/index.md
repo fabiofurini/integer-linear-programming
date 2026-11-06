@@ -9,15 +9,15 @@ hide:
 
 # Integer Linear Programming
 
-Teaching material by **[Fabio Furini](https://fabiofurini.github.io/)**, associate professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
+Teaching material conceived and developed by **[Fabio Furini](https://fabiofurini.github.io/)**, associate
+professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
 
-The course covers integer and mixed integer programming models, LP relaxations, ideal formulations, valid inequalities, cutting planes, branch-and-bound, branch-and-cut, MIP solvers and heuristics. It includes definitions, proofs, worked examples and exercises with solutions.
+**The course lecture notes, online**: integer and mixed integer programming, LP relaxation and bounds, valid inequalities, cutting planes, branch-and-bound and branch-and-cut, MIP solvers and heuristics, with definitions, worked examples step by step and exercises with solutions.
 
 [Start with the chapters :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
-[Go to the exercises](exercises/index.md){ .md-button }
+[The exercises](exercises/index.md){ .md-button }
 [:material-clipboard-check-outline: Test yourself](self-assessment.md){ .md-button }
-[Open the interactive lab](lab/index.md){ .md-button }
-[Download materials](downloads.md){ .md-button }
+[:material-download: Download the lecture notes (PDF)](downloads.md){ .md-button }
 
 </div>
 
