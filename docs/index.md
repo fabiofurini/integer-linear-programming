@@ -15,6 +15,7 @@ The course covers integer and mixed integer programming models, LP relaxations, 
 
 [Start with the chapters :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
 [Go to the exercises](exercises/index.md){ .md-button }
+[:material-clipboard-check-outline: Test yourself](self-assessment.md){ .md-button }
 [Open the interactive lab](lab/index.md){ .md-button }
 [Download materials](downloads.md){ .md-button }
 
@@ -101,6 +102,16 @@ lecture notes: on the website and in the PDF you find everything in the same pla
     10\. MIP heuristics
 
     [:octicons-arrow-right-24: The chapters](mip-heuristics/index.md)
+
+-   :material-clipboard-check-outline: **Self-assessment**
+
+    ---
+
+    *Mock exam*
+
+    A new mock exam at every start: 13 questions, 33 points, with the solutions and links to the notes.
+
+    [:octicons-arrow-right-24: Test yourself](self-assessment.md)
 
 </div>
 
