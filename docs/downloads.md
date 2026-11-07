@@ -78,4 +78,9 @@ The integer and mixed integer linear programming problems used in the examples a
 
 [:material-file-pdf-box: MIP problem catalogue (PDF)](pdf/mip-problem-catalogue.pdf){ .md-button }
 
+<!-- banca-domande -->
+## Quiz question bank
 
+All the self-assessment questions, by part and chapter, with the correct answer and the explanation; for the generated questions, whose numbers change at every start, a few examples.
+
+[:material-format-list-checks: Question bank](quiz/question_list.html){ .md-button }
