@@ -9,45 +9,31 @@ hide:
 
 # Integer Linear Programming
 
+<!-- collana-riga -->
+<p class="collana-riga" markdown>A course of the <b>Operations Research and Mathematics</b> series · [all the courses](#the-series)</p>
+<!-- /collana-riga -->
+
 Teaching material by **[Fabio Furini](https://fabiofurini.github.io/)**, associate professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
 
 The course covers integer and mixed integer programming models, LP relaxations, ideal formulations, valid inequalities, cutting planes, branch-and-bound, branch-and-cut, MIP solvers and heuristics. It includes definitions, proofs, worked examples and exercises with solutions.
 
-[Start with the chapters :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
-[Go to the exercises](exercises/index.md){ .md-button }
-[:material-clipboard-check-outline: Test yourself](self-assessment.md){ .md-button }
-[Open the interactive lab](lab/index.md){ .md-button }
-[Download materials](downloads.md){ .md-button }
+[Start :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
+[:material-pencil: Exercises](exercises/index.md){ .md-button }
+[:material-gesture-tap: Lab](lab/index.md){ .md-button }
+[:material-clipboard-check-outline: Quiz](self-assessment.md){ .md-button }
+[:material-download: Downloads](downloads.md){ .md-button }
 
 </div>
 
-## How each chapter is organized
+<!-- collana-app -->
+## Try it now
 
-Each chapter is one of the course notes, with the same numbers and the same colors as the
-lecture notes: on the website and in the PDF you find everything in the same place.
+Branch-and-bound step by step: each node solves an LP relaxation and splits the region on a fractional variable.
 
-<div class="grid" markdown>
+<div class="gi" data-grafico="pli-bb"></div>
 
-!!! definizione "Definition"
-    The precise meaning of a new concept.
-
-!!! teorema "Theorem, proposition, observation"
-    A result to remember, with its hypotheses.
-
-!!! esempio "Example"
-    A computation worked out in full, one step at a time.
-
-!!! chiave ""
-    **In green** the key point to take away.
-
-!!! algoritmo "Algorithm"
-    The pseudocode of a method, in red.
-
-</div>
-
-??? dimostrazione "Proof — opens with a click"
-    All proofs are included, but folded: first read the statement, then open
-    the proof when you want to study it. The same holds for the solutions of the exercises.
+[:material-gesture-tap: More apps in the lab](lab/index.md){ .md-button }
+<!-- /collana-app -->
 
 ## The parts of the course
 
@@ -117,17 +103,55 @@ lecture notes: on the website and in the PDF you find everything in the same pla
 
 ---
 
-By the same author:
+<!-- collana -->
+## The series
 
-- **[Linear Programming](https://fabiofurini.github.io/linear-programming/)** — polyhedra, the simplex algorithm, duality and the dual simplex, with the interactive lab;
-- **[Convex Optimization](https://fabiofurini.github.io/convex-optimization/)** — convex sets and functions, convex optimization problems, with interactive graphs;
-- **[Algorithms](https://fabiofurini.github.io/algorithms/)** — number representation, pseudo-code, sorting and searching, analysis and recursive algorithms;
-- **[Combinatorial Optimization](https://fabiofurini.github.io/combinatorial-optimization/)** — knapsack, bin packing, coloring, TSP, scheduling and lot sizing, solved in every way;
-- **[Network Optimization](https://fabiofurini.github.io/network-optimization/)** — graphs, spanning trees, shortest paths, network flows, the network simplex and project management;
-- **[MIP Modelling](https://fabiofurini.github.io/mip-modelling/)** — integer linear programming models, from the formulation to the solution with solvers;
-- **[Operations Research Lab](https://fabiofurini.github.io/operations-research-lab/)** — modelling and solving optimization problems with Python and solvers;
-- **[Mathematical Analysis 1](https://fabiofurini.github.io/mathematical-analysis-1/)** — real numbers, functions, limits, derivatives and series, with interactive graphs;
-- **[Linear Algebra](https://fabiofurini.github.io/linear-algebra/)** — vectors, matrices, determinants, linear systems and eigenvalues, with the computation lab.
+Ten courses built the same way: lecture notes online and in PDF, exercises with solutions, an interactive lab and self-assessment quizzes.
+
+<div class="grid cards" markdown>
+
+-   :material-function-variant: **[Mathematical Analysis 1](https://fabiofurini.github.io/mathematical-analysis-1/)**
+
+    real numbers, functions, limits, derivatives and series, with interactive graphs
+
+-   :material-matrix: **[Linear Algebra](https://fabiofurini.github.io/linear-algebra/)**
+
+    vectors, matrices, determinants, linear systems and eigenvalues, with the computation lab
+
+-   :material-code-braces: **[Algorithms](https://fabiofurini.github.io/algorithms/)**
+
+    number representation, pseudo-code, sorting and searching, analysis and recursive algorithms
+
+-   :material-vector-triangle: **[Linear Programming](https://fabiofurini.github.io/linear-programming/)**
+
+    polyhedra, the simplex algorithm, duality and the dual simplex, with the interactive lab
+
+-   :material-dots-grid: **Integer Linear Programming** · *this course*
+
+    LP relaxation, valid inequalities, cutting planes, branch-and-bound and branch-and-cut
+
+-   :material-vector-curve: **[Convex Optimization](https://fabiofurini.github.io/convex-optimization/)**
+
+    convex sets and functions, convex optimization problems, with interactive graphs
+
+-   :material-graph-outline: **[Network Optimization](https://fabiofurini.github.io/network-optimization/)**
+
+    graphs, spanning trees, shortest paths, network flows, the network simplex and project management
+
+-   :material-hexagon-multiple-outline: **[Combinatorial Optimization](https://fabiofurini.github.io/combinatorial-optimization/)**
+
+    knapsack, bin packing, coloring, TSP, scheduling and lot sizing, solved in every way
+
+-   :material-vector-polygon: **[MIP Modelling](https://fabiofurini.github.io/mip-modelling/)**
+
+    integer linear programming models, from the formulation to the solution with solvers
+
+-   :material-chart-timeline-variant: **[Operations Research Lab](https://fabiofurini.github.io/operations-research-lab/)**
+
+    modelling and solving optimization problems with Python and solvers
+
+</div>
+<!-- /collana -->
 
 Teaching material by **[Fabio Furini](https://fabiofurini.github.io/)** —
 [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
