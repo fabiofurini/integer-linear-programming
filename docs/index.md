@@ -17,6 +17,8 @@ Teaching material by **[Fabio Furini](https://fabiofurini.github.io/)**, associa
 
 The course covers integer and mixed integer programming models, LP relaxations, ideal formulations, valid inequalities, cutting planes, branch-and-bound, branch-and-cut, MIP solvers and heuristics. It includes definitions, proofs, worked examples and exercises with solutions.
 
+Prerequisites: [Linear Programming](https://fabiofurini.github.io/linear-programming/).
+
 [Start :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
 [:material-pencil: Exercises](exercises/index.md){ .md-button }
 [:material-gesture-tap: Lab](lab/index.md){ .md-button }
