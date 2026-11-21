@@ -12,9 +12,9 @@ title: "Valid inequalities"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapter «Primal and dual bounds»: the LP relaxation, the rounded bound $\lfloor z(\LP) \rfloor$, and bounds from non-negative multipliers of the constraints.
+    - From this module, the chapter [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the LP relaxation, the rounded bound $\lfloor z(\LP) \rfloor$, and bounds from non-negative multipliers of the constraints.
 
-    - From this module, the chapter «Ideal formulations»: formulations, the convex hull, and the comparison of formulations through their polyhedra.
+    - From this module, the chapter [«Ideal formulations»](https://fabiofurini.github.io/integer-linear-programming/formulations/ideal-formulations/): formulations, the convex hull, and the comparison of formulations through their polyhedra.
 
 !!! chiave "Objectives"
 

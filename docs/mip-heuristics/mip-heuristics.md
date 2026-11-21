@@ -14,9 +14,9 @@ title: "MIP heuristics"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «Primal and dual bounds» and «LP-based branch-and-bound algorithms»: the LP relaxation, the lower and upper bounds, the optimality gap, and the branching operations.
+    - From this module, the chapters [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/) and [«LP-based branch-and-bound»](https://fabiofurini.github.io/integer-linear-programming/exact-methods/bb/): the LP relaxation, the lower and upper bounds, the optimality gap, and the branching operations.
 
-    - From this module, the chapter «MIP solvers: what they do»: the incumbent solution, the sub-problems solved by a solver, and the heuristics inside it.
+    - From this module, the chapter [«MIP solvers: what they do»](https://fabiofurini.github.io/integer-linear-programming/solvers/mip-solvers/): the incumbent solution, the sub-problems solved by a solver, and the heuristics inside it.
 
     - From the module <em>Linear Programming</em>: the [dual simplex algorithm (Chapter 10)](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/), which re-optimizes an LP after a change of a bound.
 

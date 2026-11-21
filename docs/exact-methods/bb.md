@@ -14,9 +14,9 @@ title: "LP-based branch-and-bound"
 
     - From the module <em>Linear Programming</em>, [Chapter 10 «Dual Simplex algorithm»](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/): simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
 
-    - From this module, the chapter «Integer linear programming»: ILP problems, feasible and optimal solutions, and the car example.
+    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, and the car example.
 
-    - From this module, the chapter «Primal and dual bounds»: the LP relaxation, lower bounds from feasible solutions, upper bounds from the LP relaxation, and the optimality gap.
+    - From this module, the chapter [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the LP relaxation, lower bounds from feasible solutions, upper bounds from the LP relaxation, and the optimality gap.
 
 !!! chiave "Objectives"
 

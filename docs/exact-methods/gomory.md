@@ -14,9 +14,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     - From the module <em>Linear Programming</em>, [Chapter 10 «Dual Simplex algorithm»](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/): simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
 
-    - From this module, the chapters «Integer linear programming» and «Primal and dual bounds»: ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
+    - From this module, the chapters [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): ILP problems, the LP relaxation, and the upper bound given by the LP relaxation.
 
-    - From this module, the chapter «Valid inequalities»: valid inequalities and cuts that remove fractional points.
+    - From this module, the chapter [«Valid inequalities»](https://fabiofurini.github.io/integer-linear-programming/formulations/valid-inequalities/): valid inequalities and cuts that remove fractional points.
 
 !!! chiave "Objectives"
 

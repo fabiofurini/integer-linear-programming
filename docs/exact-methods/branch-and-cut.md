@@ -12,11 +12,11 @@ title: "Branch-and-cut"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «Valid inequalities» and «Cover inequalities»: valid inequalities, and the separation of a violated inequality of a family.
+    - From this module, the chapters [«Valid inequalities»](https://fabiofurini.github.io/integer-linear-programming/formulations/valid-inequalities/) and [«Cover inequalities»](https://fabiofurini.github.io/integer-linear-programming/formulations/cover/): valid inequalities, and the separation of a violated inequality of a family.
 
-    - From this module, the chapter «Cutting plane algorithm»: Gomory fractional cuts, and the re-optimization of the LP problem with the dual simplex algorithm after the insertion of a cut.
+    - From this module, the chapter [«The cutting plane algorithm with Gomory fractional cuts»](https://fabiofurini.github.io/integer-linear-programming/exact-methods/gomory/): Gomory fractional cuts, and the re-optimization of the LP problem with the dual simplex algorithm after the insertion of a cut.
 
-    - From this module, the chapter «LP-based branch-and-bound»: the list of LP problems, the pruning criteria, and the branching-variable and branching-node selection strategies.
+    - From this module, the chapter [«LP-based branch-and-bound»](https://fabiofurini.github.io/integer-linear-programming/exact-methods/bb/): the list of LP problems, the pruning criteria, and the branching-variable and branching-node selection strategies.
 
 !!! chiave "Objectives"
 

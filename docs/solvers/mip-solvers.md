@@ -12,9 +12,9 @@ title: "MIP solvers: what they do"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «LP-based branch-and-bound» and «Branch-and-cut algorithms»: the branching, bounding and pruning operations, the cuts, and the incumbent solution.
+    - From this module, the chapters [«LP-based branch-and-bound»](https://fabiofurini.github.io/integer-linear-programming/exact-methods/bb/) and [«Branch-and-cut»](https://fabiofurini.github.io/integer-linear-programming/exact-methods/branch-and-cut/): the branching, bounding and pruning operations, the cuts, and the incumbent solution.
 
-    - From this module, the chapter «Primal and dual bounds»: the lower and upper bounds and the optimality gap.
+    - From this module, the chapter [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the lower and upper bounds and the optimality gap.
 
     - To learn how to use Gurobi in practice, see the module «MIP Modelling» ([<u>fabiofurini.github.io/mip-modelling</u>](https://fabiofurini.github.io/mip-modelling/)), [chapter 3 «From the model to Python/Gurobi»](https://fabiofurini.github.io/mip-modelling/modelling-3/).
 

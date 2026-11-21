@@ -13,9 +13,10 @@ hide:
 <p class="collana-riga" markdown>A course of the <b>Operations Research and Mathematics</b> series · [all the courses](#the-series)</p>
 <!-- /collana-riga -->
 
-Teaching material by **[Fabio Furini](https://fabiofurini.github.io/)**, associate professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
+Teaching material conceived and developed by **[Fabio Furini](https://fabiofurini.github.io/)**, associate
+professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
 
-The course covers integer and mixed integer programming models, LP relaxations, ideal formulations, valid inequalities, cutting planes, branch-and-bound, branch-and-cut, MIP solvers and heuristics. It includes definitions, proofs, worked examples and exercises with solutions.
+**The course lecture notes, online**: integer and mixed integer programming, LP relaxation and bounds, valid inequalities, cutting planes, branch-and-bound and branch-and-cut, MIP solvers and heuristics, with definitions, worked examples step by step and exercises with solutions.
 
 Prerequisites: [Linear Programming](https://fabiofurini.github.io/linear-programming/).
 
@@ -204,13 +205,17 @@ All the courses of the series are built the same way: lecture notes online and i
 
     performance guarantees, approximation schemes and limits of approximation for combinatorial problems
 
+-   :material-chart-line: **[LP Modelling](https://fabiofurini.github.io/lp-modelling/)**
+
+    linear programming models of managerial problems, solved with Python and Gurobi
+
+-   :material-chart-bell-curve-cumulative: **[NLP Modelling](https://fabiofurini.github.io/nlp-modelling/)**
+
+    nonlinear programming models, from portfolios to machine learning, with Python and Gurobi
+
 -   :material-vector-polygon: **[MIP Modelling](https://fabiofurini.github.io/mip-modelling/)**
 
     integer linear programming models, from the formulation to the solution with solvers
-
--   :material-chart-timeline-variant: **[Operations Research Lab](https://fabiofurini.github.io/operations-research-lab/)**
-
-    modelling and solving optimization problems with Python and solvers
 
 </div>
 <!-- /collana -->

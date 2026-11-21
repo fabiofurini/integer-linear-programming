@@ -12,7 +12,7 @@ title: "Primal and dual bounds"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapter «Integer linear programming»: ILP problems, feasible and optimal solutions, complete enumeration, and the car example.
+    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, complete enumeration, and the car example.
 
     - From the module <em>Linear Programming</em>, [Chapter 9 «Duality theory»](https://fabiofurini.github.io/linear-programming/duality/09-duality/): the dual problem, weak duality and strong duality.
 

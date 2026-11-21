@@ -12,7 +12,7 @@ title: "Ideal formulations"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters «Integer linear programming» and «Primal and dual bounds»: the feasible region of an ILP problem, the LP relaxation and its bound, and the car example.
+    - From this module, the chapters [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the feasible region of an ILP problem, the LP relaxation and its bound, and the car example.
 
     - From the module <em>Linear Programming</em>, [Chapter 15 «The geometry of Linear Programming»](https://fabiofurini.github.io/linear-programming/advanced-methods/15-geometry/): vertices of a polyhedron, and the fact that an LP problem with an optimal solution has an optimal vertex.
 
