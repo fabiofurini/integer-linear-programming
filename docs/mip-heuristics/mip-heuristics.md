@@ -1201,6 +1201,8 @@ title: "MIP heuristics"
 </tr>
 </table></div>
 
+- The methods of this chapter applied to the knapsack, bin packing, TSP, $P\,||\,C_{\max}$ and lot sizing models: chapter [«MIP heuristics for the classical problems»](https://fabiofurini.github.io/heuristic-algorithms/mip-heuristics-classical/) of the module <em>Heuristic Algorithms</em>.
+
 ## 10.10 <code>Python</code> implementation { #sez-sec-python }
 
 - The codes use Python 3 and <code>gurobipy</code>. The variables of a model are accessed by their position $j$ in <code>m.getVars()</code>, and the list <code>I</code> of the positions of the integer variables is the set $\mathscr{D}$; indices start from $0$.
