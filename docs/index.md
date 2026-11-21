@@ -30,9 +30,9 @@ Prerequisites: [Linear Programming](https://fabiofurini.github.io/linear-program
 <!-- collana-app -->
 ## Try it now
 
-Branch-and-bound step by step: each node solves an LP relaxation and splits the region on a fractional variable.
+Branch-and-bound at the end: the complete tree, with the regions of the nodes, the pruned nodes and the incumbent. Each node solves an LP relaxation and splits the region on a fractional variable; press «Run» to replay it step by step.
 
-<div class="gi" data-grafico="pli-bb"></div>
+<div class="gi" data-grafico="pli-bb" data-vetrina="A | auto"></div>
 
 [:material-gesture-tap: More apps in the lab](lab/index.md){ .md-button }
 <!-- /collana-app -->
