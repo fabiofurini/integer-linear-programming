@@ -163,6 +163,8 @@ title: "Integer linear programming"
 
     - Second constraint: the paint shop is available for $49$ hours; a sports car takes $4$ hours and a family car $14$.
 
+    How to build models like this one from real problems is the subject of the module <em>MIP Modelling</em>: [the Modelling part](https://fabiofurini.github.io/mip-modelling/modelling/).
+
 ### 1.1.1 Feasible region and objective function
 
 <a id="box-3-defFeasRegILP"></a>
