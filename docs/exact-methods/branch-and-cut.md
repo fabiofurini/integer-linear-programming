@@ -369,7 +369,7 @@ title: "Branch-and-cut"
 
 ## 8.5 Local cuts: an example
 
-- We use the car example ($x_1$ sports cars and $x_2$ family cars): maximize $3x_1+2x_2$ subject to $10x_1+4x_2\le 45$, $4x_1+14x_2\le 49$, $x_1,x_2\in\Z_{\ge 0}$. In the branch-and-bound algorithm without cuts, node $3$ is the up-branching child of the root, with the branching constraint $x_1 \ge 4$ and the slack variable $x_5 = x_1 - 4$.
+- We use the car production example ($x_1$ sports cars and $x_2$ family cars): maximize $3x_1+2x_2$ subject to $10x_1+4x_2\le 45$, $4x_1+14x_2\le 49$, $x_1,x_2\in\Z_{\ge 0}$. In the branch-and-bound algorithm without cuts, node $3$ is the up-branching child of the root, with the branching constraint $x_1 \ge 4$ and the slack variable $x_5 = x_1 - 4$.
 
 - The optimal dictionary of the $\LP_3$ problem, with $\tilde{\vet x}(\LP_3) = (4,\tfrac{5}{4})$ and $z(\LP_3) = \tfrac{29}{2}$, is:
 

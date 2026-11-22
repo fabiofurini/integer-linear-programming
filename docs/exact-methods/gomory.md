@@ -720,7 +720,7 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
         \frac{1}{8}\;x_4.
         \end{align*}
 
-- In Example 1 the coefficients have no common divisor and nothing is rounded. In the car example of the last sections the second cut in the original variables is $6\,x_1 + 14\,x_2 \le 55$: with $g = 2$ the primitive inequality is $3\,x_1 + 7\,x_2 \le \lfloor 55/2 \rfloor = 27$, and its slack variable is $27 - 3\,x_1 - 7\,x_2$.
+- In Example 1 the coefficients have no common divisor and nothing is rounded. In the car production example of the last sections the second cut in the original variables is $6\,x_1 + 14\,x_2 \le 55$: with $g = 2$ the primitive inequality is $3\,x_1 + 7\,x_2 \le \lfloor 55/2 \rfloor = 27$, and its slack variable is $27 - 3\,x_1 - 7\,x_2$.
 
 ## 6.2 A cutting-plane algorithm based on Gomory fractional cuts
 
@@ -1307,9 +1307,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
 - For this reason, Gomory fractional cuts are often used to strengthen the LP relaxations solved at the nodes of a branch-and-bound tree: the resulting method is a <strong>branch-and-cut algorithm</strong>.
 
-## 6.3 The car example
+## 6.3 The car production example
 
-- The car example is solved by the cutting plane algorithm with the same rules as in Example 1: one cut per iteration, largest right-hand side, ties by the smallest index of the basic variable and objective-function row last.
+- The car production example is solved by the cutting plane algorithm with the same rules as in Example 1: one cut per iteration, largest right-hand side, ties by the smallest index of the basic variable and objective-function row last.
 
 - The table reports, for every cut, the inequality in the original variables before rounding (when $g > 1$) and in primitive form, the solution and the value of the next LP problem, and the upper bound $\UB = \lfloor z(\LP_{k+1}) \rfloor$.
 
@@ -1402,9 +1402,9 @@ title: "The cutting plane algorithm with Gomory fractional cuts"
 
     - Each cut is rewritten in the original variables, made primitive (divided by the greatest common divisor of its coefficients, right-hand side rounded down), and only then its slack variable is added.
 
-    - Cuts work well at the beginning and then lose effectiveness: on the car example $5$ cuts are needed.
+    - Cuts work well at the beginning and then lose effectiveness: on the car production example $5$ cuts are needed.
 
-    <strong>Dashboard of the car example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car production example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>

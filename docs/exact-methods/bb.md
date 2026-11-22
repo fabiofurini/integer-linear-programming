@@ -14,7 +14,7 @@ title: "LP-based branch-and-bound"
 
     - From the module <em>Linear Programming</em>, [Chapter 10 «Dual Simplex algorithm»](https://fabiofurini.github.io/linear-programming/duality/10-dual-simplex/): simplex dictionaries, dual feasible bases and dual pivoting operations. A short recap is given in this chapter.
 
-    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, and the car example.
+    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, and the car production example.
 
     - From this module, the chapter [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the LP relaxation, lower bounds from feasible solutions, upper bounds from the LP relaxation, and the optimality gap.
 
@@ -34,13 +34,13 @@ title: "LP-based branch-and-bound"
 
 - This chapter defines the LP-based branch-and-bound algorithm for ILP problems in canonical maximization form with integer data, with its branching and bounding operations.
 
-- The guiding instance is the car example, $\max \{ 3\,x_1 + 2\,x_2 : 10\,x_1 + 4\,x_2 \le 45,~ 4\,x_1 + 14\,x_2 \le 49,~ x_1, x_2 \in \Z_{\ge 0} \}$, whose LP relaxation has the fractional optimal solution $(\frac{7}{2},\frac{5}{2})$, with $z(\LP) = \frac{31}{2}$.
+- The guiding instance is the car production example, $\max \{ 3\,x_1 + 2\,x_2 : 10\,x_1 + 4\,x_2 \le 45,~ 4\,x_1 + 14\,x_2 \le 49,~ x_1, x_2 \in \Z_{\ge 0} \}$, whose LP relaxation has the fractional optimal solution $(\frac{7}{2},\frac{5}{2})$, with $z(\LP) = \frac{31}{2}$.
 
 ## 7.1 The idea in words and in a picture
 
 - The <strong>LP-based branch-and-bound algorithm</strong> (<strong>B&amp;B algorithm</strong>, for short) is an exact method for ILP problems. It is called <strong>LP-based</strong> because it solves LP relaxations to guide the search for an optimal solution.
 
-- In the optimal solution of the LP relaxation of the car example the variable $x_1$ takes a fractional value between $3$ and $4$. Every feasible solution of the ILP problem satisfies either $x_1 \le 3$ or $x_1 \ge 4$, so we can split the problem into two smaller LP problems, one for each side, and remove the strip in between, which contains no integer point:
+- In the optimal solution of the LP relaxation of the car production example the variable $x_1$ takes a fractional value between $3$ and $4$. Every feasible solution of the ILP problem satisfies either $x_1 \le 3$ or $x_1 \ge 4$, so we can split the problem into two smaller LP problems, one for each side, and remove the strip in between, which contains no integer point:
 
     $$
     \rightsquigarrow~\textbf{branching operations}.
@@ -54,7 +54,7 @@ title: "LP-based branch-and-bound"
 
 ![Figure 1](../img/07-bb/fig01.svg){ .fig .ovale loading=lazy  }
 
-<em>Branching on $x_1$ at the root of the car example: the two red regions are the feasible regions of the children ($x_1 \le 3$ and $x_1 \ge 4$); the gray strip $3 < x_1 < 4$ is cut off, and it contains no integer point.</em>
+<em>Branching on $x_1$ at the root of the car production example: the two red regions are the feasible regions of the children ($x_1 \le 3$ and $x_1 \ge 4$); the gray strip $3 < x_1 < 4$ is cut off, and it contains no integer point.</em>
 
 !!! chiave ""
 
@@ -77,7 +77,7 @@ title: "LP-based branch-and-bound"
     x_j &\in \Z_{\ge 0}, & \forall j \in \{1, 2, \dots, n\}. \label{bb:MIP-int} \tag{7.1c}
     \end{align*}
 
-- The car example is an ILP problem with $n = 2$ and $m = 2$.
+- The car production example is an ILP problem with $n = 2$ and $m = 2$.
 
 - We denote by $z(\ILP)$ the optimal value of the problem [(7.1)](#eq-bb-MIP), and by $\tilde{\vet x}(\ILP)$ an optimal solution.
 
@@ -433,7 +433,7 @@ title: "LP-based branch-and-bound"
 
 !!! esempio "Example 7.1: fractional values"
 
-    At the root node of the car example we have $\tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}$, and the fractional values are:
+    At the root node of the car production example we have $\tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}$, and the fractional values are:
 
     $$
     f_1 = \min\left\{ \dfrac{7}{2} - 3,~ 4 - \dfrac{7}{2} \right\} = \dfrac{1}{2} \qquad f_2 = \min\left\{ \dfrac{5}{2} - 2,~ 3 - \dfrac{5}{2} \right\} = \dfrac{1}{2}
@@ -472,7 +472,7 @@ title: "LP-based branch-and-bound"
 
 !!! esempio "Example 7.2: strong branching"
 
-    At the root node of the car example we have $\tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}$ and $z(\LP_1) = \dfrac{31}{2}$. For each fractional variable we solve the two child LP problems (with the dual simplex algorithm, from the optimal dictionary of $\LP_1$):
+    At the root node of the car production example we have $\tilde x_1 = \dfrac{7}{2},~~\tilde x_2 = \dfrac{5}{2}$ and $z(\LP_1) = \dfrac{31}{2}$. For each fractional variable we solve the two child LP problems (with the dual simplex algorithm, from the optimal dictionary of $\LP_1$):
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -567,9 +567,9 @@ title: "LP-based branch-and-bound"
 
         ![Figure 5](../img/07-bb/fig05.svg){ .fig loading=lazy  }
 
-## 7.7 Worked examples on the car example
+## 7.7 Worked examples on the car production example
 
-- We now solve the car example with two executions of the B&amp;B algorithm, which differ only in the selection strategies. Since all the variables and all the costs are integer, the bound of a node is $\mathrm{UB}(\LP_k) = \lfloor z(\LP_k) \rfloor$.
+- We now solve the car production example with two executions of the B&amp;B algorithm, which differ only in the selection strategies. Since all the variables and all the costs are integer, the bound of a node is $\mathrm{UB}(\LP_k) = \lfloor z(\LP_k) \rfloor$.
 
 - In the first execution every node is re-optimized with the dual simplex algorithm, and we report all the dictionaries. For each node a figure shows its feasible region.
 
@@ -579,7 +579,7 @@ title: "LP-based branch-and-bound"
 
 !!! esempio "Example 7.5: execution A: smallest index and LIFO"
 
-    We execute the B&amp;B algorithm on the car example with:
+    We execute the B&amp;B algorithm on the car production example with:
 
     1. the smallest-index rule (lexicographic) as branching-variable selection strategy;
 
@@ -593,7 +593,7 @@ title: "LP-based branch-and-bound"
 
     - <span style="color:#e03131"><strong>Initialization</strong></span>
 
-        The $\LP_1$ problem is the LP relaxation of the car example. The simplex algorithm with Bland's rule, starting from the basis of the slack variables, performs 2 pivoting operations ($x_1$ enters and $x_3$ leaves; $x_2$ enters and $x_4$ leaves) and ends with the optimal dictionary:
+        The $\LP_1$ problem is the LP relaxation of the car production example. The simplex algorithm with Bland's rule, starting from the basis of the slack variables, performs 2 pivoting operations ($x_1$ enters and $x_3$ leaves; $x_2$ enters and $x_4$ leaves) and ends with the optimal dictionary:
 
         \begin{equation*}
         \begin{cases}
@@ -1106,7 +1106,7 @@ title: "LP-based branch-and-bound"
 
 !!! esempio "Example 7.6: execution B: largest index and best bound"
 
-    We execute again the B&amp;B algorithm on the car example, now with:
+    We execute again the B&amp;B algorithm on the car production example, now with:
 
     1. the largest-index rule (lexicographic) as branching-variable selection strategy;
 
@@ -1377,7 +1377,7 @@ title: "LP-based branch-and-bound"
 
 !!! esempio "Example 7.7: heuristic initialization"
 
-    We execute the B&amp;B algorithm of <span style="color:#1971c2">[Example 7.5](#box-9-ex-bb-runA)</span> (smallest index, LIFO), starting from a heuristic solution of the car example.
+    We execute the B&amp;B algorithm of <span style="color:#1971c2">[Example 7.5](#box-9-ex-bb-runA)</span> (smallest index, LIFO), starting from a heuristic solution of the car production example.
 
     - The one-variable heuristic of the chapter «Primal and dual bounds» fixes $x_1$ as large as possible and $x_2 = 0$: it gives $\bar{\vet x} = (4, 0)$ of value $12$. Starting execution A with $\LB = 12$, the algorithm solves $6$ LP problems, as many as without the heuristic: this lower bound is too weak to prune any node earlier.
 
@@ -1432,7 +1432,7 @@ title: "LP-based branch-and-bound"
 
 !!! attenzione "Warning"
 
-    - <strong>Rounding the LP solution.</strong> Rounding an optimal solution of the LP relaxation gives at best a feasible solution, in general not an optimal one. In the car example, rounding down $\tilde{\vet x}(\LP) = (\tfrac{7}{2}, \tfrac{5}{2})$ gives $(3, 2)$ of value $13$, while $z(\ILP) = 14$ at $(4, 1)$.
+    - <strong>Rounding the LP solution.</strong> Rounding an optimal solution of the LP relaxation gives at best a feasible solution, in general not an optimal one. In the car production example, rounding down $\tilde{\vet x}(\LP) = (\tfrac{7}{2}, \tfrac{5}{2})$ gives $(3, 2)$ of value $13$, while $z(\ILP) = 14$ at $(4, 1)$.
 
     - <strong>Branching on the wrong variable.</strong> The branching variable must be an integer variable with a fractional value: a variable with an integer value does not cut off $\tilde{\vet x}(\LP_k)$.
 
@@ -1464,7 +1464,7 @@ title: "LP-based branch-and-bound"
 
     - The selection strategies and a good heuristic solution change the size of the tree, not the optimal value.
 
-    <strong>Dashboard of the car example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car production example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1505,7 +1505,7 @@ title: "LP-based branch-and-bound"
     </tr>
     </table></div>
 
-    In the car example the algorithm closes the gap between $\LB = 13$ (rounded LP solution) and $\UB = 15$ (LP relaxation) by solving $6$ LP problems.
+    In the car production example the algorithm closes the gap between $\LB = 13$ (rounded LP solution) and $\UB = 15$ (LP relaxation) by solving $6$ LP problems.
 
 ---
 

@@ -32,7 +32,7 @@ title: "Valid inequalities"
 
 !!! nota "Where we were"
 
-    In the car example the ideal formulation gives the upper bound $14$, equal to the lower bound, so it certifies that $(4,1)$ is optimal. But we found its four inequalities by looking at the convex hull, which is not possible in general. We now learn to <strong>derive</strong> such inequalities from the constraints.
+    In the car production example the ideal formulation gives the upper bound $14$, equal to the lower bound, so it certifies that $(4,1)$ is optimal. But we found its four inequalities by looking at the convex hull, which is not possible in general. We now learn to <strong>derive</strong> such inequalities from the constraints.
 
 ## 4.1 Valid inequalities
 
@@ -64,9 +64,9 @@ title: "Valid inequalities"
 
 <a id="box-3-ex-vi-car"></a>
 
-!!! esempio "Example 4.1: valid inequalities of the car example"
+!!! esempio "Example 4.1: valid inequalities of the car production example"
 
-    The inequalities $x_1 \le 4$ and $x_2 \le 3$ of the previous chapters are valid inequalities of the car example. They do not cut off the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation, so they do not improve the upper bound $15$.
+    The inequalities $x_1 \le 4$ and $x_2 \le 3$ of the previous chapters are valid inequalities of the car production example. They do not cut off the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation, so they do not improve the upper bound $15$.
 
 ## 4.2 Deriving valid inequalities by rounding
 
@@ -95,7 +95,7 @@ title: "Valid inequalities"
 
 !!! esempio "Example 4.2: rounding with multiplier $\frac{1}{2}$"
 
-    In the car example, multiply the first constraint by $\frac{1}{2}$: we get $5\,x_1 + 2\,x_2 \le \frac{45}{2}$. Since the left-hand side is integer, we obtain the valid inequality
+    In the car production example, multiply the first constraint by $\frac{1}{2}$: we get $5\,x_1 + 2\,x_2 \le \frac{45}{2}$. Since the left-hand side is integer, we obtain the valid inequality
 
     $$
     5\,x_1 + 2\,x_2 \le 22.
@@ -210,7 +210,7 @@ title: "Valid inequalities"
 
     With the valid inequality $x_1 + x_2 \le 5$, or with $x_1 + 2\,x_2 \le 7$, the upper bound drops from $15$ to $14$. It equals the lower bound given by $(4,1)$: <strong>the solution $(4,1)$ is certified optimal</strong>, and the gap is zero.
 
-- The two inequalities, together with $x_1 \le 4$ and $x_2 \le 3$, are exactly the four inequalities of the ideal formulation of the previous chapter. For the car example we have reached the convex hull with valid inequalities derived from the constraints.
+- The two inequalities, together with $x_1 \le 4$ and $x_2 \le 3$, are exactly the four inequalities of the ideal formulation of the previous chapter. For the car production example we have reached the convex hull with valid inequalities derived from the constraints.
 
 ## 4.4 Families of valid inequalities and cuts
 
@@ -232,7 +232,7 @@ title: "Valid inequalities"
 
     - <strong>Using multipliers that are not large enough.</strong> The combined coefficients must be at least $\alpha_j$ for every $j$, and the multipliers must be non-negative.
 
-    - <strong>Stopping at a coarse right-hand side.</strong> The inequality $x_1 + x_2 \le 6$ is valid, but it does not cut off the LP optimum of the car example (its sum is $6$); the tight inequality $x_1 + x_2 \le 5$ does.
+    - <strong>Stopping at a coarse right-hand side.</strong> The inequality $x_1 + x_2 \le 6$ is valid, but it does not cut off the LP optimum of the car production example (its sum is $6$); the tight inequality $x_1 + x_2 \le 5$ does.
 
 ## 4.6 In summary
 
@@ -246,9 +246,9 @@ title: "Valid inequalities"
 
     - A valid inequality helps only if it cuts off the LP optimum and improves the rounded bound.
 
-    - In the car example, $x_1 + x_2 \le 5$ or $x_1 + 2\,x_2 \le 7$ lowers the upper bound from $15$ to $14$, and certifies that $(4,1)$ is optimal.
+    - In the car production example, $x_1 + x_2 \le 5$ or $x_1 + 2\,x_2 \le 7$ lowers the upper bound from $15$ to $14$, and certifies that $(4,1)$ is optimal.
 
-    <strong>Dashboard of the car example.</strong> The bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car production example.</strong> The bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>

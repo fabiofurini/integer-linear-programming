@@ -12,7 +12,7 @@ title: "Ideal formulations"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapters [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the feasible region of an ILP problem, the LP relaxation and its bound, and the car example.
+    - From this module, the chapters [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/) and [«Primal and dual bounds»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/lp-relaxation/): the feasible region of an ILP problem, the LP relaxation and its bound, and the car production example.
 
     - From the module <em>Linear Programming</em>, [Chapter 15 «The geometry of Linear Programming»](https://fabiofurini.github.io/linear-programming/advanced-methods/15-geometry/): vertices of a polyhedron, and the fact that an LP problem with an optimal solution has an optimal vertex.
 
@@ -34,7 +34,7 @@ title: "Ideal formulations"
 
 !!! nota "Where we were"
 
-    In the car example we have the lower bound $14$ and the upper bound $\lfloor z(\LP) \rfloor = 15$. The gap of $\frac{1}{14}$ is due to the polyhedron of the constraints, which contains fractional points outside the convex hull of the integer points. This chapter defines the polyhedron that gives no gap.
+    In the car production example we have the lower bound $14$ and the upper bound $\lfloor z(\LP) \rfloor = 15$. The gap of $\frac{1}{14}$ is due to the polyhedron of the constraints, which contains fractional points outside the convex hull of the integer points. This chapter defines the polyhedron that gives no gap.
 
 ## 3.1 The convex hull
 
@@ -50,9 +50,9 @@ title: "Ideal formulations"
 
 <a id="box-2-ex-hull-car"></a>
 
-!!! esempio "Example 3.1: convex hull of the car example"
+!!! esempio "Example 3.1: convex hull of the car production example"
 
-    The convex hull of the $16$ integer points of the car example has $6$ vertices:
+    The convex hull of the $16$ integer points of the car production example has $6$ vertices:
 
     $$
     (0,0), \quad (4,0), \quad (4,1), \quad (3,2), \quad (1,3), \quad (0,3).
@@ -62,7 +62,7 @@ title: "Ideal formulations"
 
     ![Figure 1](../img/03-ideal-formulations/fig01.svg){ .fig .ovale loading=lazy  }
 
-    <em>The convex hull of the $16$ integer points of the car example (green). Its $6$ vertices (black squares) are integer points; five other points lie on its boundary and five in its interior.</em>
+    <em>The convex hull of the $16$ integer points of the car production example (green). Its $6$ vertices (black squares) are integer points; five other points lie on its boundary and five in its interior.</em>
 
 ## 3.2 Formulations and ideal formulations
 
@@ -102,19 +102,19 @@ title: "Ideal formulations"
 
 <a id="box-6-ex-car-not-ideal"></a>
 
-!!! esempio "Example 3.2: the formulation of the car example is not ideal"
+!!! esempio "Example 3.2: the formulation of the car production example is not ideal"
 
-    The point $(\frac{7}{2},\frac{5}{2})$ belongs to the polyhedron $P$ of the car example but not to $\mathrm{conv}(F)$, because it violates $x_1 + x_2 \le 5$, which all the vertices of the hull of <span style="color:#1971c2">[Example 3.1](#box-2-ex-hull-car)</span> satisfy: $\mathrm{conv}(F) \subsetneq P$.
+    The point $(\frac{7}{2},\frac{5}{2})$ belongs to the polyhedron $P$ of the car production example but not to $\mathrm{conv}(F)$, because it violates $x_1 + x_2 \le 5$, which all the vertices of the hull of <span style="color:#1971c2">[Example 3.1](#box-2-ex-hull-car)</span> satisfy: $\mathrm{conv}(F) \subsetneq P$.
 
     ![Figure 2](../img/03-ideal-formulations/fig02.svg){ .fig .ovale loading=lazy  }
 
-    <em>The car example: the polyhedron of the LP relaxation (red) contains the convex hull of the integer points (green), and the optimal solution of the LP relaxation (blue) is outside the hull.</em>
+    <em>The car production example: the polyhedron of the LP relaxation (red) contains the convex hull of the integer points (green), and the optimal solution of the LP relaxation (blue) is outside the hull.</em>
 
 <a id="box-7-ex-car-ideal"></a>
 
-!!! esempio "Example 3.3: an ideal formulation of the car example"
+!!! esempio "Example 3.3: an ideal formulation of the car production example"
 
-    The convex hull of the car example is described by the following four inequalities and the non-negativity constraints:
+    The convex hull of the car production example is described by the following four inequalities and the non-negativity constraints:
 
     $$
     \begin{array}{rrrrrrr}
@@ -131,7 +131,7 @@ title: "Ideal formulations"
 
     ![Figure 3](../img/03-ideal-formulations/fig03.svg){ .fig .ovale loading=lazy  }
 
-    <em>The ideal formulation of the car example: its feasible region (green) is the convex hull of the integer points. The optimal solution of the LP problem is the integer point $(4,1)$ (blue).</em>
+    <em>The ideal formulation of the car production example: its feasible region (green) is the convex hull of the integer points. The optimal solution of the LP problem is the integer point $(4,1)$ (blue).</em>
 
 ## 3.3 Comparing formulations
 
@@ -147,7 +147,7 @@ title: "Ideal formulations"
     P_1 \subseteq P_2 \quad \Longrightarrow \quad z(\ILP) ~\le~ z(\LP_1) ~\le~ z(\LP_2).
     $$
 
-- The ideal formulation is the strongest of all, because it is contained in every formulation. In the car example the original formulation gives the bound $\lfloor \frac{31}{2} \rfloor = 15$, and the ideal one of <span style="color:#1971c2">[Example 3.3](#box-7-ex-car-ideal)</span> gives the bound $14$.
+- The ideal formulation is the strongest of all, because it is contained in every formulation. In the car production example the original formulation gives the bound $\lfloor \frac{31}{2} \rfloor = 15$, and the ideal one of <span style="color:#1971c2">[Example 3.3](#box-7-ex-car-ideal)</span> gives the bound $14$.
 
 !!! chiave ""
 
@@ -165,11 +165,11 @@ title: "Ideal formulations"
 
 !!! attenzione "Warning"
 
-    - <strong>Believing that the points that are not vertices lie strictly inside the hull.</strong> They can lie on its boundary, as $(0,1)$ and $(3,0)$ in the car example.
+    - <strong>Believing that the points that are not vertices lie strictly inside the hull.</strong> They can lie on its boundary, as $(0,1)$ and $(3,0)$ in the car production example.
 
     - <strong>Checking only the optimal solution.</strong> A formulation can return an integer optimal solution without being ideal: the LP optimum can be integer for one objective function and fractional for another one.
 
-    - <strong>Believing that every formulation is ideal.</strong> The formulation of the car example has the right integer points but contains fractional points outside the hull.
+    - <strong>Believing that every formulation is ideal.</strong> The formulation of the car production example has the right integer points but contains fractional points outside the hull.
 
     - <strong>Adding inequalities that remove integer points.</strong> A formulation must keep all the points of $F$: the polyhedron can shrink only down to the convex hull, never below it.
 
@@ -183,11 +183,11 @@ title: "Ideal formulations"
 
     - A stronger formulation, with a smaller polyhedron, never gives a worse bound.
 
-    - The car example has an ideal formulation with $4$ inequalities, which gives $z(\LP) = 14 = z(\ILP)$.
+    - The car production example has an ideal formulation with $4$ inequalities, which gives $z(\LP) = 14 = z(\ILP)$.
 
     - Ideal formulations exist for rational data, but in general they need exponentially many inequalities and are hard to find.
 
-    <strong>Dashboard of the car example.</strong> The bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car production example.</strong> The bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>

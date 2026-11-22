@@ -59,7 +59,7 @@ title: "MIP heuristics"
 
     and $z(\LP)=\min\{f(\vet x): \vet x\in\mathcal{L}\}$ is the value of the LP relaxation.
 
-- A maximization problem, such as the car example, is handled in the same way, exchanging $\min$ and $\max$, $\le$ and $\ge$ in the comparisons of objective values.
+- A maximization problem, such as the car production example, is handled in the same way, exchanging $\min$ and $\max$, $\le$ and $\ge$ in the comparisons of objective values.
 
 <a id="box-2-def-mipheur"></a>
 
@@ -120,9 +120,9 @@ title: "MIP heuristics"
 
 ## 10.2 The examples of the chapter { #sez-sec-models }
 
-- The methods are illustrated on the <strong>car example</strong> of this module and on four small problems of the <strong>catalogue of MIP problems</strong>. All of them are ILP problems in canonical maximization form, with integer data and $x_j\in\Z_{\ge 0}$ for every $j$, so that $\mathscr{D}=\{1,2,\dots,N\}$.
+- The methods are illustrated on the <strong>car production example</strong> of this module and on four small problems of the <strong>catalogue of MIP problems</strong>. All of them are ILP problems in canonical maximization form, with integer data and $x_j\in\Z_{\ge 0}$ for every $j$, so that $\mathscr{D}=\{1,2,\dots,N\}$.
 
-- The <strong>car example</strong> reads
+- The <strong>car production example</strong> reads
 
     $$
     \begin{array}{rrcrcl}
@@ -178,7 +178,7 @@ title: "MIP heuristics"
 <th><span class="arithmatex">\(z(\ILP)\)</span></th>
 </tr>
 <tr>
-<td>car</td>
+<td>car production</td>
 <td><span class="arithmatex">\(2\)</span></td>
 <td><span class="arithmatex">\(2\)</span></td>
 <td><span class="arithmatex">\(\frac{31}{2}\)</span></td>
@@ -229,7 +229,7 @@ title: "MIP heuristics"
     <th>optimal solution <span class="arithmatex">\(\tilde{\vet x}\)</span> of the LP relaxation</th>
     </tr>
     <tr>
-    <td>car</td>
+    <td>car production</td>
     <td><span class="arithmatex">\(\big(\frac72,\frac52\big)\)</span></td>
     </tr>
     <tr>
@@ -292,13 +292,13 @@ title: "MIP heuristics"
 
     For every $j$, $0\le\lfloor \tilde x_j\rfloor\le \tilde x_j\le u_j$, so the bounds hold. For every row $i$, since $a_{ij}\ge0$, $\sum_j a_{ij}\lfloor \tilde x_j\rfloor\le\sum_j a_{ij}\tilde x_j\le b_i$. <span class="qed">□</span>
 
-- The car example satisfies the assumptions of the observation: rounding down is always feasible, and in general not optimal.
+- The car production example satisfies the assumptions of the observation: rounding down is always feasible, and in general not optimal.
 
 <a id="box-7-ex-rounding"></a>
 
-!!! esempio "Example 10.2: Rounding on the car example and on $P42$"
+!!! esempio "Example 10.2: Rounding on the car production example and on $P42$"
 
-    <strong>Car example.</strong> The LP solution $\tilde{\vet x}=\big(\frac72,\frac52\big)$ is rounded to $\bar{\vet x}=(4,3)$, which violates the first constraint:
+    <strong>Car production example.</strong> The LP solution $\tilde{\vet x}=\big(\frac72,\frac52\big)$ is rounded to $\bar{\vet x}=(4,3)$, which violates the first constraint:
 
     $$
     10\cdot 4+4\cdot 3=52>45 .
@@ -354,7 +354,7 @@ title: "MIP heuristics"
 
 <a id="box-9-ex-divecar"></a>
 
-!!! esempio "Example 10.3: Fractional diving on the car example"
+!!! esempio "Example 10.3: Fractional diving on the car production example"
 
     <strong>Step 1.</strong> The LP solution is $\tilde{\vet x}=\big(\frac72,\frac52\big)$, of value $\frac{31}{2}$. Both variables are at distance $\frac12$ from the nearest integer; the tie is broken by the index: $x_1:=\rnd{\frac72}=4$.
 
@@ -366,13 +366,13 @@ title: "MIP heuristics"
 
 <a id="box-10-ex-guided"></a>
 
-!!! esempio "Example 10.4: Guided diving on the car example and on $P7$"
+!!! esempio "Example 10.4: Guided diving on the car production example and on $P7$"
 
-    <strong>Car example.</strong> The incumbent is $\bar{\vet x}=(3,2)$, of value $13$ (rounding down). In the LP solution $\big(\frac72,\frac52\big)$ both variables are at distance $\frac12$ from $\bar{\vet x}$; fix $x_1:=3$. The new LP solution is $\big(3,\frac{37}{14}\big)$, of value $\frac{100}{7}$; fix $x_2:=\bar x_2=2$. The LP solution $(3,2)$ is integer, of value $13$: the dive <strong>returns the incumbent</strong>, without improving it.
+    <strong>Car production example.</strong> The incumbent is $\bar{\vet x}=(3,2)$, of value $13$ (rounding down). In the LP solution $\big(\frac72,\frac52\big)$ both variables are at distance $\frac12$ from $\bar{\vet x}$; fix $x_1:=3$. The new LP solution is $\big(3,\frac{37}{14}\big)$, of value $\frac{100}{7}$; fix $x_2:=\bar x_2=2$. The LP solution $(3,2)$ is integer, of value $13$: the dive <strong>returns the incumbent</strong>, without improving it.
 
     <strong>$P7$.</strong> The incumbent is $\bar{\vet x}=(2,0)$, of value $6$ (rounding down of $\big(\frac52,0\big)$). The only fractional variable is $x_1$: fix $x_1:=2$. The LP solution $(2,1)$, of value $7$, is integer: guided diving finds the <strong>optimal</strong> solution after one fixing, even if the incumbent has $\bar x_2=0$, because the LP rebuilds the variables that are not fixed.
 
-- The incumbent only decides the <em>values</em> of the fixed variables: on the car example both fixed values agree with the poor incumbent, on $P7$ the fixed value is the right one.
+- The incumbent only decides the <em>values</em> of the fixed variables: on the car production example both fixed values agree with the poor incumbent, on $P7$ the fixed value is the right one.
 
 <a id="box-11-ex-divefail"></a>
 
@@ -534,9 +534,9 @@ title: "MIP heuristics"
 
 <a id="box-15-ex-fpcar"></a>
 
-!!! esempio "Example 10.7: The feasibility pump on the car example and on $P72$"
+!!! esempio "Example 10.7: The feasibility pump on the car production example and on $P72$"
 
-    <strong>Car example.</strong> Rounding the LP solution gives $\bar{\vet x}^0=(4,3)$, which is infeasible.
+    <strong>Car production example.</strong> Rounding the LP solution gives $\bar{\vet x}^0=(4,3)$, which is infeasible.
 
     <div class="tabella" markdown="0"><table>
     <tr>
@@ -1054,7 +1054,7 @@ title: "MIP heuristics"
 <th>certified by</th>
 </tr>
 <tr>
-<td>car, rounding down</td>
+<td>car production, rounding down</td>
 <td><span class="arithmatex">\((3,2)\)</span></td>
 <td><span class="arithmatex">\(13\)</span></td>
 <td><span class="arithmatex">\(15\)</span></td>
@@ -1062,7 +1062,7 @@ title: "MIP heuristics"
 <td>—</td>
 </tr>
 <tr>
-<td>car, diving</td>
+<td>car production, diving</td>
 <td><span class="arithmatex">\((4,1)\)</span></td>
 <td><span class="arithmatex">\(14\)</span></td>
 <td><span class="arithmatex">\(15\)</span></td>
@@ -1546,7 +1546,7 @@ def fix_and_optimize(m, x_tilde, windows, theta=1, trace=None):
 
     - Inside a MIP solver the dual bound is available: the gap of the heuristic solution is known, and a gap equal to $0$ certifies optimality.
 
-    <strong>Dashboard of the car example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
+    <strong>Dashboard of the car production example.</strong> The lower and upper bounds on $z(\ILP)$ found so far in this module:
 
     <div class="tabella" markdown="0"><table>
     <tr>

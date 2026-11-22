@@ -14,7 +14,7 @@ The cutting plane algorithm with Gomory fractional cuts, LP-based branch-and-bou
 
     ---
 
-    Gomory fractional cuts · A cutting-plane algorithm based on Gomory fractional cuts · The car example · Typical mistakes · …
+    Gomory fractional cuts · A cutting-plane algorithm based on Gomory fractional cuts · The car production example · Typical mistakes · …
 
     [:octicons-arrow-right-24: Read the chapter](gomory.md) · [Exercises](../exercises/gomory.md) · [Slides](../pdf/slides-06-gomory.pdf)
 

@@ -12,7 +12,7 @@ title: "Primal and dual bounds"
 
 !!! nota "Prerequisites"
 
-    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, complete enumeration, and the car example.
+    - From this module, the chapter [«Integer linear programming»](https://fabiofurini.github.io/integer-linear-programming/models-and-bounds/ilp/): ILP problems, feasible and optimal solutions, complete enumeration, and the car production example.
 
     - From the module <em>Linear Programming</em>, [Chapter 9 «Duality theory»](https://fabiofurini.github.io/linear-programming/duality/09-duality/): the dual problem, weak duality and strong duality.
 
@@ -93,7 +93,7 @@ title: "Primal and dual bounds"
 
 !!! esempio "Example 2.1: primal bound"
 
-    For the feasible solution $(2,2)$ of the car example we get $\LB = 3 \cdot 2 + 2 \cdot 2 = 10$, so $z(\ILP) \ge 10$.
+    For the feasible solution $(2,2)$ of the car production example we get $\LB = 3 \cdot 2 + 2 \cdot 2 = 10$, so $z(\ILP) \ge 10$.
 
 <a id="box-5-def-floor"></a>
 
@@ -103,7 +103,7 @@ title: "Primal and dual bounds"
 
 <a id="box-6-ex-heur-car"></a>
 
-!!! esempio "Example 2.2: two heuristic algorithms for the car example"
+!!! esempio "Example 2.2: two heuristic algorithms for the car production example"
 
     - The <strong>one-variable heuristic</strong> sets a single variable to its maximum value, with the other one equal to $0$, and keeps the better of the two solutions.
 
@@ -211,9 +211,9 @@ title: "Primal and dual bounds"
 
 <a id="box-10-ex-lp-car"></a>
 
-!!! esempio "Example 2.3: the LP relaxation of the car example"
+!!! esempio "Example 2.3: the LP relaxation of the car production example"
 
-    - The LP relaxation of the car example has the optimal solution
+    - The LP relaxation of the car production example has the optimal solution
 
         $$
         \tilde{x}_1 = \frac{7}{2}, \quad \tilde{x}_2 = \frac{5}{2}, \qquad z(\LP) = \frac{31}{2},
@@ -229,7 +229,7 @@ title: "Primal and dual bounds"
 
     ![Figure 1](../img/02-lp-relaxation/fig01.svg){ .fig .ovale loading=lazy  }
 
-    <em>The LP relaxation of the car example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The gray dashed line is the objective line of the optimal ILP solution.</em>
+    <em>The LP relaxation of the car production example: the feasible region (red), its $16$ integer points (black) and the optimal solution $(\frac{7}{2},\frac{5}{2})$ of the LP relaxation (blue), with the objective line $3\,x_1 + 2\,x_2 = \frac{31}{2}$ through it (dashed). The gray dashed line is the objective line of the optimal ILP solution.</em>
 
     - The optimal value is $14$ or $15$. With $\UB = 15$ and $\LB = 14$ the optimality gap $\eqref{gap}$ is $\frac{1}{14} \approx 7.1\%$: the solution $(4,1)$ is not yet certified optimal.
 
@@ -241,7 +241,7 @@ title: "Primal and dual bounds"
 
 <a id="box-11-ex-round-car"></a>
 
-!!! esempio "Example 2.4: rounding in the car example"
+!!! esempio "Example 2.4: rounding in the car production example"
 
     - The optimal solution of the LP relaxation is $\tilde{\vet x}(\LP) = (\frac{7}{2},\frac{5}{2})$. Rounding to the nearest integer gives $(4,3)$, which is infeasible: $10 \cdot 4 + 4 \cdot 3 = 52 > 45$.
 
@@ -326,9 +326,9 @@ title: "Primal and dual bounds"
 
 <a id="box-15-ex-vub-car"></a>
 
-!!! esempio "Example 2.7: upper bounds on the variables of the car example"
+!!! esempio "Example 2.7: upper bounds on the variables of the car production example"
 
-    Both constraints of the car example have non-negative coefficients:
+    Both constraints of the car production example have non-negative coefficients:
 
     \begin{align*}
     x_1 &\le \min \left\{ \left\lfloor \tfrac{45}{10} \right\rfloor, \left\lfloor \tfrac{49}{4} \right\rfloor \right\}
@@ -337,7 +337,7 @@ title: "Primal and dual bounds"
     = \min\{11, 3\} = 3.
     \end{align*}
 
-    - The inequalities $x_1 \le 4$ and $x_2 \le 3$ are satisfied by all the integer points of the car example, and they can be added to the model. They cut off two regions of the polyhedron, and no integer point.
+    - The inequalities $x_1 \le 4$ and $x_2 \le 3$ are satisfied by all the integer points of the car production example, and they can be added to the model. They cut off two regions of the polyhedron, and no integer point.
 
     ![Figure 4](../img/02-lp-relaxation/fig04.svg){ .fig .ovale loading=lazy  }
 
@@ -349,7 +349,7 @@ title: "Primal and dual bounds"
 
 !!! esempio "Example 2.8: upper bounds that cut off the LP optimum"
 
-    - Consider the objective function $x_1 - x_2$ on the constraints of the car example, whose optimal ILP solution is $(4,0)$ with $z(\ILP) = 4$. Before the bounds, the optimal solution of the LP relaxation is $(\frac{9}{2},0)$ with $z(\LP) = \frac{9}{2}$; after $x_1 \le 4$ it is $(4,0)$ with $z(\LP) = 4$, which is integer and therefore optimal.
+    - Consider the objective function $x_1 - x_2$ on the constraints of the car production example, whose optimal ILP solution is $(4,0)$ with $z(\ILP) = 4$. Before the bounds, the optimal solution of the LP relaxation is $(\frac{9}{2},0)$ with $z(\LP) = \frac{9}{2}$; after $x_1 \le 4$ it is $(4,0)$ with $z(\LP) = 4$, which is integer and therefore optimal.
 
     ![Figure 5](../img/02-lp-relaxation/fig05.svg){ .fig .ovale loading=lazy  }
 
@@ -399,7 +399,7 @@ title: "Primal and dual bounds"
 
 <a id="box-19-ex-mult-car"></a>
 
-!!! esempio "Example 2.9: multipliers for the car example"
+!!! esempio "Example 2.9: multipliers for the car production example"
 
     - A feasible solution of the LP relaxation does not give a dual bound: its value is neither a lower bound nor an upper bound on $z(\ILP)$.
 
@@ -424,7 +424,7 @@ title: "Primal and dual bounds"
     </tr>
     </table></div>
 
-    - Multiplying the first constraint of the car example by $\frac{3}{4}$ we get
+    - Multiplying the first constraint of the car production example by $\frac{3}{4}$ we get
 
         $$
         \frac{15}{2}\,x_1 + 3\,x_2 \le \frac{135}{4}.
@@ -472,7 +472,7 @@ title: "Primal and dual bounds"
     </tr>
     </table></div>
 
-    - The best multipliers, with the smallest value $45\,\pi_1 + 49\,\pi_2$, solve the dual problem [(2.6)](#eq-DLP) of the car example:
+    - The best multipliers, with the smallest value $45\,\pi_1 + 49\,\pi_2$, solve the dual problem [(2.6)](#eq-DLP) of the car production example:
 
     $$
     \begin{array}{rrrrrrr}
@@ -485,7 +485,7 @@ title: "Primal and dual bounds"
 
 <a id="box-20-ex-dual-car"></a>
 
-!!! esempio "Example 2.10: optimal dual solution of the car example"
+!!! esempio "Example 2.10: optimal dual solution of the car production example"
 
     The optimal solution of the dual problem of <span style="color:#1971c2">[Example 2.9](#box-19-ex-mult-car)</span> is $\tilde{\vet \pi}(\mathrm{D(LP)}) = (\frac{17}{62},\frac{2}{31})$, and
 
@@ -526,7 +526,7 @@ title: "Primal and dual bounds"
 
     - <strong>Deriving a bound on a variable from a constraint with negative coefficients.</strong> The proof of $\eqref{vub}$ needs all the coefficients to be non-negative.
 
-    - <strong>Believing that a stronger formulation always improves the bound.</strong> The bounds $x_1 \le 4$ and $x_2 \le 3$ leave the bound $15$ of the car example unchanged.
+    - <strong>Believing that a stronger formulation always improves the bound.</strong> The bounds $x_1 \le 4$ and $x_2 \le 3$ leave the bound $15$ of the car production example unchanged.
 
 ## 2.8 In summary
 
@@ -544,7 +544,7 @@ title: "Primal and dual bounds"
 
     - Non-negative multipliers of the constraints give dual bounds; the best ones solve the dual problem, whose optimal value is $z(\LP)$.
 
-    <strong>Dashboard of the car example.</strong> The bounds on $z(\ILP)$ found so far in this module (primal bound: lower; dual bound: upper):
+    <strong>Dashboard of the car production example.</strong> The bounds on $z(\ILP)$ found so far in this module (primal bound: lower; dual bound: upper):
 
     <div class="tabella" markdown="0"><table>
     <tr>

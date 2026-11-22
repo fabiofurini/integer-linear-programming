@@ -80,7 +80,7 @@ lecture notes: on the website and in the PDF you find everything in the same pla
 6. [The cutting plane algorithm with Gomory fractional cuts](exact-methods/gomory.md)
     - 6.1 Gomory fractional cuts
     - 6.2 A cutting-plane algorithm based on Gomory fractional cuts
-    - 6.3 The car example
+    - 6.3 The car production example
     - 6.4 Typical mistakes
     - 6.5 In summary
 7. [LP-based branch-and-bound](exact-methods/bb.md)
@@ -90,7 +90,7 @@ lecture notes: on the website and in the PDF you find everything in the same pla
     - 7.4 A short recap of the dual simplex algorithm
     - 7.5 Branching-variable selection strategies
     - 7.6 Branching-node selection strategies
-    - 7.7 Worked examples on the car example
+    - 7.7 Worked examples on the car production example
     - 7.8 Typical mistakes
     - 7.9 Extensions
     - 7.10 In summary

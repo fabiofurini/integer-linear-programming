@@ -155,7 +155,13 @@ title: "Integer linear programming"
     \end{array}
     $$
 
-    The variables $x_1$ and $x_2$ can be read as the numbers of cars of two types to produce: this ILP problem is the <strong>car example</strong>, the guiding example of the module.
+    <strong>The car production example.</strong> This ILP problem is the guiding example of the module. A company produces two types of cars, sports cars and family cars: $x_1$ and $x_2$ are the numbers of sports and family cars to produce, integer because a car cannot be produced in part.
+
+    - The profit is $3$ for a sports car and $2$ for a family car (in thousands of euros): the objective maximizes the total profit $3x_1+2x_2$.
+
+    - First constraint: the assembly line is available for $45$ hours; a sports car takes $10$ hours and a family car $4$.
+
+    - Second constraint: the paint shop is available for $49$ hours; a sports car takes $4$ hours and a family car $14$.
 
 ### 1.1.1 Feasible region and objective function
 
@@ -216,7 +222,7 @@ title: "Integer linear programming"
 
     ![Figure 1](../img/01-ilp/fig01.svg){ .fig .ovale loading=lazy  }
 
-    <em>The car example: the feasible region of the ILP problem is the set of its $16$ integer points (black) inside the polyhedron (red). The optimal solution $(4,1)$ is blue, with the objective line $3\,x_1 + 2\,x_2 = 14$ (dashed).</em>
+    <em>The car production example: the feasible region of the ILP problem is the set of its $16$ integer points (black) inside the polyhedron (red). The optimal solution $(4,1)$ is blue, with the objective line $3\,x_1 + 2\,x_2 = 14$ (dashed).</em>
 
     The point $\bar{\vet x} = (2,2)$ belongs to $F$, because $10 \cdot 2 + 4 \cdot 2 = 28 \le 45$ and $4 \cdot 2 + 14 \cdot 2 = 36 \le 49$. The point $(4,2)$ does not belong to $F$, because $10 \cdot 4 + 4 \cdot 2 = 48 > 45$. The point $(\frac{7}{2},\frac{5}{2})$ belongs to $P$ but not to $F$, because it is not integer.
 
@@ -258,7 +264,7 @@ title: "Integer linear programming"
 
     Consider the ILP problem of <span style="color:#1971c2">[Example 1.1](#box-2-exILPCanonical)</span>. The gradient of the objective function is $\nabla f = (3,2)$. Moving the level line $3\,x_1 + 2\,x_2 = z$ in the direction of $\nabla f$, the last point of $F$ reached is $(4,1)$, on the dashed line $3\,x_1 + 2\,x_2 = 14$ of the figure of <span style="color:#1971c2">[Example 1.2](#box-4-exFeasRegILP)</span>. No other point of $F$ lies on this line.
 
-    The car example has the <strong>unique</strong> optimal solution $\tilde{\vet x}(\ILP) = (4,1)$, with optimal value $z(\ILP) = 14$.
+    The car production example has the <strong>unique</strong> optimal solution $\tilde{\vet x}(\ILP) = (4,1)$, with optimal value $z(\ILP) = 14$.
 
 ## 1.2 Possible outcomes
 
@@ -292,7 +298,7 @@ title: "Integer linear programming"
 
 ## 1.3 Complete enumeration
 
-- When the feasible region is a finite set we can find an optimal solution by <strong>complete enumeration</strong>: we compute the objective function for every feasible solution and keep the best. For the car example, there are $16$ points:
+- When the feasible region is a finite set we can find an optimal solution by <strong>complete enumeration</strong>: we compute the objective function for every feasible solution and keep the best. For the car production example, there are $16$ points:
 
 $$
 \begin{array}{ccc|ccc}
@@ -402,7 +408,7 @@ $$
 
     - To avoid enumeration we need bounds on $z(\ILP)$ from both sides: feasible solutions and relaxations, the subject of the next chapter.
 
-    <strong>Dashboard of the car example.</strong> No bounds yet: the next chapter gives the first lower and upper bounds.
+    <strong>Dashboard of the car production example.</strong> No bounds yet: the next chapter gives the first lower and upper bounds.
 
 ---
 
