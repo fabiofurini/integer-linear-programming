@@ -20,8 +20,6 @@ The course presents integer and mixed integer linear programming: the LP relaxat
 inequalities and cutting planes, the branch-and-bound and branch-and-cut algorithms, MIP solvers and
 heuristics.
 
-Every chapter has definitions, examples worked out step by step and exercises with solutions.
-
 Prerequisites: [Linear Programming](https://fabiofurini.github.io/linear-programming/).
 
 [Start :material-arrow-right:](models-and-bounds/index.md){ .md-button .md-button--primary }
