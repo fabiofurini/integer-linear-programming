@@ -16,7 +16,11 @@ hide:
 Teaching material conceived and developed by **[Fabio Furini](https://fabiofurini.github.io/)**, associate
 professor at [DIAG](https://www.diag.uniroma1.it/), Sapienza University of Rome.
 
-**The course lecture notes, online**: integer and mixed integer programming, LP relaxation and bounds, valid inequalities, cutting planes, branch-and-bound and branch-and-cut, MIP solvers and heuristics, with definitions, worked examples step by step and exercises with solutions.
+The course presents integer and mixed integer linear programming: the LP relaxation and bounds, valid
+inequalities and cutting planes, the branch-and-bound and branch-and-cut algorithms, MIP solvers and
+heuristics.
+
+Every chapter has definitions, examples worked out step by step and exercises with solutions.
 
 Prerequisites: [Linear Programming](https://fabiofurini.github.io/linear-programming/).
 
