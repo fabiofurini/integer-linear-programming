@@ -1515,7 +1515,7 @@ title: "LP-based branch-and-bound"
 
 ## Interactive lab { #interactive-lab }
 
-The ideas of the chapter, hands on: move the sliders and drag the points.
+The apps of this chapter: move the sliders and drag the points.
 Each app also opens full page in the [interactive lab](../lab/index.md): [Branch-and-bound step by step](../lab/branch-and-bound-steps.md).
 
 <div class="gi" data-grafico="pli-bb"></div>

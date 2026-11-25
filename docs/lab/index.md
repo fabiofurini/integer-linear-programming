@@ -5,7 +5,7 @@ hide:
 
 # Interactive lab
 
-Here you can get your hands on integer linear programming. Pick an app: it opens full page.
+Each app illustrates a topic of the course. Pick an app: it opens full page.
 Drag the points and move the sliders; the ▶ button next to a parameter makes it move by itself.
 The numbers are exact fractions.
 

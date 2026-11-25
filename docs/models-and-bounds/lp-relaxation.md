@@ -569,7 +569,7 @@ title: "Primal and dual bounds"
 
 ## Interactive lab { #interactive-lab }
 
-The ideas of the chapter, hands on: move the sliders and drag the points.
+The apps of this chapter: move the sliders and drag the points.
 Each app also opens full page in the [interactive lab](../lab/index.md): [Integer points and the LP relaxation](../lab/integer-points.md).
 
 <div class="gi" data-grafico="pli-punti-interi"></div>
