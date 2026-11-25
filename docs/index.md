@@ -94,6 +94,14 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
 
     [:octicons-arrow-right-24: The chapters](mip-heuristics/index.md)
 
+-   :material-vector-polygon: **MIP Modelling**
+
+    ---
+
+    From the description of a problem to the integer linear programming model, solved with Python and Gurobi: modelling techniques and assignment, scheduling, location and production problems. It is a separate module of the series.
+
+    [:octicons-arrow-right-24: The MIP Modelling module](https://fabiofurini.github.io/mip-modelling/)
+
 -   :material-clipboard-check-outline: **Self-assessment**
 
     ---
