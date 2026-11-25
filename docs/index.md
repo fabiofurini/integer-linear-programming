@@ -50,8 +50,6 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
 
     What an integer linear programming problem is (MIP, ILP, BIP), its solutions and outcomes; primal and dual bounds, the gap and the LP relaxation.
 
-    1\. Integer linear programming · 2\. Primal and dual bounds
-
     [:octicons-arrow-right-24: The chapters](models-and-bounds/index.md)
 
 -   :material-vector-polygon: **II · Strengthening the formulation**
@@ -59,8 +57,6 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
     ---
 
     Ideal formulations, valid inequalities and cover inequalities: how to strengthen a formulation.
-
-    3\. Ideal formulations · 4\. Valid inequalities · 5\. Cover inequalities
 
     [:octicons-arrow-right-24: The chapters](formulations/index.md)
 
@@ -70,8 +66,6 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
 
     The cutting plane algorithm with Gomory fractional cuts, LP-based branch-and-bound and branch-and-cut. Examples worked out step by step and exercises with complete solutions.
 
-    6\. The cutting plane algorithm with Gomory fractional cuts · 7\. LP-based branch-and-bound · 8\. Branch-and-cut
-
     [:octicons-arrow-right-24: The chapters](exact-methods/index.md)
 
 -   :material-cog-outline: **IV · MIP solvers**
@@ -80,8 +74,6 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
 
     What a MIP solver does (presolve, cuts, primal heuristics, tree strategies, tolerances) and how to read its log, with real examples.
 
-    9\. MIP solvers: what they do
-
     [:octicons-arrow-right-24: The chapters](solvers/index.md)
 
 -   :material-lightning-bolt: **V · MIP heuristics**
@@ -89,8 +81,6 @@ Branch-and-bound at the end: the complete tree, with the regions of the nodes, t
     ---
 
     Rounding, diving, feasibility pump, RINS, local branching, relax-and-fix and fix-and-optimize. Examples and exercises with complete solutions.
-
-    10\. MIP heuristics
 
     [:octicons-arrow-right-24: The chapters](mip-heuristics/index.md)
 
